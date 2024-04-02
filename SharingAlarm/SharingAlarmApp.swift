@@ -1,0 +1,103 @@
+//
+//  SharingAlarmApp.swift
+//  SharingAlarm
+//
+//  Created by 曹越程 on 2024/3/14.
+//
+
+import SwiftUI
+import CloudKit
+import UserNotifications
+
+@main
+struct SharingAlarmApp: App {
+    @StateObject private var authViewModel = AuthViewModel()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    init() {
+        requestNotificationPermission()
+        customizeTabBarAppearance()
+    }
+    
+    var body: some Scene {
+        WindowGroup {
+            if authViewModel.isAuthenticated {
+                ContentView()
+                    .environmentObject(authViewModel)
+                    .environment(\.colorScheme, .light)
+            } else {
+                LoginView(authViewModel: authViewModel)
+                    .environmentObject(authViewModel)
+                    .environment(\.colorScheme, .light)
+            }
+        }
+    }
+    
+    
+    func customizeTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        
+        appearance.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+    
+        UITabBar.appearance().standardAppearance = appearance
+        // Use this line if you want the same appearance when the tab bar scrolls (iOS 15+)
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+}
+
+func requestNotificationPermission() {
+    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+        if granted {
+            print("Notification permission granted.")
+        } else if let error = error {
+            print("Notification permission error: \(error.localizedDescription)")
+        }
+    }
+}
+
+func scheduleNotification(for alarm: Alarm) {
+    let content = UNMutableNotificationContent()
+    content.title = "Alarm"
+    content.body = "Your alarm is going off!"
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(alarm.sound).mp3"))
+    
+    let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarm.time)
+    print(triggerDate)
+    let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+    
+    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+    
+    UNUserNotificationCenter.current().add(request) { error in
+        if let error = error {
+            print("Error scheduling notification: \(error.localizedDescription)")
+        }
+    }
+}
+
+func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // This is called when a notification is delivered while the app is in the foreground.
+    print("Notification will present: \(notification.request.identifier)")
+    completionHandler([.banner, .sound]) // Ensure banners and sounds are allowed.
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Request notification permissions
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+            print("Permission granted: \(granted)")
+        }
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("Notification will present: \(notification.request.identifier)")
+        completionHandler([.banner, .sound, .badge]) // Decide how to present the notification in the foreground.
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("Notification received: \(response.notification.request.identifier)")
+        completionHandler()
+    }
+}

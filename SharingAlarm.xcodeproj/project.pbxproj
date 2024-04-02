@@ -1,0 +1,672 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
+		D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* LogsView.swift */; };
+		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
+		D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E72BBA7AE400B56F32 /* SettingsView.swift */; };
+		D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */; };
+		D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */; };
+		D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D35372ED2BBB738300B56F32 /* Friendship.xcdatamodeld */; };
+		D35372F22BBB7DAC00B56F32 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372F12BBB7DAC00B56F32 /* UserData.swift */; };
+		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
+		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
+		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
+		D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB892BA371A00099D382 /* Preview Assets.xcassets */; };
+		D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB8B2BA371A00099D382 /* Persistence.swift */; };
+		D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */; };
+		D38EEB992BA371A00099D382 /* SharingAlarmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB982BA371A00099D382 /* SharingAlarmTests.swift */; };
+		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
+		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
+		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D38EEB952BA371A00099D382 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D38EEB772BA3719F0099D382 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D38EEB7E2BA3719F0099D382;
+			remoteInfo = SharingAlarm;
+		};
+		D38EEB9F2BA371A00099D382 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D38EEB772BA3719F0099D382 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D38EEB7E2BA3719F0099D382;
+			remoteInfo = SharingAlarm;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
+		D35372E32BBA7AD200B56F32 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
+		D35372E72BBA7AE400B56F32 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsViewModel.swift; sourceTree = "<group>"; };
+		D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
+		D35372EE2BBB738300B56F32 /* Friendship.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Friendship.xcdatamodel; sourceTree = "<group>"; };
+		D35372F12BBB7DAC00B56F32 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharingAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmApp.swift; sourceTree = "<group>"; };
+		D38EEB842BA3719F0099D382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D38EEB862BA371A00099D382 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D38EEB892BA371A00099D382 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D38EEB8B2BA371A00099D382 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		D38EEB8E2BA371A00099D382 /* SharingAlarm.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SharingAlarm.xcdatamodel; sourceTree = "<group>"; };
+		D38EEB942BA371A00099D382 /* SharingAlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharingAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D38EEB982BA371A00099D382 /* SharingAlarmTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmTests.swift; sourceTree = "<group>"; };
+		D38EEB9E2BA371A00099D382 /* SharingAlarmUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharingAlarmUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITests.swift; sourceTree = "<group>"; };
+		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D38EEB7C2BA3719F0099D382 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB912BA371A00099D382 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB9B2BA371A00099D382 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D35372F02BBB7D9500B56F32 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D35372F12BBB7DAC00B56F32 /* UserData.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D38EEB762BA3719F0099D382 = {
+			isa = PBXGroup;
+			children = (
+				D38EEB812BA3719F0099D382 /* SharingAlarm */,
+				D38EEB972BA371A00099D382 /* SharingAlarmTests */,
+				D38EEBA12BA371A00099D382 /* SharingAlarmUITests */,
+				D38EEB802BA3719F0099D382 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D38EEB802BA3719F0099D382 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */,
+				D38EEB942BA371A00099D382 /* SharingAlarmTests.xctest */,
+				D38EEB9E2BA371A00099D382 /* SharingAlarmUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
+			isa = PBXGroup;
+			children = (
+				D35372F02BBB7D9500B56F32 /* Models */,
+				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
+				D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */,
+				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
+				D38EEB842BA3719F0099D382 /* ContentView.swift */,
+				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
+				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
+				D35372E32BBA7AD200B56F32 /* LogsView.swift */,
+				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
+				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
+				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
+				D38EEB862BA371A00099D382 /* Assets.xcassets */,
+				D38EEB8B2BA371A00099D382 /* Persistence.swift */,
+				D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */,
+				D38EEB882BA371A00099D382 /* Preview Content */,
+				D35372ED2BBB738300B56F32 /* Friendship.xcdatamodeld */,
+			);
+			path = SharingAlarm;
+			sourceTree = "<group>";
+		};
+		D38EEB882BA371A00099D382 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				D38EEB892BA371A00099D382 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D38EEB972BA371A00099D382 /* SharingAlarmTests */ = {
+			isa = PBXGroup;
+			children = (
+				D38EEB982BA371A00099D382 /* SharingAlarmTests.swift */,
+			);
+			path = SharingAlarmTests;
+			sourceTree = "<group>";
+		};
+		D38EEBA12BA371A00099D382 /* SharingAlarmUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */,
+				D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */,
+			);
+			path = SharingAlarmUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D38EEB7E2BA3719F0099D382 /* SharingAlarm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D38EEBA82BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarm" */;
+			buildPhases = (
+				D38EEB7B2BA3719F0099D382 /* Sources */,
+				D38EEB7C2BA3719F0099D382 /* Frameworks */,
+				D38EEB7D2BA3719F0099D382 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SharingAlarm;
+			productName = SharingAlarm;
+			productReference = D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D38EEB932BA371A00099D382 /* SharingAlarmTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D38EEBAB2BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarmTests" */;
+			buildPhases = (
+				D38EEB902BA371A00099D382 /* Sources */,
+				D38EEB912BA371A00099D382 /* Frameworks */,
+				D38EEB922BA371A00099D382 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D38EEB962BA371A00099D382 /* PBXTargetDependency */,
+			);
+			name = SharingAlarmTests;
+			productName = SharingAlarmTests;
+			productReference = D38EEB942BA371A00099D382 /* SharingAlarmTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D38EEB9D2BA371A00099D382 /* SharingAlarmUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D38EEBAE2BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarmUITests" */;
+			buildPhases = (
+				D38EEB9A2BA371A00099D382 /* Sources */,
+				D38EEB9B2BA371A00099D382 /* Frameworks */,
+				D38EEB9C2BA371A00099D382 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D38EEBA02BA371A00099D382 /* PBXTargetDependency */,
+			);
+			name = SharingAlarmUITests;
+			productName = SharingAlarmUITests;
+			productReference = D38EEB9E2BA371A00099D382 /* SharingAlarmUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D38EEB772BA3719F0099D382 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					D38EEB7E2BA3719F0099D382 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					D38EEB932BA371A00099D382 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = D38EEB7E2BA3719F0099D382;
+					};
+					D38EEB9D2BA371A00099D382 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = D38EEB7E2BA3719F0099D382;
+					};
+				};
+			};
+			buildConfigurationList = D38EEB7A2BA3719F0099D382 /* Build configuration list for PBXProject "SharingAlarm" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D38EEB762BA3719F0099D382;
+			productRefGroup = D38EEB802BA3719F0099D382 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D38EEB7E2BA3719F0099D382 /* SharingAlarm */,
+				D38EEB932BA371A00099D382 /* SharingAlarmTests */,
+				D38EEB9D2BA371A00099D382 /* SharingAlarmUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D38EEB7D2BA3719F0099D382 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */,
+				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB922BA371A00099D382 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB9C2BA371A00099D382 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D38EEB7B2BA3719F0099D382 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D35372F22BBB7DAC00B56F32 /* UserData.swift in Sources */,
+				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
+				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
+				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
+				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
+				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
+				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
+				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
+				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
+				D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */,
+				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
+				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
+				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB902BA371A00099D382 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D38EEB992BA371A00099D382 /* SharingAlarmTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D38EEB9A2BA371A00099D382 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */,
+				D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D38EEB962BA371A00099D382 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D38EEB7E2BA3719F0099D382 /* SharingAlarm */;
+			targetProxy = D38EEB952BA371A00099D382 /* PBXContainerItemProxy */;
+		};
+		D38EEBA02BA371A00099D382 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D38EEB7E2BA3719F0099D382 /* SharingAlarm */;
+			targetProxy = D38EEB9F2BA371A00099D382 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D38EEBA62BA371A00099D382 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D38EEBA72BA371A00099D382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D38EEBA92BA371A00099D382 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
+				DEVELOPMENT_TEAM = 528US555T2;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D38EEBAA2BA371A00099D382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
+				DEVELOPMENT_TEAM = 528US555T2;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D38EEBAC2BA371A00099D382 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarmTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SharingAlarm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SharingAlarm";
+			};
+			name = Debug;
+		};
+		D38EEBAD2BA371A00099D382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarmTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SharingAlarm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SharingAlarm";
+			};
+			name = Release;
+		};
+		D38EEBAF2BA371A00099D382 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarmUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SharingAlarm;
+			};
+			name = Debug;
+		};
+		D38EEBB02BA371A00099D382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarmUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SharingAlarm;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D38EEB7A2BA3719F0099D382 /* Build configuration list for PBXProject "SharingAlarm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D38EEBA62BA371A00099D382 /* Debug */,
+				D38EEBA72BA371A00099D382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D38EEBA82BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D38EEBA92BA371A00099D382 /* Debug */,
+				D38EEBAA2BA371A00099D382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D38EEBAB2BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarmTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D38EEBAC2BA371A00099D382 /* Debug */,
+				D38EEBAD2BA371A00099D382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D38EEBAE2BA371A00099D382 /* Build configuration list for PBXNativeTarget "SharingAlarmUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D38EEBAF2BA371A00099D382 /* Debug */,
+				D38EEBB02BA371A00099D382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D35372ED2BBB738300B56F32 /* Friendship.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D35372EE2BBB738300B56F32 /* Friendship.xcdatamodel */,
+			);
+			currentVersion = D35372EE2BBB738300B56F32 /* Friendship.xcdatamodel */;
+			path = Friendship.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D38EEB8E2BA371A00099D382 /* SharingAlarm.xcdatamodel */,
+			);
+			currentVersion = D38EEB8E2BA371A00099D382 /* SharingAlarm.xcdatamodel */;
+			path = SharingAlarm.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = D38EEB772BA3719F0099D382 /* Project object */;
+}
