@@ -10,9 +10,8 @@ import CloudKit
 import AuthenticationServices
 
 struct AppUser {
-    var id: String  // A unique identifier, e.g., Apple ID, Google ID
-    var username: String
-    var email: String
+    var name: String
+    var uid: String
     var authMethod: AuthMethod
 }
 
@@ -21,4 +20,3 @@ enum AuthMethod {
     case google
     // Add more as needed
 }
-

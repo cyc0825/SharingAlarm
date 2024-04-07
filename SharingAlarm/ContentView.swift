@@ -14,38 +14,58 @@ struct ContentView: View {
     var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String
 
     var body: some View {
-        TabView {
-            AlarmsView()
-                .tabItem {
-                    Label("Alarms", systemImage: "alarm.fill")
-                }
-
-            LogsView()
-                .tabItem {
-                    Label("Logs", systemImage: "list.bullet.rectangle")
-                }
-
-            FriendsView()
-                .tabItem {
-                    Label("Friends", systemImage: "person.3.fill")
-                }
-
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                }
-        }
-        .onAppear {
-            if !loaded {
-                authViewModel.checkUserExistsWithAppleID(appleID: userAppleId)
-                loaded = true
+        ZStack {
+            TabView {
+                AlarmsView()
+                    .tabItem {
+                        Label("Alarms", systemImage: "alarm.fill")
+                    }
+                    .background {
+                        Color(UIColor.secondarySystemBackground)
+                            .ignoresSafeArea()
+                    }
+                
+                LogsView()
+                    .tabItem {
+                        Label("Logs", systemImage: "list.bullet.rectangle")
+                    }
+                    .background {
+                        Color(UIColor.secondarySystemBackground)
+                            .ignoresSafeArea()
+                    }
+                
+                FriendsView()
+                    .tabItem {
+                        Label("Friends", systemImage: "person.3.fill")
+                    }
+                    .background {
+                        Color(UIColor.secondarySystemBackground)
+                            .ignoresSafeArea()
+                    }
+                
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape.fill")
+                    }
+                    .background {
+                        Color(UIColor.secondarySystemBackground)
+                            .ignoresSafeArea()
+                    }
             }
-        }
-        .sheet(isPresented: $authViewModel.shouldShowProfileSetup) {
-            ProfileSetupView { username, email in
-                saveUserProfileToCloudKit(username: username, email: email) {
-                    authViewModel.setUserExists(true)
+            .onAppear {
+                if !loaded {
+                    authViewModel.checkUserExistsWithAppleID(appleID: userAppleId)
+                    loaded = true
                 }
+            }
+            .sheet(isPresented: $authViewModel.shouldShowProfileSetup) {
+                ProfileSetupView { username, uid in
+                    authViewModel.saveOrUpdateUserProfile(username: username, uid: uid) {
+                        authViewModel.setUserExists(true)
+                        authViewModel.shouldShowProfileSetup = false
+                    }
+                }
+                .environment(\.colorScheme, .light)
             }
         }
 //        NavigationView {
@@ -60,13 +80,6 @@ struct ContentView: View {
 //            Text("Select an item")
 //        }
     }
-    
-    private func logout(){
-        UserDefaults.standard.setValue(false, forKey: "logged")
-        authViewModel.updateAuthenticationState(isAuthenticated: false)
-        UserDefaults.standard.removeObject(forKey: "appleIDUser")
-    }
-
 }
 
 private let itemFormatter: DateFormatter = {

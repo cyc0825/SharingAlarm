@@ -33,7 +33,6 @@ struct SharingAlarmApp: App {
         }
     }
     
-    
     func customizeTabBarAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()

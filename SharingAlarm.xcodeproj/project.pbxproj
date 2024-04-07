@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* LogsView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
@@ -25,6 +26,7 @@
 		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
+		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
@@ -67,6 +70,7 @@
 		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
+		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,8 @@
 				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
 				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
+				D3E7E8372BC0962500E36A4D /* StyleView.swift */,
+				D31605762BC074F400A4089E /* LoadingView.swift */,
 				D38EEB862BA371A00099D382 /* Assets.xcassets */,
 				D38EEB8B2BA371A00099D382 /* Persistence.swift */,
 				D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */,
@@ -300,11 +306,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */,
 				D35372F22BBB7DAC00B56F32 /* UserData.swift in Sources */,
 				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
+				D31605772BC074F400A4089E /* LoadingView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
