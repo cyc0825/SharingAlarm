@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FB1972BC3172700C88BBC /* AddFriendCard.swift */; };
 		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* LogsView.swift */; };
@@ -26,6 +27,7 @@
 		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
+		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D30FB1972BC3172700C88BBC /* AddFriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCard.swift; sourceTree = "<group>"; };
 		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
@@ -70,6 +73,7 @@
 		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
+		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,9 +102,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D30FB1962BC3171100C88BBC /* ViewCards */ = {
+			isa = PBXGroup;
+			children = (
+				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
+				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
+			);
+			path = ViewCards;
+			sourceTree = "<group>";
+		};
 		D35372F02BBB7D9500B56F32 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
+				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
 				D35372F12BBB7DAC00B56F32 /* UserData.swift */,
 			);
 			path = Models;
@@ -129,16 +144,15 @@
 		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
 			isa = PBXGroup;
 			children = (
+				D30FB1962BC3171100C88BBC /* ViewCards */,
 				D35372F02BBB7D9500B56F32 /* Models */,
 				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
 				D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */,
 				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
 				D38EEB842BA3719F0099D382 /* ContentView.swift */,
 				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
-				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
 				D35372E32BBA7AD200B56F32 /* LogsView.swift */,
 				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
-				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3E7E8372BC0962500E36A4D /* StyleView.swift */,
 				D31605762BC074F400A4089E /* LoadingView.swift */,
@@ -315,10 +329,12 @@
 				D31605772BC074F400A4089E /* LoadingView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
+				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
 				D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
+				D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */,
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
 				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,
 			);
@@ -493,6 +509,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -523,6 +540,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=iphoneos*]" = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
