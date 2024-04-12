@@ -11,6 +11,7 @@ import CoreData
 struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var loaded = false
+    @State private var showingAlarmView = false
     var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String
 
     var body: some View {
@@ -20,36 +21,20 @@ struct ContentView: View {
                     .tabItem {
                         Label("Alarms", systemImage: "alarm.fill")
                     }
-                    .background {
-                        Color(UIColor.secondarySystemBackground)
-                            .ignoresSafeArea()
-                    }
                 
-                LogsView()
+                ActivitiesView()
                     .tabItem {
-                        Label("Logs", systemImage: "list.bullet.rectangle")
-                    }
-                    .background {
-                        Color(UIColor.secondarySystemBackground)
-                            .ignoresSafeArea()
+                        Label("Activities", systemImage: "list.bullet.rectangle")
                     }
                 
                 FriendsView()
                     .tabItem {
                         Label("Friends", systemImage: "person.3.fill")
                     }
-                    .background {
-                        Color(UIColor.secondarySystemBackground)
-                            .ignoresSafeArea()
-                    }
                 
                 SettingsView()
                     .tabItem {
                         Label("Settings", systemImage: "gearshape.fill")
-                    }
-                    .background {
-                        Color(UIColor.secondarySystemBackground)
-                            .ignoresSafeArea()
                     }
             }
             .onAppear {
@@ -59,13 +44,22 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $authViewModel.shouldShowProfileSetup) {
-                ProfileSetupView { username, uid in
+                ProfileSetupView(
+                    onSubmit: { username, uid in
                     authViewModel.saveOrUpdateUserProfile(username: username, uid: uid) {
                         authViewModel.setUserExists(true)
                         authViewModel.shouldShowProfileSetup = false
-                    }
-                }
+                        }
+                    },
+                    initialUsername: "",
+                    initialUid: "")
                 .environment(\.colorScheme, .light)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotificationTapped"))) { _ in
+                showingAlarmView = true
+            }
+            .sheet(isPresented: $showingAlarmView) {
+                AlarmView()
             }
         }
 //        NavigationView {
@@ -89,6 +83,3 @@ private let itemFormatter: DateFormatter = {
     return formatter
 }()
 
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}

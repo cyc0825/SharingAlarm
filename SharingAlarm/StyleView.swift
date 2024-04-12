@@ -31,3 +31,12 @@ struct BlurView: UIViewRepresentable {
     }
 }
 
+struct LargeTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(15)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+    }
+}

@@ -8,6 +8,7 @@
 import SwiftUI
 import CloudKit
 import UserNotifications
+import EventKit
 
 @main
 struct SharingAlarmApp: App {
@@ -82,7 +83,7 @@ func scheduleNotification(for alarm: Alarm) {
     let content = UNMutableNotificationContent()
     content.title = "Alarm"
     content.body = "Your alarm is going off!"
-    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(alarm.sound).mp3"))
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "AlarmTest.mp3"))
     
     let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarm.time)
     print(triggerDate)
@@ -135,7 +136,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print("Notification received: \(response.notification.request.identifier)")
+        NotificationCenter.default.post(name: NSNotification.Name("NotificationTapped"), object: nil)
         completionHandler()
     }
 }

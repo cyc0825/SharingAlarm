@@ -109,10 +109,13 @@ class FriendsViewModel: ObservableObject {
     }
     
     func searchRequest() {
-        guard UserDefaults.standard.value(forKey: "uid") != nil else { return }
-        let predicate = NSPredicate(format: "receiverID == %@", UserDefaults.standard.value(forKey: "uid") as! String)
+        guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
+        let lastFetchDate = UserDefaults.standard.value(forKey: "lastFriendRequestFetchDate") as? Date ?? Date.distantPast
+        
+        let predicate = NSPredicate(format: "modificationDate > %@ AND receiverID == %@", argumentArray: [lastFetchDate, uid])
         let query = CKQuery(recordType: "FriendRequest", predicate: predicate)
         let operation = CKQueryOperation(query: query)
+        var mostRecentUpdate: Date = lastFetchDate
         operation.recordMatchedBlock = { (recordID, result) in
             switch result {
             case .success(let record):
@@ -123,6 +126,9 @@ class FriendsViewModel: ObservableObject {
                 self.fetchUsernames(for: senderID) { name in
                     guard !self.friendRequests.contains(where: { $0.senderID == senderID }) else {
                         return
+                    }
+                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
+                        mostRecentUpdate = modificationDate
                     }
                     let newRequest = FriendRequest(recordID: recordID, senderID: senderID, senderName: name)
                     self.friendRequests.append(newRequest)
@@ -143,7 +149,7 @@ class FriendsViewModel: ObservableObject {
                 print("Query failed with error: \(error.localizedDescription)")
             }
         }
-        
+        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFriendRequestFetchDate")
         CKContainer.default().publicCloudDatabase.add(operation)
     }
     
@@ -180,17 +186,18 @@ class FriendsViewModel: ObservableObject {
     }
     
     func fetchFriends() {
-        guard UserDefaults.standard.value(forKey: "uid") != nil else { return }
-        let currentUserID = UserDefaults.standard.value(forKey: "uid") as! String
+        guard let currentUserID = UserDefaults.standard.value(forKey: "uid") as? String else { return }
+        let lastFetchDate = UserDefaults.standard.value(forKey: "lastFriendFetchDate") as? Date ?? Date.distantPast
         
-        let predicate1 = NSPredicate(format: "userID1 == %@", currentUserID)
-        let predicate2 = NSPredicate(format: "userID2 == %@", currentUserID)
+        let predicate1 = NSPredicate(format: "modificationDate > %@ AND userID1 == %@", argumentArray: [lastFetchDate, currentUserID])
+        let predicate2 = NSPredicate(format: "modificationDate > %@ AND userID2 == %@", argumentArray: [lastFetchDate, currentUserID])
         
         let query1 = CKQuery(recordType: "Friendship", predicate: predicate1)
         let query2 = CKQuery(recordType: "Friendship", predicate: predicate2)
         
         let operation1 = CKQueryOperation(query: query1)
         let operation2 = CKQueryOperation(query: query2)
+        var mostRecentUpdate: Date = lastFetchDate
         
         operation1.recordMatchedBlock = { (recordID, result) in
             switch result {
@@ -203,7 +210,11 @@ class FriendsViewModel: ObservableObject {
                     guard !self.friends.contains(where: { $0.uid == userID }) else {
                         return
                     }
-                    var newfriend = User(recordID: recordID, name: name, uid: userID)
+                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
+                        mostRecentUpdate = modificationDate
+                    }
+                    
+                    let newfriend = User(recordID: recordID, name: name, uid: userID)
                     self.friends.append(newfriend)
                 }
             case .failure(let error):
@@ -222,7 +233,10 @@ class FriendsViewModel: ObservableObject {
                     guard !self.friends.contains(where: { $0.uid == userID }) else {
                         return
                     }
-                    var newfriend = User(recordID: recordID, name: name, uid: userID)
+                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
+                        mostRecentUpdate = modificationDate
+                    }
+                    let newfriend = User(recordID: recordID, name: name, uid: userID)
                     self.friends.append(newfriend)
                 }
             case .failure(let error):
@@ -255,7 +269,7 @@ class FriendsViewModel: ObservableObject {
                 print("Query failed with error: \(error.localizedDescription)")
             }
         }
-        
+        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFriendFetchDate")
         CKContainer.default().publicCloudDatabase.add(operation1)
         CKContainer.default().publicCloudDatabase.add(operation2)
     }

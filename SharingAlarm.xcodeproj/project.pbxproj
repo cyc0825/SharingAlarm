@@ -10,7 +10,7 @@
 		D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FB1972BC3172700C88BBC /* AddFriendCard.swift */; };
 		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
-		D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* LogsView.swift */; };
+		D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
 		D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E72BBA7AE400B56F32 /* SettingsView.swift */; };
 		D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */; };
@@ -28,6 +28,11 @@
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
 		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
+		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
+		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
+		D3B53B342BC6204B00B41769 /* AlarmTest.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* AlarmTest.mp3 */; };
+		D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */; };
+		D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* ActivityCard.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +57,7 @@
 		D30FB1972BC3172700C88BBC /* AddFriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCard.swift; sourceTree = "<group>"; };
 		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
-		D35372E32BBA7AD200B56F32 /* LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsView.swift; sourceTree = "<group>"; };
+		D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		D35372E72BBA7AE400B56F32 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsViewModel.swift; sourceTree = "<group>"; };
@@ -74,6 +79,11 @@
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
 		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
+		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
+		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		D3B53B332BC6204B00B41769 /* AlarmTest.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AlarmTest.mp3; sourceTree = "<group>"; };
+		D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
+		D3B53B372BC85B8A00B41769 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +117,7 @@
 			children = (
 				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
 				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
+				D3B53B372BC85B8A00B41769 /* ActivityCard.swift */,
 			);
 			path = ViewCards;
 			sourceTree = "<group>";
@@ -114,8 +125,10 @@
 		D35372F02BBB7D9500B56F32 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */,
 				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
 				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
+				D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */,
 				D35372F12BBB7DAC00B56F32 /* UserData.swift */,
 			);
 			path = Models;
@@ -144,6 +157,7 @@
 		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
 			isa = PBXGroup;
 			children = (
+				D3B53B322BC6203500B41769 /* Resources */,
 				D30FB1962BC3171100C88BBC /* ViewCards */,
 				D35372F02BBB7D9500B56F32 /* Models */,
 				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
@@ -151,11 +165,12 @@
 				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
 				D38EEB842BA3719F0099D382 /* ContentView.swift */,
 				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
-				D35372E32BBA7AD200B56F32 /* LogsView.swift */,
+				D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */,
 				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3E7E8372BC0962500E36A4D /* StyleView.swift */,
 				D31605762BC074F400A4089E /* LoadingView.swift */,
+				D3B53B2E2BC4E66000B41769 /* AlarmView.swift */,
 				D38EEB862BA371A00099D382 /* Assets.xcassets */,
 				D38EEB8B2BA371A00099D382 /* Persistence.swift */,
 				D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */,
@@ -188,6 +203,14 @@
 				D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */,
 			);
 			path = SharingAlarmUITests;
+			sourceTree = "<group>";
+		};
+		D3B53B322BC6203500B41769 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D3B53B332BC6204B00B41769 /* AlarmTest.mp3 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +319,7 @@
 			files = (
 				D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */,
 				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
+				D3B53B342BC6204B00B41769 /* AlarmTest.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,17 +349,21 @@
 				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
+				D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
+				D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */,
 				D31605772BC074F400A4089E /* LoadingView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
+				D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
-				D35372E42BBA7AD200B56F32 /* LogsView.swift in Sources */,
+				D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
 				D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */,
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
+				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
 				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

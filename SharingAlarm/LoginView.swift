@@ -8,7 +8,6 @@
 import SwiftUI
 import AuthenticationServices
 import CloudKit
-import Combine
 
 class Coordinator: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     var authViewModel: AuthViewModel
@@ -98,9 +97,40 @@ struct LoginView: View {
 
 struct ProfileSetupView: View {
     var onSubmit: (String, String) -> Void
-    
+    var initialUsername: String
+    var initialUid: String
+        
     @State private var username: String = ""
     @State private var uid: String = ""
+    @State private var isChecking = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var usernameWarning: String?
+    @State private var uidWarning: String?
+    
+    init(onSubmit: @escaping (String, String) -> Void, initialUsername: String, initialUid: String) {
+        self.onSubmit = onSubmit
+        self.initialUsername = initialUsername
+        self.initialUid = initialUid
+        _username = State(initialValue: initialUsername)
+        _uid = State(initialValue: initialUid)
+    }
+    
+    func isUniqueIdentifier(_ identifier: String, completion: @escaping (Bool) -> Void) {
+        let predicate = NSPredicate(format: "uid == %@", identifier)
+        let query = CKQuery(recordType: "UserData", predicate: predicate)
+        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
+            DispatchQueue.main.async {
+                if let records = records, !records.isEmpty {
+                    // Identifier exists, hence not unique
+                    completion(false)
+                } else {
+                    // No existing record with the identifier, hence unique
+                    completion(true)
+                }
+            }
+        }
+    }
     
     var body: some View {
         VStack {
@@ -118,42 +148,75 @@ struct ProfileSetupView: View {
             TextField("Name", text: $username)
                 .textFieldStyle(LargeTextFieldStyle())
                 .padding(.horizontal)
-            
+            if let usernameWarning = usernameWarning {
+                Text(usernameWarning)
+                    .foregroundColor(.red)
+            }
             // Unique Identifier TextField
             TextField("Unique Identifier", text: $uid)
                 .textFieldStyle(LargeTextFieldStyle())
                 .padding(.horizontal)
+            if let uidWarning = uidWarning {
+                Text(uidWarning)
+                    .foregroundColor(.red)
+            }
             
             Spacer()
-            
-            // Submit Button
-            Button(action: {
-                onSubmit(username, uid)
-            }) {
+            Button(action: validateAndSubmit, label: {
                 Text("Go")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-            }
+            })
+            .background(Color.blue)
+            .cornerRadius(25)
+            .padding(.horizontal)
             .padding(.bottom, 50)
+            
         }
         .background(Color(UIColor.systemGray6))
-        .edgesIgnoringSafeArea(.all) // Extend the background color to the edges
+        .edgesIgnoringSafeArea(.all)
     }
-}
-
-// Custom TextField Style for larger TextFields
-struct LargeTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .padding(15)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
+    
+    private func validateAndSubmit() {
+        // Reset warnings
+        usernameWarning = nil
+        uidWarning = nil
+        
+        var isValid = true
+        
+        // Check for empty fields
+        if username.isEmpty {
+            print("Name cannot be empty")
+            usernameWarning = "Name cannot be empty"
+            isValid = false
+        }
+        
+        if uid.isEmpty {
+            print("Unique Identifier cannot be empty")
+            uidWarning = "Unique Identifier cannot be empty"
+            isValid = false
+        } else if uid != initialUid {
+            // Additional check if UID is changed and needs to be unique
+            isUniqueIdentifier(uid) { isUnique in
+                if !isUnique {
+                    uidWarning = "Someone else has taken this UID, think about another one"
+                    isValid = false
+                } else {
+                    // Proceed with submission if both checks pass
+                    if isValid {
+                        onSubmit(username, uid)
+                    }
+                }
+            }
+        } else {
+            print("UID Unchanged")
+            // UID not changed, proceed if username check passes
+            if isValid {
+                onSubmit(username, uid)
+            }
+        }
     }
 }
 
@@ -186,113 +249,4 @@ func saveUserProfileToCloudKit(username: String, uid: String, completion: @escap
         }
     }
     completion()
-}
-
-class AuthViewModel: ObservableObject {
-    @Published var isAuthenticated: Bool = false
-    @Published var userExists: Bool = false
-    @Published var shouldShowProfileSetup: Bool = false
-    @Published var user: AppUser?
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init() {
-        isAuthenticated = UserDefaults.standard.bool(forKey: "logged")
-        $userExists
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] exists in
-                self?.updateShowingProfileSetup()
-            }
-            .store(in: &cancellables)
-    }
-    
-    func updateShowingProfileSetup() {
-        // Adjust this logic as needed. This is a simple example.
-        shouldShowProfileSetup = isAuthenticated && userExists == false
-    }
-    
-    func updateAuthenticationState(isAuthenticated: Bool) {
-        UserDefaults.standard.set(isAuthenticated, forKey: "logged")
-        self.isAuthenticated = isAuthenticated
-    }
-    
-    func fetchUserByAppleID(completion: @escaping (CKRecord?, Error?) -> Void) {
-        
-        guard let appleIDCredential = UserDefaults.standard.value(forKey: "appleIDUser") as? String else {
-            completion(nil, nil) // No appleIDCredential stored
-            return
-        }
-        let predicate = NSPredicate(format: "appleIDCredential == %@", appleIDCredential)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        let database = CKContainer.default().publicCloudDatabase
-        
-        database.perform(query, inZoneWith: nil) { records, error in
-            if let error = error {
-                completion(nil, error)
-                return
-            }
-            completion(records?.first, nil) // Assuming only one record per appleIDCredential
-        }
-    }
-    
-    // This function is for authorizing when the app is first logged in
-    func checkUserExistsWithAppleID(appleID: String) {
-        let predicate = NSPredicate(format: "appleIDCredential == %@", appleID)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        let database = CKContainer.default().publicCloudDatabase
-        
-        database.perform(query, inZoneWith: nil) { [weak self] records, error in
-            DispatchQueue.main.async {
-                guard let self = self, error == nil else {
-                    print("Error: \(error?.localizedDescription ?? "Unknown error")")
-                    return
-                }
-                
-                if let record = records?.first {
-                    self.userExists = true
-                    
-                    // Assuming 'name' and 'email' are the field names in your CloudKit record.
-                    let name = record["name"] as? String ?? "Unknown"
-                    let uid = record["uid"] as? String ?? "Unknown"
-                    
-                    // Saving to UserDefaults
-                    UserDefaults.standard.set(name, forKey: "name")
-                    UserDefaults.standard.set(uid, forKey: "uid")
-                    
-                } else {
-                    self.userExists = false
-                }
-            }
-        }
-    }
-    
-    func saveOrUpdateUserProfile(username: String, uid: String, completion: @escaping () -> Void) {
-        fetchUserByAppleID { record, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print("Fetch error: \(error.localizedDescription)")
-                    completion()
-                    return
-                }
-                
-                if let existingRecord = record {
-                    // Update the existing record
-                    existingRecord["name"] = username
-                    existingRecord["uid"] = uid
-                    updateUserRecord(existingRecord, completion: completion)
-                    self.user = AppUser(name: username, uid: uid, authMethod: .apple)
-                } else {
-                    // No existing record, create a new one
-                    self.user = AppUser(name: username, uid: uid, authMethod: .apple)
-                    saveUserProfileToCloudKit(username: username, uid: uid, completion: completion)
-                }
-            }
-        }
-    }
-    
-    func setUserExists(_ exists: Bool) {
-        DispatchQueue.main.async {
-            self.userExists = exists
-        }
-    }
 }

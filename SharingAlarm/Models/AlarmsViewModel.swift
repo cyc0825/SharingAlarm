@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import CloudKit
 
-struct Alarm: Identifiable, Codable {
-    var id = UUID()
+struct Alarm: Hashable {
+    var recordID: CKRecord.ID
     var time: Date
     var sound: String
     var repeatInterval: String
@@ -17,39 +18,91 @@ struct Alarm: Identifiable, Codable {
 class AlarmsViewModel: ObservableObject {
     @Published var alarms: [Alarm] = [] {
         didSet {
-            saveAlarms()
+            //saveAlarms()
         }
     }
 
     let alarmsKey = "alarmsData"
 
     init() {
-        loadAlarms()
+        //loadAlarms()
     }
     let sounds = ["Harmony", "Ripples", "Signal"]
     let intervals = ["None", "Daily", "Weekly"]
     
-    func loadAlarms() {
-        guard let data = UserDefaults.standard.data(forKey: alarmsKey),
-              let storedAlarms = try? JSONDecoder().decode([Alarm].self, from: data) else { return }
-        self.alarms = storedAlarms
+    func fetchUpdatedRecords(ofType recordType: String, since lastFetchDate: Date, completion: @escaping (Result<Date, Error>) -> Void) {
+        // Predicate to fetch records modified after 'lastFetchDate'
+        let predicate = NSPredicate(format: "modificationDate > %@", lastFetchDate as CVarArg)
+        let query = CKQuery(recordType: recordType, predicate: predicate)
+        
+        // You can also specify sorting if needed
+        let sortDescriptor = NSSortDescriptor(key: "modificationDate", ascending: true)
+        query.sortDescriptors = [sortDescriptor]
+        let operation = CKQueryOperation(query: query)
+        var mostRecentUpdate: Date = lastFetchDate
+        operation.recordMatchedBlock = { (recordID, result) in
+            switch result {
+            case .success(let record):
+                DispatchQueue.main.async {
+                    guard !self.alarms.contains(where: { $0.recordID == recordID }) else {
+                        return
+                    }
+                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
+                        mostRecentUpdate = modificationDate
+                    }
+                    let alarm = Alarm(recordID: recordID, time: record["time"] as? Date ?? Date(), sound: record["sound"] as? String ?? "Nil", repeatInterval: record["interval"] as? String ?? "Nil")
+                    self.alarms.append(alarm)
+                }
+            case .failure(let error):
+                print("Error fetching record: \(error)")
+            }
+        }
+        operation.queryResultBlock = { result in
+            switch result {
+            case .success(let cursor):
+                if let cursor = cursor {
+                    print("Additional data available with cursor: \(cursor)")
+                } else {
+                    print("Fetched all data. No additional data to fetch.")
+                }
+                completion(.success((mostRecentUpdate)))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+        
+        CKContainer.default().publicCloudDatabase.add(operation)
     }
-
-    func saveAlarms() {
-        if let encodedData = try? JSONEncoder().encode(alarms) {
-            UserDefaults.standard.set(encodedData, forKey: alarmsKey)
+    
+    func addAlarm(time: Date, sound: String, repeatInterval: String, completion: @escaping (Result<Alarm, Error>) -> Void) {
+        let newAlarm = CKRecord(recordType: "AlarmData")
+        newAlarm["time"] = time
+        newAlarm["sound"] = sound
+        newAlarm["interval"] = repeatInterval
+        
+        CKContainer.default().publicCloudDatabase.save(newAlarm) { (record, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                } else if let recordID = record?.recordID {
+                    let newAlarm = Alarm(recordID: recordID, time: time, sound: sound, repeatInterval: repeatInterval)
+                    self.alarms.append(newAlarm)
+                    completion(.success((newAlarm)))
+                }
+            }
         }
     }
     
-    func addAlarm(time: Date) {
-        let newAlarm = Alarm(time: time, sound: "Harmony", repeatInterval: "None")
-        alarms.append(newAlarm)
-    }
-    
-    func removeAlarm(with id: UUID) {
-        if let index = alarms.firstIndex(where: { $0.id == id }) {
-            alarms.remove(at: index)
-            saveAlarms()
+    func removeAlarm(recordID: CKRecord.ID, completion: @escaping (Result<Void, Error>) -> Void) {
+        print("Removing")
+        CKContainer.default().publicCloudDatabase.delete(withRecordID: recordID) { (record, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
         }
     }
 }

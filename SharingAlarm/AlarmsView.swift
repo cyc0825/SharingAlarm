@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct AlarmsView: View {
     @StateObject var viewModel = AlarmsViewModel()
@@ -21,8 +22,8 @@ struct AlarmsView: View {
                 
                 // List of Alarms
                 List {
-                    ForEach(viewModel.alarms, id: \.id) { alarm in
-                        NavigationLink(destination: AlarmDetailView(viewModel: viewModel, alarmId: alarm.id)) {
+                    ForEach(viewModel.alarms, id: \.recordID) { alarm in
+                        NavigationLink(destination: AlarmDetailView(viewModel: viewModel, alarmId: alarm.recordID)) {
                             Text("Alarm at \(alarm.time.formatted(date: .omitted, time: .shortened))")
                         }
                     }
@@ -37,6 +38,30 @@ struct AlarmsView: View {
                     }
                 }
             }
+            .onAppear{
+                let lastFetchDate = UserDefaults.standard.object(forKey: "lastFetchAlarmDateKey") as? Date ?? Date()
+                viewModel.fetchUpdatedRecords(ofType: "AlarmData", since: lastFetchDate) { result in
+                    switch result {
+                    case .success(let mostRecentUpdate):
+                        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFetchAlarmDateKey")
+                        
+                    case .failure(let error):
+                        print("Error fetching updated records: \(error.localizedDescription)")
+                    }
+                }
+            }
+            .refreshable {
+                let lastFetchDate = UserDefaults.standard.object(forKey: "lastFetchAlarmDateKey") as? Date ?? Date()
+                viewModel.fetchUpdatedRecords(ofType: "AlarmData", since: lastFetchDate) { result in
+                    switch result {
+                    case .success(let mostRecentUpdate):
+                        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFetchAlarmDateKey")
+                        
+                    case .failure(let error):
+                        print("Error fetching updated records: \(error.localizedDescription)")
+                    }
+                }
+            }
             .navigationTitle("Alarms")
             .navigationBarItems(trailing: Button(action: {
                 showingAddAlarm = true
@@ -45,9 +70,15 @@ struct AlarmsView: View {
             })
             .sheet(isPresented: $showingAddAlarm) {
                 AddAlarmView(isPresented: $showingAddAlarm) { time, repeatInterval, sound in
-                    let newAlarm = Alarm(time: time, sound: sound, repeatInterval: repeatInterval)
-                    viewModel.alarms.append(newAlarm)
-                    scheduleNotification(for: newAlarm)
+                    viewModel.addAlarm(time: time, sound: sound, repeatInterval: repeatInterval) { result in
+                        switch result {
+                        case .success(let newAlarm):
+                            scheduleNotification(for: newAlarm)
+                            print("add successfully")
+                        case .failure(let error):
+                            print("Failed to add alarm: \(error.localizedDescription)")
+                        }}
+                    
                 }
             }
         }
@@ -97,10 +128,10 @@ struct AlarmDetailView: View {
     @ObservedObject var viewModel: AlarmsViewModel
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
-    let alarmId: UUID
+    let alarmId: CKRecord.ID
     
     var alarmIndex: Int? {
-        viewModel.alarms.firstIndex(where: { $0.id == alarmId })
+        viewModel.alarms.firstIndex(where: { $0.recordID == alarmId })
     }
     
     var body: some View {
@@ -122,8 +153,18 @@ struct AlarmDetailView: View {
                 
                 Button("Delete Alarm") {
                     presentationMode.wrappedValue.dismiss()
-                    viewModel.removeAlarm(with: alarmId)
-                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [alarmId.uuidString])
+                    viewModel.removeAlarm(recordID: viewModel.alarms[alarmIndex].recordID) { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success():
+                                viewModel.alarms.remove(at: alarmIndex)
+                            case .failure(let error):
+                                print("Failed to remove alarm: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+//                    viewModel.removeAlarm(with: alarmId)
+//                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [alarmId.uuidString])
                 }
                 .foregroundColor(.red)
             }

@@ -12,6 +12,8 @@ struct FriendsView: View {
     @StateObject var viewModel = FriendsViewModel()
     @State private var showingAddFriend = false
     @State private var hasNewFriendRequests = false
+    @State private var showDeleteConfirmation = false
+    @State private var friendIDToDelete: Int?
     
     var body: some View {
         NavigationView {
@@ -20,28 +22,45 @@ struct FriendsView: View {
                     Text("Tap the add button and add your friends.")
                         .padding()
                 } else {
-                    List(viewModel.friends, id: \.recordID) { friend in
-                        Text(friend.name)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    viewModel.removeFriendship(recordID: friend.recordID) { result in
-                                        switch result {
-                                        case .success():
-                                            print("Request removed successfully.")
-                                        case .failure(let error):
-                                            print("Failed to remove friend: \(error.localizedDescription)")
-                                        }
-                                    }       
+                    List(viewModel.friends.indices, id: \.self) { index in
+                        Text(viewModel.friends[index].name)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button {
+                                    friendIDToDelete = index
+                                    showDeleteConfirmation = true
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
+                                .tint(.red)
                             }
+                    }
+                    .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                        Button("Delete", role: .destructive) {
+                            guard let friendIDToDelete = friendIDToDelete else { return }
+                            viewModel.removeFriendship(recordID: viewModel.friends[friendIDToDelete].recordID) { result in
+                                switch result {
+                                case .success():
+                                    viewModel.friends.remove(at: friendIDToDelete)
+                                case .failure(let error):
+                                    print("Failed to remove friend: \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                        Button("Cancel", role: .cancel) {}
+                    } message: {
+                        if let friendIDToDelete = friendIDToDelete {
+                            Text("Would you like to remove \(viewModel.friends[friendIDToDelete].name) from your friends list?")
+                        }
                     }
                 }
             }
             .onAppear{
                 viewModel.searchRequest()
                 viewModel.fetchFriends()
+            }
+            .refreshable {
+                viewModel.fetchFriends()
+                viewModel.searchRequest()
             }
             .navigationTitle("Friends")
             .navigationBarItems(trailing: Button(action: {

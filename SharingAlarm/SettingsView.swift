@@ -81,6 +81,7 @@ struct ProfileView: View {
                         UserDefaults.standard.removeObject(forKey: "appleIDUser")
                         UserDefaults.standard.removeObject(forKey: "name")
                         UserDefaults.standard.removeObject(forKey: "uid")
+                        UserDefaults.standard.removeObject(forKey: "lastFetchDateKey")
                     }
                     .foregroundColor(.red)
                     
@@ -95,11 +96,15 @@ struct ProfileView: View {
                 .ignoresSafeArea()
         }
         .sheet(isPresented: $showingProfileEdit) {
-            ProfileSetupView { username, uid in
-                authViewModel.saveOrUpdateUserProfile(username: username, uid: uid) {
-                    showingProfileEdit = false
-                }
-            }
+            ProfileSetupView(
+                onSubmit: { username, uid in
+                    authViewModel.saveOrUpdateUserProfile(username: username, uid: uid) {
+                        showingProfileEdit = false
+                    }
+                },
+                initialUsername: userName,
+                initialUid: uid
+            )
             .environment(\.colorScheme, .light)
         }
     }
@@ -115,8 +120,4 @@ struct AlarmSoundShopView: View {
     var body: some View {
         Text("Alarm Sound Shop")
     }
-}
-
-#Preview {
-    ProfileView()
 }
