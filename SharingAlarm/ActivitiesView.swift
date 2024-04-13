@@ -23,14 +23,18 @@ struct ActivitiesView: View {
                 }
             }
             .navigationTitle("Activities")
-        }
-        .navigationBarItems(trailing: Button(action: {
-            showingAddActivity = true
-        }) {
-            Image(systemName: "calendar.badge.plus")
-        })
-        .sheet(isPresented: $showingAddActivity) {
-            AddActivityView()
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showingAddActivity = true
+                    }) {
+                        Image(systemName: "calendar.badge.plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddActivity) {
+                AddActivityView()
+            }
         }
     }
 }
@@ -43,12 +47,18 @@ struct AddActivityView: View {
                 Text("Add")
             }
             .navigationBarTitle("Add Activity", displayMode: .inline)
-            .navigationBarItems(leading: Button("Cancel") {
-                presentationMode.wrappedValue.dismiss()
-            })
-            .navigationBarItems(leading: Button("Save") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Save") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
         }
     }
 }

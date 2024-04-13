@@ -52,6 +52,9 @@ class AlarmsViewModel: ObservableObject {
                     }
                     let alarm = Alarm(recordID: recordID, time: record["time"] as? Date ?? Date(), sound: record["sound"] as? String ?? "Nil", repeatInterval: record["interval"] as? String ?? "Nil")
                     self.alarms.append(alarm)
+                    self.alarms.sort {
+                        $0.time < $1.time
+                    }
                 }
             case .failure(let error):
                 print("Error fetching record: \(error)")

@@ -63,15 +63,19 @@ struct FriendsView: View {
                 viewModel.searchRequest()
             }
             .navigationTitle("Friends")
-            .navigationBarItems(trailing: Button(action: {
-                showingAddFriend = true
-            }) {
-                if viewModel.friendRequests.count > 0 {
-                    Image(systemName: "plus.circle")
-                } else {
-                    Image(systemName: "plus")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showingAddFriend = true
+                    }) {
+                        if viewModel.friendRequests.count > 0 {
+                            Image(systemName: "plus.circle")
+                        } else {
+                            Image(systemName: "plus")
+                        }
+                    }
                 }
-            })
+            }
             .sheet(isPresented: $showingAddFriend) {
                 AddFriendView(viewModel: viewModel)
             }
@@ -115,9 +119,13 @@ struct AddFriendView: View {
                 viewModel.searchRequest()
             }
             .navigationBarTitle("Add Friends", displayMode: .inline)
-            .navigationBarItems(leading: Button("Cancel") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
         }
     }
 }

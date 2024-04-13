@@ -12,8 +12,24 @@ struct ActivityCard: View {
     var body: some View {
         ZStack {
             Color.accentColor.ignoresSafeArea(edges: .all)
-            Text("ActivityCard")
+            VStack {
+                Spacer()
+                Text("ActivityName")
+                Text("Next Alarm: ")
+                HStack{
+                    Rectangle()
+                        .fill(.gray)
+                        .frame(width:35, height:35)
+                        .cornerRadius(10)
+                }
+                Spacer()
+            }
         }
         .frame(width: UIScreen.main.bounds.width * 4 / 5, height: 100)
+        .cornerRadius(10)
     }
+}
+
+#Preview {
+    ActivityCard(viewModel: ActivitiesViewModel())
 }

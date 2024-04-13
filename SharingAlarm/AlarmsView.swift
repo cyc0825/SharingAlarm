@@ -15,10 +15,7 @@ struct AlarmsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Image("alarmsvg")
-                    .resizable()
-                    .frame(width: 300,height: 300)
-                    .padding()
+                AlarmInterfaceView(viewModel: viewModel)
                 
                 // List of Alarms
                 List {
@@ -29,14 +26,14 @@ struct AlarmsView: View {
                     }
                 }
                 .listStyle(PlainListStyle())
-                Section(header: Text("Next Alarm")) {
-                    if let nextAlarm = viewModel.nextAlarm {
-                        Text("Alarm at \(nextAlarm.time.formatted(date: .omitted, time: .shortened))")
-                        Text("\(viewModel.timeUntilNextAlarm())")
-                    } else {
-                        Text("No upcoming alarms")
-                    }
-                }
+//                Section(header: Text("Next Alarm")) {
+//                    if let nextAlarm = viewModel.nextAlarm {
+//                        Text("Alarm at \(nextAlarm.time.formatted(date: .omitted, time: .shortened))")
+//                        Text("\(viewModel.timeUntilNextAlarm())")
+//                    } else {
+//                        Text("No upcoming alarms")
+//                    }
+//                }
             }
             .onAppear{
                 let lastFetchDate = UserDefaults.standard.object(forKey: "lastFetchAlarmDateKey") as? Date ?? Date()
@@ -163,8 +160,6 @@ struct AlarmDetailView: View {
                             }
                         }
                     }
-//                    viewModel.removeAlarm(with: alarmId)
-//                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [alarmId.uuidString])
                 }
                 .foregroundColor(.red)
             }
