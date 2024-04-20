@@ -13,11 +13,22 @@ struct AlarmInterfaceView: View {
     var colorSet: [Color] = [Color.accentColor, Color.secondAccent, Color.thirdAccent]
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
+    func arcTapped(index: Int) {
+        viewModel.selectedAlarm = viewModel.alarms[index]
+        print("Arc: ", index, " tapped")
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             let clockCenter = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
             let clockRadius: CGFloat = min(geometry.size.width, geometry.size.height) * 0.25 // 25% of the smallest dimension
             ZStack {
+                Rectangle()
+                    .fill(BackgroundStyle())
+                    .onTapGesture {
+                        viewModel.selectedAlarm = nil
+                    }
+                
                 // Draw minute lines around the circle
                 ForEach(0..<60) { i in
                     Path { path in
@@ -38,7 +49,7 @@ struct AlarmInterfaceView: View {
                 // Hour Pointer
                 
                 
-                ForEach(viewModel.alarms.indices, id: \.self) { index in
+                ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
                     let alarmDate = viewModel.alarms[index].time
                     let countdownDuration = alarmDate.timeIntervalSince(Date())
                     let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
@@ -48,19 +59,14 @@ struct AlarmInterfaceView: View {
                             endAngle: Angle(degrees: endAngleDegree-90),
                             lineWidth: 20,
                             color: colorSet[index],
+                            action: self.arcTapped,
                             index: index)
                         .frame(width: geometry.size.width, height: geometry.size.height)
-                    PointerView(width: 6, height: 60, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
+                    PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
                 }
             }
-            
         }
         .frame(height: 400)
-        .onReceive(timer) { _ in
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.hour, .minute, .second], from: Date())
-            currentTime = Time(hour: components.hour ?? 0, minute: components.minute ?? 0, second: components.second ?? 0)
-        }
     }
 }
 
@@ -98,7 +104,7 @@ struct ArcView: View {
     var endAngle: Angle
     var lineWidth: CGFloat
     var color: Color
-    
+    var action: (Int) -> Void
     var index: Int
     
     @GestureState private var tapped = false // Tracks the tap state
@@ -113,7 +119,7 @@ struct ArcView: View {
                     gestureState = currentState
                 }
                 .onEnded { _ in
-                    self.arcTapped(index: index)
+                    self.action(index)
                 }
             
             // Animated drawing of the arc
@@ -138,10 +144,6 @@ struct ArcView: View {
             }
             
         }
-    }
-    
-    func arcTapped(index: Int) {
-        print("Arc: ", index, " tapped")
     }
 }
 

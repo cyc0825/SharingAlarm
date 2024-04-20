@@ -13,6 +13,8 @@ import EventKit
 @main
 struct SharingAlarmApp: App {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var friendViewModel = FriendsViewModel()
+    @StateObject private var activityViewModel = ActivitiesViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -26,6 +28,8 @@ struct SharingAlarmApp: App {
             if authViewModel.isAuthenticated {
                 ContentView()
                     .environmentObject(authViewModel)
+                    .environmentObject(friendViewModel)
+                    .environmentObject(activityViewModel)
                     .environment(\.colorScheme, .light)
             } else {
                 LoginView(authViewModel: authViewModel)

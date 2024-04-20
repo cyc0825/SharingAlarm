@@ -9,15 +9,16 @@ import SwiftUI
 import CloudKit
 
 struct FriendsView: View {
-    @StateObject var viewModel = FriendsViewModel()
+    @EnvironmentObject var viewModel: FriendsViewModel
     @State private var showingAddFriend = false
     @State private var hasNewFriendRequests = false
     @State private var showDeleteConfirmation = false
     @State private var friendIDToDelete: Int?
-    
+    @State private var friendToDelete: String?
+
     var body: some View {
         NavigationView {
-            Group {
+            ZStack {
                 if viewModel.friends.isEmpty {
                     Text("Tap the add button and add your friends.")
                         .padding()
@@ -27,6 +28,7 @@ struct FriendsView: View {
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 Button {
                                     friendIDToDelete = index
+                                    friendToDelete = viewModel.friends[friendIDToDelete!].name
                                     showDeleteConfirmation = true
                                 } label: {
                                     Label("Delete", systemImage: "trash")
@@ -49,14 +51,10 @@ struct FriendsView: View {
                         Button("Cancel", role: .cancel) {}
                     } message: {
                         if let friendIDToDelete = friendIDToDelete {
-                            Text("Would you like to remove \(viewModel.friends[friendIDToDelete].name) from your friends list?")
+                            Text("Would you like to remove \(friendToDelete!) from your friends list?")
                         }
                     }
                 }
-            }
-            .onAppear{
-                viewModel.searchRequest()
-                viewModel.fetchFriends()
             }
             .refreshable {
                 viewModel.fetchFriends()
@@ -117,6 +115,9 @@ struct AddFriendView: View {
             }
             .onAppear{
                 viewModel.searchRequest()
+            }
+            .onDisappear{
+                viewModel.fetchFriends()
             }
             .navigationBarTitle("Add Friends", displayMode: .inline)
             .toolbar {

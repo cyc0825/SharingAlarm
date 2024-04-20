@@ -14,7 +14,7 @@ class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var userExists: Bool = false
     @Published var shouldShowProfileSetup: Bool = false
-    @Published var user: AppUser?
+    @Published var user: User?
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -101,12 +101,19 @@ class AuthViewModel: ObservableObject {
                     // Update the existing record
                     existingRecord["name"] = username
                     existingRecord["uid"] = uid
-                    updateUserRecord(existingRecord, completion: completion)
-                    self.user = AppUser(name: username, uid: uid, authMethod: .apple)
+                    self.updateUserRecord(existingRecord, completion: completion)
+                    self.user = User(recordID: existingRecord.recordID, name: username, uid: uid)
                 } else {
                     // No existing record, create a new one
-                    self.user = AppUser(name: username, uid: uid, authMethod: .apple)
-                    saveUserProfileToCloudKit(username: username, uid: uid, completion: completion)
+                    self.saveUserProfileToCloudKit(username: username, uid: uid) { result in
+                        switch result {
+                        case .success(let user):
+                            print("Successfully create User")
+                        case .failure(let error):
+                            print("Failed to create user: \(error.localizedDescription)")
+                        }
+                        
+                    }
                 }
             }
         }
@@ -117,4 +124,38 @@ class AuthViewModel: ObservableObject {
             self.userExists = exists
         }
     }
+    
+    func saveUserProfileToCloudKit(username: String, uid: String, completion: @escaping (Result<User, Error>) -> Void) {
+        let newRecord = CKRecord(recordType: "UserData")
+        newRecord["appleIDCredential"] = UserDefaults.standard.value(forKey: "appleIDUser") as! String
+        newRecord["name"] = username
+        newRecord["uid"] = uid
+        UserDefaults.standard.set(username, forKey: "name")
+        UserDefaults.standard.set(uid, forKey: "uid")
+        print("Add to cloud")
+        
+        CKContainer.default().publicCloudDatabase.save(newRecord) { record, error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let recordID = record?.recordID {
+                let user = User(recordID: recordID, name: username, uid: uid)
+                self.user = user
+                completion(.success((user)))
+            }
+        }
+    }
+    
+    func updateUserRecord(_ record: CKRecord, completion: @escaping () -> Void) {
+        // Similar to the save logic in `saveUserProfileToCloudKit`
+        // but use the passed `record` instead of creating a new CKRecord
+        CKContainer.default().publicCloudDatabase.save(record) { savedRecord, error in
+            if let error = error {
+                print("Update error: \(error.localizedDescription)")
+            } else {
+                print("User updated successfully")
+            }
+            completion()
+        }
+    }
+
 }

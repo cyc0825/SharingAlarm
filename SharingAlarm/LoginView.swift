@@ -219,34 +219,3 @@ struct ProfileSetupView: View {
         }
     }
 }
-
-func updateUserRecord(_ record: CKRecord, completion: @escaping () -> Void) {
-    // Similar to the save logic in `saveUserProfileToCloudKit`
-    // but use the passed `record` instead of creating a new CKRecord
-    CKContainer.default().publicCloudDatabase.save(record) { savedRecord, error in
-        if let error = error {
-            print("Update error: \(error.localizedDescription)")
-        } else {
-            print("User updated successfully")
-        }
-        completion()
-    }
-}
-
-func saveUserProfileToCloudKit(username: String, uid: String, completion: @escaping () -> Void) {
-    let newRecord = CKRecord(recordType: "UserData")
-    newRecord["appleIDCredential"] = UserDefaults.standard.value(forKey: "appleIDUser") as! String
-    newRecord["name"] = username
-    newRecord["uid"] = uid
-    UserDefaults.standard.set(username, forKey: "name")
-    UserDefaults.standard.set(uid, forKey: "uid")
-    print("Add to cloud")
-    
-    CKContainer.default().publicCloudDatabase.save(newRecord) { record, error in
-        if let error = error {
-            print("An error occurred: \(error.localizedDescription)")
-            return
-        }
-    }
-    completion()
-}

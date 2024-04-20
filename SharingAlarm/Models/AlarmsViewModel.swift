@@ -21,19 +21,17 @@ class AlarmsViewModel: ObservableObject {
             //saveAlarms()
         }
     }
+    @Published var selectedAlarm: Alarm?
 
     let alarmsKey = "alarmsData"
 
-    init() {
-        //loadAlarms()
-    }
     let sounds = ["Harmony", "Ripples", "Signal"]
     let intervals = ["None", "Daily", "Weekly"]
     
-    func fetchUpdatedRecords(ofType recordType: String, since lastFetchDate: Date, completion: @escaping (Result<Date, Error>) -> Void) {
-        // Predicate to fetch records modified after 'lastFetchDate'
+    func fetchUpdatedRecords() {
+        let lastFetchDate = UserDefaults.standard.value(forKey: "lastAlarmFetchDate") as? Date ?? Date.distantPast
         let predicate = NSPredicate(format: "modificationDate > %@", lastFetchDate as CVarArg)
-        let query = CKQuery(recordType: recordType, predicate: predicate)
+        let query = CKQuery(recordType: "AlarmData", predicate: predicate)
         
         // You can also specify sorting if needed
         let sortDescriptor = NSSortDescriptor(key: "modificationDate", ascending: true)
@@ -68,12 +66,11 @@ class AlarmsViewModel: ObservableObject {
                 } else {
                     print("Fetched all data. No additional data to fetch.")
                 }
-                completion(.success((mostRecentUpdate)))
             case .failure(let error):
-                completion(.failure(error))
+                print("Query failed with error: \(error.localizedDescription)")
             }
         }
-        
+        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastAlarmFetchDate")
         CKContainer.default().publicCloudDatabase.add(operation)
     }
     
@@ -122,4 +119,22 @@ extension AlarmsViewModel {
         let minutes = Int(timeInterval) / 60 % 60
         return "\(hours) hours, \(minutes) minutes remaining"
     }
+}
+
+class AlarmDetailsViewModel: ObservableObject {
+    var alarm: Alarm? {
+        didSet {
+            if let alarm = alarm {
+                time = alarm.time
+                repeatInterval = alarm.repeatInterval
+                sound = alarm.sound
+            }
+        }
+    }
+    
+    @Published var time: Date = Date()
+    @Published var repeatInterval: String = ""
+    @Published var sound: String = "Default"
+    
+    // Add functionality to modify alarm details as needed
 }

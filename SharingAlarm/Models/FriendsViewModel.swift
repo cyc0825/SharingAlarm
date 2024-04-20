@@ -8,8 +8,6 @@
 import Foundation
 import CloudKit
 
-
-
 struct FriendRequest: Hashable{
     var recordID: CKRecord.ID
     var senderID: String
@@ -134,16 +132,16 @@ class FriendsViewModel: ObservableObject {
                     self.friendRequests.append(newRequest)
                 }
             case .failure(let error):
-                print("Failed to fetch record: \(error.localizedDescription)")
+                print("Failed to fetch friend: \(error.localizedDescription)")
             }
         }
         operation.queryResultBlock = { result in
             switch result {
             case .success(let cursor):
                 if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
+                    print("Additional friend available with cursor: \(cursor)")
                 } else {
-                    print("Fetched all data. No additional data to fetch.")
+                    print("Fetched all friend. No additional data to fetch.")
                 }
             case .failure(let error):
                 print("Query failed with error: \(error.localizedDescription)")
@@ -187,7 +185,7 @@ class FriendsViewModel: ObservableObject {
     
     func fetchFriends() {
         guard let currentUserID = UserDefaults.standard.value(forKey: "uid") as? String else { return }
-        let lastFetchDate = UserDefaults.standard.value(forKey: "lastFriendFetchDate") as? Date ?? Date.distantPast
+        let lastFetchDate = Date.distantPast
         
         let predicate1 = NSPredicate(format: "modificationDate > %@ AND userID1 == %@", argumentArray: [lastFetchDate, currentUserID])
         let predicate2 = NSPredicate(format: "modificationDate > %@ AND userID2 == %@", argumentArray: [lastFetchDate, currentUserID])

@@ -10,6 +10,8 @@ import CoreData
 
 struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var friendViewModel: FriendsViewModel
+    @EnvironmentObject var activityViewModel: ActivitiesViewModel
     @State private var loaded = false
     @State private var showingAlarmView = false
     var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String
@@ -40,6 +42,11 @@ struct ContentView: View {
             .onAppear {
                 if !loaded {
                     authViewModel.checkUserExistsWithAppleID(appleID: userAppleId)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
+                        friendViewModel.searchRequest()
+                        friendViewModel.fetchFriends()
+                        activityViewModel.fetchActivity()
+                    }
                     loaded = true
                 }
             }

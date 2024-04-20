@@ -35,7 +35,7 @@ struct SettingsView: View {
 }
 
 struct ProfileView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel // Assuming you have this for authentication
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var showingProfileEdit = false
     
     let userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Unknown"
@@ -81,7 +81,8 @@ struct ProfileView: View {
                         UserDefaults.standard.removeObject(forKey: "appleIDUser")
                         UserDefaults.standard.removeObject(forKey: "name")
                         UserDefaults.standard.removeObject(forKey: "uid")
-                        UserDefaults.standard.removeObject(forKey: "lastFetchDateKey")
+                        UserDefaults.standard.removeObject(forKey: "lastAlarmFetchDate")
+                        UserDefaults.standard.removeObject(forKey: "lastFriendRequestFetchDate")
                     }
                     .foregroundColor(.red)
                     
