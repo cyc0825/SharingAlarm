@@ -71,25 +71,35 @@ class ActivitiesViewModel: ObservableObject {
 
     }
     
-    func addActivity(name: String, startDate: Date, endDate: Date, participants: [String], completion: @escaping (Result<Void, Error>) -> Void) {
+    func addActivity(name: String, startDate: Date, endDate: Date, participants: [User], completion: @escaping (Result<Activity, Error>) -> Void) {
         guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
         let newActivity = CKRecord(recordType: "ActivityData")
-        var participants = participants
-        participants.append(uid)
+        var participantsUID = convertUserToUID(Users: participants)
+        
+        participantsUID.append(uid)
         newActivity["name"] = name
         newActivity["startDate"] = startDate
         newActivity["endDate"] = endDate
-        newActivity["participants"] = participants
+        newActivity["participants"] = participantsUID
         
         CKContainer.default().publicCloudDatabase.save(newActivity) { (record, error) in
             DispatchQueue.main.async {
                 if let error = error {
                     completion(.failure(error))
-                } else {
-                    completion(.success(()))
+                } else  if let record = record{
+                    let activity = Activity(recordID: record.recordID, from: startDate, to: endDate, name: name, participants: participants)
+                    completion(.success((activity)))
                 }
             }
         }
+    }
+    
+    func convertUserToUID(Users: [User]) -> [String] {
+        var result: [String] = []
+        for user in Users {
+            result.append(user.uid)
+        }
+        return result
     }
     
     func removeActivity(recordID: CKRecord.ID, completion: @escaping (Result<Void, Error>) -> Void){

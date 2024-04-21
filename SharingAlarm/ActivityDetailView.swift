@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ActivityDetailView: View {
-    @StateObject var viewModel = ActivitiesViewModel()
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @ObservedObject var viewModel: ActivitiesViewModel
     @State private var friendToDelete: String?
     let activity: Activity
     
@@ -19,8 +20,8 @@ struct ActivityDetailView: View {
     var body: some View {
         NavigationView {
             List {
-                Section {
-                    List(activity.participants.indices, id: \.self) { index in
+                Section(header: Text("Participants")) {
+                    ForEach(activity.participants.indices, id: \.self) { index in
                         Text(activity.participants[index].name)
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 Button {
@@ -32,13 +33,13 @@ struct ActivityDetailView: View {
                             }
                     }
                 }
-                .frame(minHeight: 100)
                 
                 Section {
-                    Button("Delete", role: .destructive) {
+                    Button("Delete") {
                         viewModel.removeActivity(recordID: viewModel.activities[activityIndex].recordID) { result in
                             switch result {
                             case .success():
+                                self.presentationMode.wrappedValue.dismiss()
                                 viewModel.activities.remove(at: activityIndex)
                             case .failure(let error):
                                 print("Failed to remove activity: \(error.localizedDescription)")

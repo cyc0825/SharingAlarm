@@ -77,7 +77,7 @@ class FriendsViewModel: ObservableObject {
         }
     }
     
-    func addFriendship(fromRequest request: FriendRequest, receiverID: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func addFriendship(fromRequest request: FriendRequest, receiverID: String, completion: @escaping (Result<User, Error>) -> Void) {
         let newFriendship = CKRecord(recordType: "Friendship")
         newFriendship["userID1"] = receiverID
         newFriendship["userID2"] = request.senderID
@@ -86,8 +86,9 @@ class FriendsViewModel: ObservableObject {
             DispatchQueue.main.async {
                 if let error = error {
                     completion(.failure(error))
-                } else {
-                    completion(.success(()))
+                } else if let record = record {
+                    let user = User(recordID: newFriendship.recordID, name: request.senderName , uid: request.senderID)
+                    completion(.success(user))
                 }
             }
         }

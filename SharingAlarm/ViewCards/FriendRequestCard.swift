@@ -37,7 +37,8 @@ struct FriendRequestCard: View {
                                     print("Request removed successfully.")
                                     viewModel.addFriendship(fromRequest: viewModel.friendRequests[index], receiverID: UserDefaults.standard.value(forKey: "uid") as! String) { result in
                                         switch result {
-                                        case .success():
+                                        case .success(let friend):
+                                            viewModel.friends.append(friend)
                                             print("Friendship added successfully.")
                                             viewModel.friendRequests.remove(at: index)
                                         case .failure(let error):

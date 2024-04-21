@@ -13,13 +13,13 @@ struct ActivitiesView: View {
     @State private var showingAddActivity = false
     var body: some View {
         NavigationView {
-            Group{
+            ZStack{
                 if viewModel.activities.isEmpty {
                     Text("There is no activity happening")
                         .padding()
                 } else {
                     List(viewModel.activities.indices, id: \.self) { index in
-                        NavigationLink(destination: ActivityDetailView(activity: viewModel.activities[index])) {
+                        NavigationLink(destination: ActivityDetailView(viewModel: viewModel, activity: viewModel.activities[index])) {
                             ActivityCard(viewModel: viewModel, index: index)
                         }
                     }
@@ -98,9 +98,6 @@ struct AddActivityView: View {
                 }
             }
             .navigationBarTitle("Add Activity", displayMode: .inline)
-            .onDisappear{
-                viewModel.fetchActivity()
-            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
@@ -109,9 +106,10 @@ struct AddActivityView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        viewModel.addActivity(name: name, startDate: startDate, endDate: endDate, participants: convertUserToUID(Users: participants)){ result in
+                        viewModel.addActivity(name: name, startDate: startDate, endDate: endDate, participants: participants){ result in
                             switch result {
-                            case .success():
+                            case .success(let activity):
+                                viewModel.activities.append(activity)
                                 print("Successfully add activity")
                             case .failure(let error):
                                 print("Failed to add alarm: \(error.localizedDescription)")
@@ -126,14 +124,6 @@ struct AddActivityView: View {
                 FriendPicker(selectedFriends: $participants)
             }
         }
-    }
-    
-    func convertUserToUID(Users: [User]) -> [String] {
-        var result: [String] = []
-        for user in Users {
-            result.append(user.uid)
-        }
-        return result
     }
 }
 
