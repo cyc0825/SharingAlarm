@@ -83,7 +83,7 @@ func subscribeToFriendRequests() {
     }
 }
 
-func scheduleNotification(for alarm: Alarm) {
+func scheduleNotification(for alarm: Alarm, viewModel: AlarmsViewModel) {
     let content = UNMutableNotificationContent()
     content.title = "Alarm"
     content.body = "Your alarm is going off!"
@@ -103,20 +103,29 @@ func scheduleNotification(for alarm: Alarm) {
             var updatedAlarm = alarm
             updatedAlarm.notificationIdentifier = identifier
             // Now update the CloudKit record
-            updateCloudKitRecord(for: updatedAlarm)
+            print("Scheduled notification, now updateCloudKitRecord")
+            updateCloudKitRecord(for: updatedAlarm, viewModel: viewModel)
+            
         }
     }
 }
 
-func modifyNotification(for alarm: Alarm) {
+func modifyNotification(for alarm: Alarm, viewModel: AlarmsViewModel) {
     guard let identifier = alarm.notificationIdentifier else {
         return
     }
     UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-    scheduleNotification(for: alarm)
+    viewModel.removeAlarm(recordID: alarm.recordID) { result in
+        switch result {
+        case .success():
+            scheduleNotification(for: alarm, viewModel: viewModel)
+        case .failure(let error):
+            print("Error removing alarm record: \(error.localizedDescription)")
+        }
+    }
 }
 
-func updateCloudKitRecord(for alarm: Alarm) {
+func updateCloudKitRecord(for alarm: Alarm, viewModel: AlarmsViewModel) {
     let record = alarm.toCKRecord()
     let database = CKContainer.default().publicCloudDatabase
     database.save(record) { savedRecord, error in
@@ -124,6 +133,9 @@ func updateCloudKitRecord(for alarm: Alarm) {
             print("Error updating CloudKit record: \(error.localizedDescription)")
         } else if let savedRecord = savedRecord {
             print("Successfully updated CloudKit record with notification identifier.")
+            DispatchQueue.main.sync{
+                viewModel.alarms.append(alarm)
+            }
         }
     }
 }

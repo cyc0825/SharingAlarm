@@ -25,6 +25,8 @@ struct Alarm: Hashable {
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "AlarmData", recordID: recordID)
         record["time"] = time
+        record["sound"] = sound
+        record["interval"] = repeatInterval
         record["notificationIdentifier"] = notificationIdentifier
         return record
     }
@@ -64,7 +66,13 @@ class AlarmsViewModel: ObservableObject {
                     if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
                         mostRecentUpdate = modificationDate
                     }
-                    let alarm = Alarm(recordID: recordID, time: record["time"] as? Date ?? Date(), sound: record["sound"] as? String ?? "Nil", repeatInterval: record["interval"] as? String ?? "Nil")
+                    let alarm = Alarm(
+                        recordID: recordID,
+                        time: record["time"] as? Date ?? Date(),
+                        sound: record["sound"] as? String ?? "Nil",
+                        repeatInterval: record["interval"] as? String ?? "Nil",
+                        notificationIdentifier: record["notificationIdentifier"]
+                    )
                     self.alarms.append(alarm)
                     self.alarms.sort {
                         $0.time < $1.time

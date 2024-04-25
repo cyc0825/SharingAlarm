@@ -149,30 +149,12 @@ struct ArcView: View {
                 }
             }
             .sheet(isPresented: $isShowDetail) {
-                AlarmDetailView(
-                    isPresented: $isShowDetail,
-                    viewModel: viewModel,
-                    alarm: viewModel.selectedAlarm!
-                ) { time, repeatInterval, sound in
-                    viewModel.addAlarm(time: time, sound: sound, repeatInterval: repeatInterval) { result in
-                        switch result {
-                        case .success(let newAlarm):
-                            modifyNotification(for: newAlarm)
-                            DispatchQueue.main.asyncAfter(deadline: .now()+1){
-                                viewModel.removeAlarm(recordID: viewModel.selectedAlarm!.recordID) { result in
-                                    switch result {
-                                    case .success:
-                                        print("edit successfully")
-                                    case .failure(let error):
-                                        print("Failed to add alarm: \(error.localizedDescription)")
-                                    }
-                                    
-                                }
-                            }
-                            print("add successfully")
-                        case .failure(let error):
-                            print("Failed to add alarm: \(error.localizedDescription)")
-                        }}
+                if let selectedAlarm = viewModel.selectedAlarm {
+                    AlarmDetailView(
+                        isPresented: $isShowDetail,
+                        viewModel: viewModel,
+                        alarm: selectedAlarm
+                    )
                 }
             }
         }

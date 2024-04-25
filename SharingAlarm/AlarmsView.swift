@@ -66,7 +66,7 @@ struct AlarmsView: View {
                     
                     .frame(width: UIScreen.main.bounds.width*7/8)
                     
-                    if let selectedAlarm = viewModel.selectedAlarm {
+                    if viewModel.selectedAlarm != nil {
                         Button(action: {showingEditAlarm = true}, label: {
                             Text("Edit Alarm")
                                 .frame(maxWidth: .infinity, minHeight: 50)
@@ -118,40 +118,15 @@ struct AlarmsView: View {
             }
             .navigationTitle("Alarms")
             .sheet(isPresented: $showingAddAlarm) {
-                AddAlarmView(isPresented: $showingAddAlarm) { time, repeatInterval, sound in
-                    viewModel.addAlarm(time: time, sound: sound, repeatInterval: repeatInterval) { result in
-                        switch result {
-                        case .success(let newAlarm):
-                            scheduleNotification(for: newAlarm)
-                        case .failure(let error):
-                            print("Failed to add alarm: \(error.localizedDescription)")
-                        }}
-                    
-                }
+                AddAlarmView(viewModel: viewModel, isPresented: $showingAddAlarm)
             }
             .sheet(isPresented: $showingEditAlarm) {
-                AlarmDetailView(
-                    isPresented: $showingEditAlarm,
-                    viewModel: viewModel,
-                    alarm: viewModel.selectedAlarm!
-                ) { time, repeatInterval, sound in
-                    viewModel.addAlarm(time: time, sound: sound, repeatInterval: repeatInterval) { result in
-                        switch result {
-                        case .success(let newAlarm):
-                            modifyNotification(for: newAlarm)
-                            viewModel.removeAlarm(recordID: viewModel.selectedAlarm!.recordID) { result in
-                                switch result {
-                                case .success:
-                                    print("edit successfully")
-                                case .failure(let error):
-                                    print("Failed to add alarm: \(error.localizedDescription)")
-                                }
-                                    
-                            }
-                            print("add successfully")
-                        case .failure(let error):
-                            print("Failed to add alarm: \(error.localizedDescription)")
-                        }}
+                if let selectedAlarm = viewModel.selectedAlarm {
+                    AlarmDetailView(
+                        isPresented: $showingEditAlarm,
+                        viewModel: viewModel,
+                        alarm: selectedAlarm
+                    )
                 }
             }
         }
@@ -159,15 +134,13 @@ struct AlarmsView: View {
 }
 
 struct AddAlarmView: View {
+    @ObservedObject var viewModel: AlarmsViewModel
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Harmony"
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
-    
-    var saveAction: (Date, String, String) -> Void // Closure to handle saving
-    
     var body: some View {
         NavigationView {
             Form {
@@ -189,7 +162,9 @@ struct AddAlarmView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
-                saveAction(selectedTime, repeatInterval, selectedSound)
+                let newAlarmR = CKRecord(recordType: "AlarmData")
+                let newAlarm = Alarm(recordID: newAlarmR.recordID, time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval)
+                scheduleNotification(for: newAlarm, viewModel: viewModel)
                 isPresented = false
             })
         }
@@ -210,39 +185,35 @@ struct AlarmDetailView: View {
         viewModel.alarms.firstIndex(where: { $0 == alarm }) ?? 0
     }
     
-    init(isPresented: Binding<Bool>, viewModel: AlarmsViewModel, alarm: Alarm, saveAction: @escaping (Date, String, String) -> Void) {
+    init(isPresented: Binding<Bool>, viewModel: AlarmsViewModel, alarm: Alarm) {
         self._isPresented = isPresented
         self.viewModel = viewModel
         self._selectedTime = State(initialValue: viewModel.selectedAlarm?.time ?? Date())
         self._repeatInterval = State(initialValue: viewModel.selectedAlarm?.repeatInterval ?? "None")
         self._selectedSound = State(initialValue:viewModel.selectedAlarm?.sound ?? "Harmony")
         self.alarm = alarm
-        self.saveAction = saveAction
     }
-    
-
-    var saveAction: (Date, String, String) -> Void // Closure to handle saving
     
     var body: some View {
         NavigationView {
             // Safely unwrap alarmIndex to ensure we're operating on valid data
-            if viewModel.selectedAlarm != nil {
+            if let selectedAlarm = viewModel.selectedAlarm {
                 Form {
-                    DatePicker("Time", selection: $viewModel.alarms[alarmIndex].time, displayedComponents: .hourAndMinute)
+                    DatePicker("Time", selection: $selectedTime, displayedComponents: .hourAndMinute)
                     
-                    Picker("Repeat", selection: $viewModel.alarms[alarmIndex].repeatInterval) {
+                    Picker("Repeat", selection: $repeatInterval) {
                         ForEach(repeatOptions, id: \.self) { option in
                             Text(option).tag(option)
                         }
                     }
                     
-                    Picker("Sound", selection: $viewModel.alarms[alarmIndex].sound) {
+                    Picker("Sound", selection: $selectedSound) {
                         ForEach(sounds, id: \.self) { sound in
                             Text(sound).tag(sound)
                         }
                     }
                     
-                    Button("Delete Alarm") {
+                    Button("Delete Alarm", role: .destructive) {
                         viewModel.removeAlarm(recordID: viewModel.alarms[alarmIndex].recordID) { result in
                             viewModel.selectedAlarm = nil
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -261,8 +232,11 @@ struct AlarmDetailView: View {
                 .navigationBarItems(leading: Button("Cancel") {
                     isPresented = false
                 }, trailing: Button("Save") {
-                    viewModel.alarms.remove(at: alarmIndex)
-                    saveAction(selectedTime, repeatInterval, selectedSound)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        viewModel.alarms.remove(at: alarmIndex)
+                    }
+                    let newAlarm = Alarm(recordID: selectedAlarm.recordID, time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, notificationIdentifier: selectedAlarm.notificationIdentifier)
+                    modifyNotification(for: newAlarm, viewModel: viewModel)
                     isPresented = false
                 })
             }
