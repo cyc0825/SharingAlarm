@@ -60,7 +60,8 @@ struct AlarmInterfaceView: View {
                             lineWidth: 20,
                             color: colorSet[index],
                             action: self.arcTapped,
-                            index: index)
+                            index: index,
+                            viewModel: viewModel)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                     PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
                 }
@@ -106,20 +107,25 @@ struct ArcView: View {
     var color: Color
     var action: (Int) -> Void
     var index: Int
+    var viewModel: AlarmsViewModel
     
     @GestureState private var tapped = false // Tracks the tap state
-
     @State private var drawAnimationProgress: CGFloat = 0.0 // For drawing animation
+    @State var isShowDetail = false
 
     var body: some View {
         GeometryReader { geometry in
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            let tapGesture = LongPressGesture(minimumDuration: 0.01)
+            let tapGesture = LongPressGesture(minimumDuration: 0.6)
+                .onChanged {_ in
+                    self.action(index)
+                }
                 .updating($tapped) { currentState, gestureState, transaction in
                     gestureState = currentState
                 }
                 .onEnded { _ in
-                    self.action(index)
+                    isShowDetail = true
+                    UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
                 }
             
             // Animated drawing of the arc
@@ -130,7 +136,7 @@ struct ArcView: View {
             .stroke(style: StrokeStyle(lineWidth: tapped ? lineWidth * 1.3 : lineWidth, lineCap: .round))
             .foregroundColor(color)
             .gesture(tapGesture)
-            .animation(.easeInOut, value: tapped)
+            .animation(.spring(duration: 0.6), value: tapped)
             .onAppear {
                 // Trigger the drawing animation when the view appears
                 withAnimation(.easeOut(duration: 1.0)) {
@@ -142,7 +148,33 @@ struct ArcView: View {
                     drawAnimationProgress = 0
                 }
             }
-            
+            .sheet(isPresented: $isShowDetail) {
+                AlarmDetailView(
+                    isPresented: $isShowDetail,
+                    viewModel: viewModel,
+                    alarm: viewModel.selectedAlarm!
+                ) { time, repeatInterval, sound in
+                    viewModel.addAlarm(time: time, sound: sound, repeatInterval: repeatInterval) { result in
+                        switch result {
+                        case .success(let newAlarm):
+                            modifyNotification(for: newAlarm)
+                            DispatchQueue.main.asyncAfter(deadline: .now()+1){
+                                viewModel.removeAlarm(recordID: viewModel.selectedAlarm!.recordID) { result in
+                                    switch result {
+                                    case .success:
+                                        print("edit successfully")
+                                    case .failure(let error):
+                                        print("Failed to add alarm: \(error.localizedDescription)")
+                                    }
+                                    
+                                }
+                            }
+                            print("add successfully")
+                        case .failure(let error):
+                            print("Failed to add alarm: \(error.localizedDescription)")
+                        }}
+                }
+            }
         }
     }
 }

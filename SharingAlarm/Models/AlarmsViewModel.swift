@@ -13,6 +13,22 @@ struct Alarm: Hashable {
     var time: Date
     var sound: String
     var repeatInterval: String
+    
+    var notificationIdentifier: String?
+    
+//    init(record: CKRecord) {
+//        self.recordID = record.recordID
+//        self.time = record["time"] as? Date ?? Date()
+//        self.notificationIdentifier = record["notificationIdentifier"] as? String
+//    }
+    
+    func toCKRecord() -> CKRecord {
+        let record = CKRecord(recordType: "AlarmData", recordID: recordID)
+        record["time"] = time
+        record["notificationIdentifier"] = notificationIdentifier
+        return record
+    }
+    
 }
 
 class AlarmsViewModel: ObservableObject {

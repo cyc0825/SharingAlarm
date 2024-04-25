@@ -93,11 +93,37 @@ func scheduleNotification(for alarm: Alarm) {
     print(triggerDate)
     let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
     
-    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+    let identifier = alarm.notificationIdentifier ?? UUID().uuidString
+    let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     
     UNUserNotificationCenter.current().add(request) { error in
         if let error = error {
             print("Error scheduling notification: \(error.localizedDescription)")
+        } else {
+            var updatedAlarm = alarm
+            updatedAlarm.notificationIdentifier = identifier
+            // Now update the CloudKit record
+            updateCloudKitRecord(for: updatedAlarm)
+        }
+    }
+}
+
+func modifyNotification(for alarm: Alarm) {
+    guard let identifier = alarm.notificationIdentifier else {
+        return
+    }
+    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+    scheduleNotification(for: alarm)
+}
+
+func updateCloudKitRecord(for alarm: Alarm) {
+    let record = alarm.toCKRecord()
+    let database = CKContainer.default().publicCloudDatabase
+    database.save(record) { savedRecord, error in
+        if let error = error {
+            print("Error updating CloudKit record: \(error.localizedDescription)")
+        } else if let savedRecord = savedRecord {
+            print("Successfully updated CloudKit record with notification identifier.")
         }
     }
 }
