@@ -7,6 +7,8 @@
 
 import Foundation
 import CloudKit
+import AudioToolbox
+import UserNotifications
 
 struct Alarm: Hashable {
     var recordID: CKRecord.ID
@@ -16,11 +18,9 @@ struct Alarm: Hashable {
     
     var notificationIdentifier: String?
     
-//    init(record: CKRecord) {
-//        self.recordID = record.recordID
-//        self.time = record["time"] as? Date ?? Date()
-//        self.notificationIdentifier = record["notificationIdentifier"] as? String
-//    }
+    var remainingTime: TimeInterval {
+        max(0, time.timeIntervalSince(Date()))
+    }
     
     func toCKRecord() -> CKRecord {
         let record = CKRecord(recordType: "AlarmData", recordID: recordID)
@@ -34,17 +34,46 @@ struct Alarm: Hashable {
 }
 
 class AlarmsViewModel: ObservableObject {
-    @Published var alarms: [Alarm] = [] {
-        didSet {
-            //saveAlarms()
-        }
-    }
+    @Published var alarms: [Alarm] = []
     @Published var selectedAlarm: Alarm?
+    var timer: Timer?
 
     let alarmsKey = "alarmsData"
 
     let sounds = ["Harmony", "Ripples", "Signal"]
     let intervals = ["None", "Daily", "Weekly"]
+    
+    // For notification extension
+    var vibrationTimer: Timer?
+    var rescheduleTimer: Timer?
+    
+    func startGlobalTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.objectWillChange.send() // Notify SwiftUI to update the views
+            self.checkAlarms()
+        }
+    }
+    
+    func checkAlarms() {
+        for index in alarms.indices {
+            if alarms[index].remainingTime <= 0 {
+                removeAlarm(recordID: alarms[index].recordID) { result in
+                    switch result {
+                    case .success():
+                        self.alarms.remove(at: index)
+                        print("Alarm has finished its Mission")
+                    case .failure(let error):
+                        print("Alarm cannot finished its Mission because \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    }
+    
+    deinit {
+        timer?.invalidate()
+    }
     
     func fetchUpdatedRecords() {
         let lastFetchDate = UserDefaults.standard.value(forKey: "lastAlarmFetchDate") as? Date ?? Date.distantPast
@@ -132,16 +161,31 @@ class AlarmsViewModel: ObservableObject {
 }
 
 extension AlarmsViewModel {
-    var nextAlarm: Alarm? {
-        alarms.sorted { $0.time < $1.time }.first(where: { $0.time > Date() })
+
+    func startLongVibration() {
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+        vibrationTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(vibrate), userInfo: nil, repeats: true)
+        rescheduleTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(stopVibrationAndReschedule), userInfo: nil, repeats: false)
+    }
+
+    @objc private func stopVibrationAndReschedule() {
+        stopVibration()
+        // rescheduleAlarm()
     }
     
-    func timeUntilNextAlarm() -> String {
-        guard let nextAlarm = nextAlarm else { return "No upcoming alarms" }
-        let timeInterval = nextAlarm.time.timeIntervalSinceNow
-        let hours = Int(timeInterval) / 3600
-        let minutes = Int(timeInterval) / 60 % 60
-        return "\(hours) hours, \(minutes) minutes remaining"
+    @objc private func vibrate() {
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+    }
+
+    func stopVibration() {
+        DispatchQueue.main.async {
+            if let vibrationTimer = self.vibrationTimer {
+                vibrationTimer.invalidate()
+            } else {
+                print("vibrationTimer not exist")
+            }
+            self.vibrationTimer = nil
+        }
     }
 }
 

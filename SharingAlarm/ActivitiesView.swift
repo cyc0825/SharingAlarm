@@ -48,6 +48,7 @@ struct ActivitiesView: View {
 struct AddActivityView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var friendViewModel = FriendsViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var viewModel: ActivitiesViewModel
     @State private var name = ""
     @State private var startDate = Date()
@@ -56,7 +57,6 @@ struct AddActivityView: View {
     @State private var showingFriendPicker = false
     
     let friends: [User] = []
-    let userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Unknown"
 
     var body: some View {
         NavigationView {
@@ -73,7 +73,7 @@ struct AddActivityView: View {
                 Section(header: Text("Participants")) {
                     HStack {
                         Image(systemName: "star.fill")
-                        Text(userName)
+                        Text(authViewModel.user?.name ?? "nil")
                             .fontWeight(.bold)
                     }
                     ForEach(participants.indices, id: \.self) { index in
@@ -106,6 +106,9 @@ struct AddActivityView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
+                        if let user = authViewModel.user {
+                            participants.append(user)
+                        }
                         viewModel.addActivity(name: name, startDate: startDate, endDate: endDate, participants: participants){ result in
                             switch result {
                             case .success(let activity):

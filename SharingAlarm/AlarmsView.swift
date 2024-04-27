@@ -17,21 +17,34 @@ struct AlarmsView: View {
     @State private var selectedGroup = ""
     @State private var repeatInterval = ""
     @State private var selectedSound = ""
+    @State private var remainingTime: TimeInterval? = nil
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
     
-    func remainingTime(from startDate: Date, to endDate: Date?) -> String {
-            guard let endDate = endDate else { return "" }
-
-            let components = Calendar.current.dateComponents([.day, .hour, .minute], from: startDate, to: endDate)
-            let formattedComponents = [
-                components.day.flatMap { $0 > 0 ? "\($0) day" + ($0 == 1 ? "" : "s") : nil },
-                components.hour.flatMap { $0 > 0 ? "\($0) hour" + ($0 == 1 ? "" : "s") : nil },
-                components.minute.flatMap { $0 > 0 ? "\($0) minute" + ($0 == 1 ? "" : "s") : nil }
-            ].compactMap { $0 }.joined(separator: ", ")
-
-            return formattedComponents.isEmpty ? "Time passed" : formattedComponents
+    func formatTimeInterval(_ interval: TimeInterval?) -> String {
+        if let interval = interval {
+            if interval >= 86400 {  // 86400 seconds in 24 hours
+                return "more than one day"
+            } else if interval > 0{
+                let hours = Int(interval) / 3600  // Calculate total hours
+                let minutes = (Int(interval) % 3600) / 60  // Calculate remaining minutes
+                
+                // Formatting string to show "xx hours xx mins"
+                var formattedString = ""
+                if hours > 0 {
+                    formattedString += "\(hours) hour" + (hours > 1 ? "s " : " ")
+                }
+                if minutes > 0 {
+                    formattedString += "\(minutes) min" + (minutes > 1 ? "s" : "")
+                }
+                return formattedString.trimmingCharacters(in: .whitespaces)
+            } else {
+                return "Time passed"
+            }
+        } else {
+            return ""
         }
+    }
     
     var body: some View {
         NavigationView {
@@ -48,7 +61,7 @@ struct AlarmsView: View {
                                 
                                 DetailRow(key: "Time", value: selectedTime?.formatted(date: .omitted, time: .shortened) ?? "")
                                 DetailRow(key: "Repeat", value: repeatInterval)
-                                DetailRow(key: "Remaining", value: remainingTime(from: Date(), to: selectedTime))
+                                DetailRow(key: "Remaining", value: formatTimeInterval(remainingTime))
                             }
                             .frame(maxWidth: .infinity)
                             
@@ -110,10 +123,12 @@ struct AlarmsView: View {
                     selectedTime = selectedAlarm.time
                     repeatInterval = selectedAlarm.repeatInterval
                     selectedSound = selectedAlarm.sound
+                    remainingTime = selectedAlarm.remainingTime
                 } else {
                     selectedTime = nil
                     repeatInterval = ""
                     selectedSound = ""
+                    remainingTime = nil
                 }
             }
             .navigationTitle("Alarms")

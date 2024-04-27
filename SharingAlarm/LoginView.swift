@@ -28,8 +28,7 @@ class Coordinator: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationC
                     let uid = record!["uid"] as? String ?? "Unknown"
                     UserDefaults.standard.set(name, forKey: "name")
                     UserDefaults.standard.set(uid, forKey: "uid")
-                    self.authViewModel.user?.name = name
-                    self.authViewModel.user?.uid = uid
+                    self.authViewModel.user = User(recordID: record!.recordID, name: name, uid: uid)
                 }
             }
             authViewModel.updateAuthenticationState(isAuthenticated: true)
@@ -58,7 +57,7 @@ struct SignInWithAppleButton: UIViewRepresentable {
 }
 
 struct LoginView: View {
-    @StateObject var authViewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var coordinator: Coordinator?
     var body: some View {
         NavigationStack{

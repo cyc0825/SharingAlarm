@@ -7,14 +7,18 @@
 
 import SwiftUI
 import CloudKit
-import UserNotifications
 import EventKit
+
+import PushKit
+import UIKit
+import CallKit
 
 @main
 struct SharingAlarmApp: App {
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var friendViewModel = FriendsViewModel()
     @StateObject private var activityViewModel = ActivitiesViewModel()
+    @StateObject private var alarmViewModel = AlarmsViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -30,9 +34,10 @@ struct SharingAlarmApp: App {
                     .environmentObject(authViewModel)
                     .environmentObject(friendViewModel)
                     .environmentObject(activityViewModel)
+                    .environmentObject(alarmViewModel)
                     .environment(\.colorScheme, .light)
             } else {
-                LoginView(authViewModel: authViewModel)
+                LoginView()
                     .environmentObject(authViewModel)
                     .environment(\.colorScheme, .light)
             }
@@ -90,8 +95,7 @@ func scheduleNotification(for alarm: Alarm, viewModel: AlarmsViewModel) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "AlarmTest.mp3"))
     
     let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarm.time)
-    print(triggerDate)
-    let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+    let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: true)
     
     let identifier = alarm.notificationIdentifier ?? UUID().uuidString
     let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -140,8 +144,14 @@ func updateCloudKitRecord(for alarm: Alarm, viewModel: AlarmsViewModel) {
     }
 }
 
-class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, PKPushRegistryDelegate {
+    
+    @StateObject var alarmViewModel = AlarmsViewModel()
     @StateObject var viewModel = FriendsViewModel()
+    static let shared = AppDelegate()
+    
+    var voipRegistry: PKPushRegistry!
+    var callManager: CallManager!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Request notification permissions
@@ -149,6 +159,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             print("Permission granted: \(granted)")
         }
         UNUserNotificationCenter.current().delegate = self
+        setupPushKit()
+        callManager = CallManager()
         return true
     }
     
@@ -171,14 +183,34 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
         completionHandler(.newData)
     }
-    
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("Notification will present: \(notification.request.identifier)")
+        alarmViewModel.startLongVibration()
         completionHandler([.banner, .sound, .badge]) // Decide how to present the notification in the foreground.
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         NotificationCenter.default.post(name: NSNotification.Name("NotificationTapped"), object: nil)
         completionHandler()
+    }
+    
+    func setupPushKit() {
+            voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
+            voipRegistry.delegate = self
+            voipRegistry.desiredPushTypes = [.voIP]
+        }
+
+    // MARK: - PKPushRegistryDelegate
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        // Process the received push credentials and send them to your server
+    }
+
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        // Assume you decode your incoming push and determine it's an incoming call
+        let uuid = UUID()
+        let phoneNumber = "1234567890" // Example phone number
+        callManager.reportIncomingCall(uuid: uuid, phoneNumber: phoneNumber)
+        completion()
     }
 }

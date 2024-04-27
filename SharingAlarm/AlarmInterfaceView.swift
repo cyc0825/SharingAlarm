@@ -11,11 +11,9 @@ struct AlarmInterfaceView: View {
     @StateObject var viewModel = AlarmsViewModel()
     @State private var currentTime = Time(hour: 0, minute: 0, second: 0)
     var colorSet: [Color] = [Color.accentColor, Color.secondAccent, Color.thirdAccent]
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     func arcTapped(index: Int) {
         viewModel.selectedAlarm = viewModel.alarms[index]
-        print("Arc: ", index, " tapped")
     }
     
     var body: some View {
@@ -46,14 +44,9 @@ struct AlarmInterfaceView: View {
                     .stroke(Color.primary, lineWidth: i % 5 == 0 ? 2 : 1)
                 }
                 
-                // Hour Pointer
-                
-                
                 ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
-                    let alarmDate = viewModel.alarms[index].time
-                    let countdownDuration = alarmDate.timeIntervalSince(Date())
                     let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
-                    let endAngleDegree = 360.0 * countdownDuration / 3600
+                    let endAngleDegree = 360.0 * viewModel.alarms[index].remainingTime / 3600
                     ArcView(radius: alarmCircleSize / 2,
                             startAngle: Angle(degrees: -90),
                             endAngle: Angle(degrees: endAngleDegree-90),
@@ -65,6 +58,9 @@ struct AlarmInterfaceView: View {
                         .frame(width: geometry.size.width, height: geometry.size.height)
                     PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
                 }
+            }
+            .onAppear {
+                viewModel.startGlobalTimer()
             }
         }
         .frame(height: 400)

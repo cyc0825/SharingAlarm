@@ -64,7 +64,7 @@ class AuthViewModel: ObservableObject {
         let database = CKContainer.default().publicCloudDatabase
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [self] in
                 guard let self = self, error == nil else {
                     print("Error: \(error?.localizedDescription ?? "Unknown error")")
                     return
@@ -80,7 +80,7 @@ class AuthViewModel: ObservableObject {
                     // Saving to UserDefaults
                     UserDefaults.standard.set(name, forKey: "name")
                     UserDefaults.standard.set(uid, forKey: "uid")
-                    
+                    self.user = User(recordID: record.recordID, name: record["name"] as! String, uid: record["uid"] as! String)
                 } else {
                     self.userExists = false
                 }

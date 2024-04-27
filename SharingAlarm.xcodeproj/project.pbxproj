@@ -35,6 +35,7 @@
 		D3B53B342BC6204B00B41769 /* AlarmTest.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* AlarmTest.mp3 */; };
 		D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */; };
 		D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* ActivityCard.swift */; };
+		D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,8 @@
 		D3B53B332BC6204B00B41769 /* AlarmTest.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AlarmTest.mp3; sourceTree = "<group>"; };
 		D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
 		D3B53B372BC85B8A00B41769 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
+		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
+		D3C0EF7F2BDD50E600DA1795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +164,7 @@
 		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
 			isa = PBXGroup;
 			children = (
+				D3C0EF7F2BDD50E600DA1795 /* Info.plist */,
 				D3B53B322BC6203500B41769 /* Resources */,
 				D30FB1962BC3171100C88BBC /* ViewCards */,
 				D35372F02BBB7D9500B56F32 /* Models */,
@@ -182,6 +186,7 @@
 				D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */,
 				D38EEB882BA371A00099D382 /* Preview Content */,
 				D35372ED2BBB738300B56F32 /* Friendship.xcdatamodeld */,
+				D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */,
 			);
 			path = SharingAlarm;
 			sourceTree = "<group>";
@@ -353,6 +358,7 @@
 				D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */,
 				D35372F22BBB7DAC00B56F32 /* UserData.swift in Sources */,
 				D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */,
+				D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */,
 				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
@@ -540,6 +546,7 @@
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SharingAlarm/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -571,6 +578,7 @@
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SharingAlarm/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
