@@ -15,10 +15,10 @@ struct FriendRequestCard: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(viewModel.friendRequests[index].senderName)
+                Text(viewModel.friendRequests[index].friendRef.name)
                     .font(.headline)
                     .bold()
-                Text(viewModel.friendRequests[index].senderID)
+                Text(viewModel.friendRequests[index].friendRef.uid)
                     .font(.subheadline)
                     .foregroundColor(.accentColor)
             }
@@ -31,24 +31,7 @@ struct FriendRequestCard: View {
                         animatePop = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             animatePop = false
-                            viewModel.removeFriendRequest(viewModel.friendRequests[index]) { result in
-                                switch result {
-                                case .success():
-                                    print("Request removed successfully.")
-                                    viewModel.addFriendship(fromRequest: viewModel.friendRequests[index], receiverID: UserDefaults.standard.value(forKey: "uid") as! String) { result in
-                                        switch result {
-                                        case .success(let friend):
-                                            viewModel.friends.append(friend)
-                                            print("Friendship added successfully.")
-                                            viewModel.friendRequests.remove(at: index)
-                                        case .failure(let error):
-                                            print("Failed to add friendship: \(error.localizedDescription)")
-                                        }
-                                    }
-                                case .failure(let error):
-                                    print("Failed to remove request: \(error.localizedDescription)")
-                                }
-                            }
+                            viewModel.saveFriendShip(fromRequest: viewModel.friendRequests[index])
                         }
                     }
                 }) {
@@ -61,14 +44,7 @@ struct FriendRequestCard: View {
                         animatePop = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Ensure this matches animation duration
                             animatePop = false
-                            viewModel.removeFriendRequest(viewModel.friendRequests[index]) { result in
-                                if case .failure(let error) = result {
-                                    print("Failed to remove request: \(error.localizedDescription)")
-                                } else {
-                                    print("Request declined successfully.")
-                                    viewModel.friendRequests.remove(at: index)
-                                }
-                            }
+                            viewModel.removeFriendRequest(fromRequest: viewModel.friendRequests[index])
                         }
                     }
                 }) {

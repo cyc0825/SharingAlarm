@@ -7,285 +7,215 @@
 
 import Foundation
 import CloudKit
+import FirebaseFirestore
 
-struct FriendRequest: Hashable{
-    var recordID: CKRecord.ID
-    var senderID: String
-    var senderName: String
+struct FriendReference: Codable, Identifiable {
+    @DocumentID var id: String?
+    var friendRef: AppUser
+    var timestamp: Date
 }
 
-struct User: Hashable{
-    var recordID: CKRecord.ID
-    var name: String
-    var uid: String
-}
-
+@MainActor
 class FriendsViewModel: ObservableObject {
-    @Published var friends: [User] = []
-    @Published var friendSearchResults: [User] = []
-    @Published var friendRequests: [FriendRequest] = []
+    @Published var friends: [FriendReference] = []
+    @Published var friendSearchResults: [AppUser] = []
+    @Published var friendRequests: [FriendReference] = []
+    @Published var ownRequests: [FriendReference] = []
     
-    func fetchUsernames(for senderID: String, completion: @escaping (String) -> Void) {
-        let predicate = NSPredicate(format: "uid == %@", senderID)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { (records, error) in
-            DispatchQueue.main.async {
-                guard let record = records?.first, error == nil else {
-                    print("Error fetching user data: \(error?.localizedDescription ?? "No Friend Request")")
+    private var db = Firestore.firestore()
+    
+    func fetchOwnRequest() {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        db.collection("Friends").document(userID)
+            .collection("ownRequests")
+            .getDocuments { [weak self] (querySnapshot, error) in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("Error fetching own requests: \(error.localizedDescription)")
                     return
                 }
-                if let name = record["name"] as? String {
-                    completion(name)
-                }
-            }
-        }
-    }
-    
-    func removeFriendRequest(_ request: FriendRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        let predicate = NSPredicate(format: "senderID == %@", request.senderID)
-        let query = CKQuery(recordType: "FriendRequest", predicate: predicate)
-        
-        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-                return
-            }
-            
-            guard let records = records else {
-                DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "No Records Found", code: 0, userInfo: nil)))
-                }
-                return
-            }
-            
-            let recordIDs = records.map { $0.recordID }
-            let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIDs)
-                
-            operation.modifyRecordsCompletionBlock = { savedRecords, deletedRecordIDs, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(()))
+
+                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+                    for document in querySnapshot.documents {
+                        let id = document.documentID
+                        let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
+
+                        if let friendRef = document.get("friendRef") as? DocumentReference {
+                            Task {
+                                do {
+                                    let appUser = try await friendRef.getDocument(as: AppUser.self)
+                                    self.ownRequests.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                }
+                                catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
                     }
-                }
-            }
-            
-            CKContainer.default().publicCloudDatabase.add(operation)
-        }
-    }
-    
-    func addFriendship(fromRequest request: FriendRequest, receiverID: String, completion: @escaping (Result<User, Error>) -> Void) {
-        let newFriendship = CKRecord(recordType: "Friendship")
-        newFriendship["userID1"] = receiverID
-        newFriendship["userID2"] = request.senderID
-        
-        CKContainer.default().publicCloudDatabase.save(newFriendship) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else if let record = record {
-                    let user = User(recordID: newFriendship.recordID, name: request.senderName , uid: request.senderID)
-                    completion(.success(user))
-                }
-            }
-        }
-    }
-    
-    func removeFriendship(recordID: CKRecord.ID, completion: @escaping (Result<Void, Error>) -> Void) {
-        print("Removing")
-        CKContainer.default().publicCloudDatabase.delete(withRecordID: recordID) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
                 } else {
-                    completion(.success(()))
+                    self.ownRequests = []
                 }
             }
-        }
     }
     
-    func searchRequest() {
-        guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
-        let lastFetchDate = UserDefaults.standard.value(forKey: "lastFriendRequestFetchDate") as? Date ?? Date.distantPast
-        
-        let predicate = NSPredicate(format: "modificationDate > %@ AND receiverID == %@", argumentArray: [lastFetchDate, uid])
-        let query = CKQuery(recordType: "FriendRequest", predicate: predicate)
-        let operation = CKQueryOperation(query: query)
-        var mostRecentUpdate: Date = lastFetchDate
-        operation.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                guard let senderID = record["senderID"] as? String else {
-                    print("SenderID is nil")
+    func fetchFriendsRequest() {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        print("Start fetching friend Request for \(userID)")
+        db.collection("Friends").document(userID)
+            .collection("friendRequests")
+            .getDocuments { [weak self] (querySnapshot, error) in
+                guard let self = self else { return }
+
+                if let error = error {
+                    print("Error fetching friend requests: \(error.localizedDescription)")
                     return
                 }
-                self.fetchUsernames(for: senderID) { name in
-                    guard !self.friendRequests.contains(where: { $0.senderID == senderID }) else {
-                        return
+
+                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+                    for document in querySnapshot.documents {
+                        let id = document.documentID
+                        let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
+
+                        if let friendRef = document.get("friendRef") as? DocumentReference {
+                            Task {
+                                do {
+                                    print(friendRef)
+                                    let appUser = try await friendRef.getDocument(as: AppUser.self)
+                                    print(appUser)
+                                    self.friendRequests.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                }
+                                catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
                     }
-                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
-                        mostRecentUpdate = modificationDate
-                    }
-                    let newRequest = FriendRequest(recordID: recordID, senderID: senderID, senderName: name)
-                    self.friendRequests.append(newRequest)
-                }
-            case .failure(let error):
-                print("Failed to fetch friend: \(error.localizedDescription)")
-            }
-        }
-        operation.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional friend available with cursor: \(cursor)")
                 } else {
-                    print("Fetched all friend. No additional data to fetch.")
+                    self.friendRequests = []
                 }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
             }
-        }
-        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFriendRequestFetchDate")
-        CKContainer.default().publicCloudDatabase.add(operation)
-    }
-    
-    func searchFriends(query: String) {
-        let predicate = NSPredicate(format: "uid BEGINSWITH %@", query)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        let operation = CKQueryOperation(query: query)
-        
-        operation.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                DispatchQueue.main.async {
-                    self.friendSearchResults.append(User(recordID: recordID, name: record["name"] as? String ?? "Unknown", uid: record["uid"] as? String ?? "Unknown"))
-                }
-            case .failure(let error):
-                print("Failed to fetch record: \(error.localizedDescription)")
-            }
-        }
-        
-        operation.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
-                } else {
-                    print("Fetched all data. No additional data to fetch.")
-                }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
-            }
-        }
-        
-        CKContainer.default().publicCloudDatabase.add(operation)
     }
     
     func fetchFriends() {
-        guard let currentUserID = UserDefaults.standard.value(forKey: "uid") as? String else { return }
-        let lastFetchDate = Date.distantPast
-        
-        let predicate1 = NSPredicate(format: "modificationDate > %@ AND userID1 == %@", argumentArray: [lastFetchDate, currentUserID])
-        let predicate2 = NSPredicate(format: "modificationDate > %@ AND userID2 == %@", argumentArray: [lastFetchDate, currentUserID])
-        
-        let query1 = CKQuery(recordType: "Friendship", predicate: predicate1)
-        let query2 = CKQuery(recordType: "Friendship", predicate: predicate2)
-        
-        let operation1 = CKQueryOperation(query: query1)
-        let operation2 = CKQueryOperation(query: query2)
-        var mostRecentUpdate: Date = lastFetchDate
-        
-        operation1.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                guard let userID = record["userID2"] as? String else {
-                    print("userID is nil")
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        db.collection("Friends").document(userID)
+            .collection("friends")
+            .getDocuments { [weak self] (querySnapshot, error) in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error fetching friends: \(error.localizedDescription)")
                     return
                 }
-                self.fetchUsernames(for: userID) { name in
-                    guard !self.friends.contains(where: { $0.uid == userID }) else {
-                        return
+                
+                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+                    for document in querySnapshot.documents {
+                        let id = document.documentID
+                        let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
+
+                        if let friendRef = document.get("friendRef") as? DocumentReference {
+                            Task {
+                                do {
+                                    let appUser = try await friendRef.getDocument(as: AppUser.self)
+                                    self.friends.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                }
+                                catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        }
                     }
-                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
-                        mostRecentUpdate = modificationDate
-                    }
-                    
-                    let newfriend = User(recordID: recordID, name: name, uid: userID)
-                    self.friends.append(newfriend)
-                }
-            case .failure(let error):
-                print("Failed to fetch record: \(error.localizedDescription)")
-            }
-        }
-        
-        operation2.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                guard let userID = record["userID1"] as? String else {
-                    print("userID is nil")
-                    return
-                }
-                self.fetchUsernames(for: userID) { name in
-                    guard !self.friends.contains(where: { $0.uid == userID }) else {
-                        return
-                    }
-                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
-                        mostRecentUpdate = modificationDate
-                    }
-                    let newfriend = User(recordID: recordID, name: name, uid: userID)
-                    self.friends.append(newfriend)
-                }
-            case .failure(let error):
-                print("Failed to fetch record: \(error.localizedDescription)")
-            }
-        }
-        
-        operation1.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
                 } else {
-                    print("Fetched all data. No additional data to fetch.")
+                    self.friends = []
                 }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
             }
-        }
-        
-        operation2.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
-                } else {
-                    print("Fetched all data. No additional data to fetch.")
-                }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
-            }
-        }
-        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastFriendFetchDate")
-        CKContainer.default().publicCloudDatabase.add(operation1)
-        CKContainer.default().publicCloudDatabase.add(operation2)
     }
     
-    func sendFriendRequest(to userID: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard UserDefaults.standard.value(forKey: "uid") != nil else { return }
-        let newFriendRequest = CKRecord(recordType: "FriendRequest")
-        newFriendRequest["receiverID"] = userID
-        newFriendRequest["senderID"] = UserDefaults.standard.value(forKey: "uid") as! String
-        
-        CKContainer.default().publicCloudDatabase.save(newFriendRequest) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
+    // User1 sends FR to User2
+    func saveFriendRequest(user2ID: String) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                try await db.collection("Friends").document(userID)
+                    .collection("ownRequests")
+                    .addDocument(data: ["friendRef": db.collection("UserData").document(user2ID),
+                                        "timestamp": Date.now])
+                
+                try await db.collection("Friends").document(user2ID)
+                    .collection("friendRequests")
+                    .addDocument(data: ["friendRef": db.collection("UserData").document(userID),
+                                        "timestamp": Date.now])
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func saveFriendShip(fromRequest request: FriendReference) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                try await db.collection("Friends").document(userID)
+                    .collection("friends")
+                    .addDocument(data: ["friendRef": request.friendRef,
+                                        "timestamp": Date.now])
+                
+                try await db.collection("Friends").document(request.friendRef.uid)
+                    .collection("friends")
+                    .addDocument(data: ["friendRef": db.collection("users").document(userID),
+                                        "timestamp": Date.now])
+                try await print("1st try wait")
+                try await print("2st try wait")
+                print("after try wait")
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+        print("after Task")
+    }
+    
+    func fetchFriendSearch(query: String) {
+        Task {
+            do {
+                let documentSnapshot = try await db.collection("UserData").whereField("uid", isGreaterThan: query).getDocuments()
+                if !documentSnapshot.isEmpty {
+                    for document in documentSnapshot.documents {
+                        let id = document.documentID
+                        if let uid = document.get("uid") as? String, let name = document.get("name") as? String {
+                            let appUser = AppUser(id: id, name: name, uid: uid)
+                            self.friendSearchResults.append(appUser)
+                        }
+                    }
                 }
+                else {
+                    self.friendSearchResults = []
+                }
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func removeFriendRequest(fromRequest request: FriendReference) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                try await db.collection("Friends").document(userID)
+                    .collection("friendRequests")
+                    .document(request.id!)
+                    .delete()
+                print("Trying to remove FR for \(request.friendRef.id!)")
+                try await db.collection("Friends").document(request.friendRef.id!)
+                    .collection("ownRequests")
+                    .document(request.id!)
+                    .delete()
+            }
+            catch {
+                print(error.localizedDescription)
             }
         }
     }

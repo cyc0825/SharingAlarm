@@ -9,13 +9,17 @@ import SwiftUI
 import CloudKit
 import EventKit
 
+import FirebaseCore
+
 import PushKit
 import UIKit
 import CallKit
 
 @main
 struct SharingAlarmApp: App {
+
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var userViewModel = UserViewModel()
     @StateObject private var friendViewModel = FriendsViewModel()
     @StateObject private var activityViewModel = ActivitiesViewModel()
     @StateObject private var alarmViewModel = AlarmsViewModel()
@@ -23,36 +27,24 @@ struct SharingAlarmApp: App {
     
     init() {
         requestNotificationPermission()
-        customizeTabBarAppearance()
         subscribeToFriendRequests()
     }
     
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isAuthenticated {
-                ContentView()
-                    .environmentObject(authViewModel)
-                    .environmentObject(friendViewModel)
-                    .environmentObject(activityViewModel)
-                    .environmentObject(alarmViewModel)
-                    .environment(\.colorScheme, .light)
-            } else {
-                LoginView()
-                    .environmentObject(authViewModel)
-                    .environment(\.colorScheme, .light)
+            NavigationView {
+                AuthedView {
+                } content: {
+                    ContentView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(userViewModel)
+                        .environmentObject(friendViewModel)
+                        .environmentObject(activityViewModel)
+                        .environmentObject(alarmViewModel)
+                    Spacer()
+                }
             }
         }
-    }
-    
-    func customizeTabBarAppearance() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        
-        appearance.backgroundColor = UIColor.white.withAlphaComponent(0.7)
-    
-        UITabBar.appearance().standardAppearance = appearance
-        // Use this line if you want the same appearance when the tab bar scrolls (iOS 15+)
-        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 }
 
@@ -161,6 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
         setupPushKit()
         callManager = CallManager()
+        FirebaseApp.configure()
         return true
     }
     
@@ -178,7 +171,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         if notification?.subscriptionID == "friend-request-changes" {
             print("detect changed for friend request")
-            viewModel.searchRequest()
+//            viewModel.searchRequest()
         }
 
         completionHandler(.newData)

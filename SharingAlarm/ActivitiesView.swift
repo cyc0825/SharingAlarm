@@ -53,10 +53,10 @@ struct AddActivityView: View {
     @State private var name = ""
     @State private var startDate = Date()
     @State private var endDate = Date()
-    @State private var participants: [User] = []
+    @State private var participants: [AppUser] = []
     @State private var showingFriendPicker = false
     
-    let friends: [User] = []
+    let friends: [AppUser] = []
 
     var body: some View {
         NavigationView {
@@ -73,7 +73,7 @@ struct AddActivityView: View {
                 Section(header: Text("Participants")) {
                     HStack {
                         Image(systemName: "star.fill")
-                        Text(authViewModel.user?.name ?? "nil")
+                        Text(authViewModel.user?.displayName ?? "nil")
                             .fontWeight(.bold)
                     }
                     ForEach(participants.indices, id: \.self) { index in
@@ -106,9 +106,9 @@ struct AddActivityView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        if let user = authViewModel.user {
-                            participants.append(user)
-                        }
+//                        if let user = authViewModel.user {
+//                            participants.append(user)
+//                        }
                         viewModel.addActivity(name: name, startDate: startDate, endDate: endDate, participants: participants){ result in
                             switch result {
                             case .success(let activity):
@@ -132,17 +132,17 @@ struct AddActivityView: View {
 
 struct FriendPicker: View {
     @StateObject var viewModel = FriendsViewModel()
-    @Binding var selectedFriends: [User]
+    @Binding var selectedFriends: [AppUser]
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
             List(viewModel.friends.indices, id: \.self) { index in
-                Button(viewModel.friends[index].name) {
+                Button(viewModel.friends[index].friendRef.name) {
                     // Add the selected friend to the participants list if not already added
-                    if !selectedFriends.contains(where: { $0.recordID == viewModel.friends[index].recordID }) {
-                        selectedFriends.append(viewModel.friends[index])
-                    }
+//                    if !selectedFriends.contains(where: { $0.recordID == viewModel.friends[index].recordID }) {
+//                        selectedFriends.append(viewModel.friends[index])
+//                    }
                     dismiss()
                 }
             }

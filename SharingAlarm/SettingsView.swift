@@ -36,15 +36,37 @@ struct SettingsView: View {
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var showingProfileEdit = false
     
-    let userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Unknown"
-    let uid: String = UserDefaults.standard.value(forKey: "uid") as? String ?? "Unknown"
+    let userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Give yourself a name so that your friend can remember you"
+    let uid: String = UserDefaults.standard.value(forKey: "uid") as? String ?? "Haven't setup yet"
+    @State var presentingConfirmationDialog = false
+    
+    private func deleteAccount() {
+        Task {
+            if await authViewModel.deleteAccount() == true {
+                print("Successfully deleting account")
+            }
+        }
+    }
+    
+    private func signOut() {
+        authViewModel.signOut()
+        UserDefaults.standard.setValue(false, forKey: "logged")
+        UserDefaults.standard.removeObject(forKey: "appleIDUser")
+        UserDefaults.standard.removeObject(forKey: "name")
+        UserDefaults.standard.removeObject(forKey: "uid")
+        UserDefaults.standard.removeObject(forKey: "lastAlarmFetchDate")
+        UserDefaults.standard.removeObject(forKey: "lastFriendRequestFetchDate")
+        UserDefaults.standard.removeObject(forKey: "userID")
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             // User information
             
-            Text("ID: \(authViewModel.user?.uid ?? userName)")
+            Text("UID: \(uid)")
                 .font(.callout)
                 .foregroundColor(.gray)
                 .padding(.bottom)
@@ -75,38 +97,46 @@ struct ProfileView: View {
                 }.frame(height: 20)
                 
                 Section {
-                    Button("Log out") {
-                        UserDefaults.standard.setValue(false, forKey: "logged")
-                        authViewModel.updateAuthenticationState(isAuthenticated: false)
-                        UserDefaults.standard.removeObject(forKey: "appleIDUser")
-                        UserDefaults.standard.removeObject(forKey: "name")
-                        UserDefaults.standard.removeObject(forKey: "uid")
-                        UserDefaults.standard.removeObject(forKey: "lastAlarmFetchDate")
-                        UserDefaults.standard.removeObject(forKey: "lastFriendRequestFetchDate")
+                  Button(role: .cancel, action: signOut) {
+                    HStack {
+                      Spacer()
+                      Text("Sign out")
+                      Spacer()
                     }
-                    .foregroundColor(.red)
-                    
+                  }
+                }
+                Section {
+                  Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
+                    HStack {
+                      Spacer()
+                      Text("Delete Account")
+                      Spacer()
+                    }
+                  }
                 }
             }
-            .listStyle(SidebarListStyle())
         }
-        .navigationTitle(authViewModel.user?.name ?? uid)
+        .navigationTitle(userName)
         .padding()
-        .background {
-            Color(UIColor.secondarySystemBackground)
-                .ignoresSafeArea()
+        .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
+                            isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
+          Button("Delete Account", role: .destructive, action: deleteAccount)
+          Button("Cancel", role: .cancel, action: { })
         }
         .sheet(isPresented: $showingProfileEdit) {
             ProfileSetupView(
                 onSubmit: { username, uid in
-                    authViewModel.saveOrUpdateUserProfile(username: username, uid: uid) {
-                        showingProfileEdit = false
-                    }
+                    // authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
+                    showingProfileEdit = false
+                    UserDefaults.standard.setValue(username, forKey: "name")
+                    UserDefaults.standard.setValue(uid, forKey: "uid")
+                    userViewModel.appUser.uid = uid
+                    userViewModel.appUser.name = username
+                    userViewModel.saveUserData()
                 },
-                initialUsername: userName,
-                initialUid: uid
+                initialUsername: userViewModel.appUser.name,
+                initialUid: userViewModel.appUser.uid
             )
-            .environment(\.colorScheme, .light)
         }
     }
 }

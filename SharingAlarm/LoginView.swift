@@ -9,88 +9,140 @@ import SwiftUI
 import AuthenticationServices
 import CloudKit
 
-class Coordinator: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    var authViewModel: AuthViewModel
-    init(authViewModel: AuthViewModel) {
-        self.authViewModel = authViewModel
-    }
-
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            UserDefaults.standard.set(appleIDCredential.user, forKey: "appleIDUser")
-            authViewModel.fetchUserByAppleID { record, error in
-                DispatchQueue.main.async { [self] in
-                    guard error == nil && record != nil else  {
-                        print("Fetch error: \(error?.localizedDescription ?? "Record is empty")")
-                        return
-                    }
-                    let name = record!["name"] as? String ?? "Unknown"
-                    let uid = record!["uid"] as? String ?? "Unknown"
-                    UserDefaults.standard.set(name, forKey: "name")
-                    UserDefaults.standard.set(uid, forKey: "uid")
-                    self.authViewModel.user = User(recordID: record!.recordID, name: name, uid: uid)
-                }
-            }
-            authViewModel.updateAuthenticationState(isAuthenticated: true)
-        }
-    }
-
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
-        print("Sign in with Apple errored: \(error)")
-    }
-
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        // Return the current window to present the sign in view
-        return UIApplication.shared.windows.first! // Adjust this as necessary for your app structure
-    }
-}
-
-
-struct SignInWithAppleButton: UIViewRepresentable {
-    func makeUIView(context: Context) -> ASAuthorizationAppleIDButton {
-        return ASAuthorizationAppleIDButton(type: .signIn, style: .black)
-    }
-
-    func updateUIView(_ uiView: ASAuthorizationAppleIDButton, context: Context) {
-    }
+private enum FocusableField: Hashable {
+  case email
+  case password
 }
 
 struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var coordinator: Coordinator?
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
+    @FocusState private var focus: FocusableField?
+    
+    private func signInWithEmailPassword() {
+        Task {
+            if await authViewModel.signInWithEmailPassword() == true {
+                dismiss()
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack{
             ZStack {
                 Color.accentColor.ignoresSafeArea(edges: .all)
                 VStack{
+                    Text("WELCOME!")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding([.top, .bottom], 50)
                     Image("loginscreen")
                         .resizable()
                         .frame(width: 300, height: 300)
-                        .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height/3)
-                    SignInWithAppleButton()
-                        .frame(width: 280, height: 60)
-                        .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height/4)
+                        .padding(.bottom, 40)
                         .onTapGesture {
-                            performSignInWithApple()
+                            focus = nil
                         }
+                    
+                    HStack {
+                        Image(systemName: "at")
+                        TextField("Email", text: $authViewModel.email)
+                            .accentColor(.gray)
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                            .focused($focus, equals: .email)
+                            .submitLabel(.next)
+                            .onSubmit {
+                                self.focus = .password
+                            }
+                    }
+                    .padding(.vertical, 6)
+                    .background(Divider(), alignment: .bottom)
+                    .padding(.bottom, 4)
+                    
+                    HStack {
+                        Image(systemName: "lock")
+                        SecureField("Password", text: $authViewModel.password)
+                            .accentColor(.gray)
+                            .disableAutocorrection(true)
+                            .focused($focus, equals: .password)
+                            .submitLabel(.go)
+                            .onSubmit {
+                                signInWithEmailPassword()
+                            }
+                    }
+                    .padding(.vertical, 6)
+                    .background(Divider(), alignment: .bottom)
+                    .padding(.bottom, 8)
+                    
+                    if !authViewModel.errorMessage.isEmpty {
+                        VStack {
+                            Text(authViewModel.errorMessage)
+                                .foregroundColor(Color(UIColor.systemRed))
+                        }
+                    }
+                    
+                    Button(action: signInWithEmailPassword) {
+                        if authViewModel.authenticationState != .authenticating {
+                            Text("Login")
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity)
+                        }
+                        else {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .disabled(!authViewModel.isValid)
+                    .frame(maxWidth: .infinity)
+                    .buttonStyle(.borderedProminent)
+                    .tint(authViewModel.isValid ? .thirdAccent : .gray)
+                    
+                    HStack {
+                        VStack { Divider() }
+                        Text("or")
+                        VStack { Divider() }
+                    }
+                    
+                    SignInWithAppleButton(.signIn) { request in
+                        authViewModel.handleSignInWithAppleRequest(request)
+                    } onCompletion: { result in
+                        authViewModel.handleSignInWithAppleCompletion(result)
+                    }
+                    .signInWithAppleButtonStyle(colorScheme == .light ? .black : .white)
+                    .frame(height: 50)
+                    .cornerRadius(8)
+                    
+                    HStack {
+                        Text("Don't have an account yet?")
+                        Button(action: { authViewModel.switchFlow() }) {
+                            Text("Sign up")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .padding([.top, .bottom], 50)
                 }
-                
+                .padding()
             }
-            .navigationTitle("WELCOME!")
+            .sheet(isPresented: $authViewModel.isNewUser) {
+                ProfileSetupView(
+                    onSubmit: { username, uid in
+                        authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
+                        authViewModel.isNewUser = false
+                        UserDefaults.standard.setValue(username, forKey: "name")
+                        UserDefaults.standard.setValue(uid, forKey: "uid")
+                    },
+                    initialUsername: "",
+                    initialUid: ""
+                )
+            }
         }
         
-    }
-
-    private func performSignInWithApple() {
-        let request = ASAuthorizationAppleIDProvider().createRequest()
-        request.requestedScopes = [.fullName, .email]
-
-        coordinator = Coordinator(authViewModel: authViewModel)
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = coordinator
-        controller.presentationContextProvider = coordinator
-        controller.performRequests()
     }
 }
 
@@ -99,6 +151,8 @@ struct ProfileSetupView: View {
     var initialUsername: String
     var initialUid: String
         
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var username: String = ""
     @State private var uid: String = ""
     @State private var isChecking = false
@@ -115,21 +169,21 @@ struct ProfileSetupView: View {
         _uid = State(initialValue: initialUid)
     }
     
-    func isUniqueIdentifier(_ identifier: String, completion: @escaping (Bool) -> Void) {
-        let predicate = NSPredicate(format: "uid == %@", identifier)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
-            DispatchQueue.main.async {
-                if let records = records, !records.isEmpty {
-                    // Identifier exists, hence not unique
-                    completion(false)
-                } else {
-                    // No existing record with the identifier, hence unique
-                    completion(true)
-                }
-            }
-        }
-    }
+//    func isUniqueIdentifier(_ identifier: String, completion: @escaping (Bool) -> Void) {
+//        let predicate = NSPredicate(format: "uid == %@", identifier)
+//        let query = CKQuery(recordType: "UserData", predicate: predicate)
+//        CKContainer.default().publicCloudDatabase.perform(query, inZoneWith: nil) { records, error in
+//            DispatchQueue.main.async {
+//                if let records = records, !records.isEmpty {
+//                    // Identifier exists, hence not unique
+//                    completion(false)
+//                } else {
+//                    // No existing record with the identifier, hence unique
+//                    completion(true)
+//                }
+//            }
+//        }
+//    }
     
     var body: some View {
         VStack {
@@ -176,6 +230,9 @@ struct ProfileSetupView: View {
         }
         .background(Color(UIColor.systemGray6))
         .edgesIgnoringSafeArea(.all)
+        .onDisappear{
+            userViewModel.fetchUserData()
+        }
     }
     
     private func validateAndSubmit() {
@@ -198,17 +255,19 @@ struct ProfileSetupView: View {
             isValid = false
         } else if uid != initialUid {
             // Additional check if UID is changed and needs to be unique
-            isUniqueIdentifier(uid) { isUnique in
-                if !isUnique {
-                    uidWarning = "Someone else has taken this UID, think about another one"
-                    isValid = false
-                } else {
-                    // Proceed with submission if both checks pass
-                    if isValid {
-                        onSubmit(username, uid)
-                    }
-                }
-            }
+//            authViewModel.checkIfUIDExists(uid: uid) { exist, error in
+//                guard error == nil else { print("Error"); return }
+//                if !exist {
+//                    if isValid {
+//                        onSubmit(username, uid)
+//                    }
+//                } else {
+//                    // Proceed with submission if both checks pass
+//                    uidWarning = "Someone else has taken this UID, think about another one"
+//                    isValid = false
+//                }
+//            }
+            onSubmit(username, uid)
         } else {
             print("UID Unchanged")
             // UID not changed, proceed if username check passes

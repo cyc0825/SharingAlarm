@@ -24,11 +24,11 @@ struct FriendsView: View {
                         .padding()
                 } else {
                     List(viewModel.friends.indices, id: \.self) { index in
-                        Text(viewModel.friends[index].name)
+                        Text(viewModel.friends[index].friendRef.name)
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                 Button {
                                     friendIDToDelete = index
-                                    friendToDelete = viewModel.friends[friendIDToDelete!].name
+                                    friendToDelete = viewModel.friends[friendIDToDelete!].friendRef.name
                                     showDeleteConfirmation = true
                                 } label: {
                                     Label("Delete", systemImage: "trash")
@@ -39,14 +39,14 @@ struct FriendsView: View {
                     .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
                         Button("Delete", role: .destructive) {
                             guard let friendIDToDelete = friendIDToDelete else { return }
-                            viewModel.removeFriendship(recordID: viewModel.friends[friendIDToDelete].recordID) { result in
-                                switch result {
-                                case .success():
-                                    viewModel.friends.remove(at: friendIDToDelete)
-                                case .failure(let error):
-                                    print("Failed to remove friend: \(error.localizedDescription)")
-                                }
-                            }
+//                            viewModel.removeFriendship(recordID: viewModel.friends[friendIDToDelete].recordID) { result in
+//                                switch result {
+//                                case .success():
+//                                    viewModel.friends.remove(at: friendIDToDelete)
+//                                case .failure(let error):
+//                                    print("Failed to remove friend: \(error.localizedDescription)")
+//                                }
+//                            }
                         }
                         Button("Cancel", role: .cancel) {}
                     } message: {
@@ -58,7 +58,7 @@ struct FriendsView: View {
             }
             .refreshable {
                 viewModel.fetchFriends()
-                viewModel.searchRequest()
+                viewModel.fetchFriendsRequest()
             }
             .navigationTitle("Friends")
             .toolbar {
@@ -87,7 +87,6 @@ struct AddFriendView: View {
     @State private var name = ""
 
     @State private var searchQuery = ""
-    @State private var searchResults: [CKRecord] = []
     
     var body: some View {
         NavigationView {
@@ -97,11 +96,11 @@ struct AddFriendView: View {
                     .padding()
                 
                 Button("Search") {
-                    viewModel.searchFriends(query: searchQuery)
+                    viewModel.fetchFriendSearch(query: searchQuery)
                 }
                 .padding()
                 
-                List(viewModel.friendSearchResults, id: \.recordID) { friend in
+                List(viewModel.friendSearchResults, id: \.id) { friend in
                     AddFriendCard(friend: friend, viewModel: viewModel)
                 }
                 
@@ -114,7 +113,7 @@ struct AddFriendView: View {
                 .frame(height: UIScreen.main.bounds.height / 10)
             }
             .onAppear{
-                viewModel.searchRequest()
+                viewModel.fetchFriendsRequest()
             }
             .navigationBarTitle("Add Friends", displayMode: .inline)
             .toolbar {

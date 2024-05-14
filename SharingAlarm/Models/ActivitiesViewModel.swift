@@ -13,7 +13,7 @@ struct Activity {
     var from: Date
     var to: Date
     var name: String
-    var participants: [User]
+    var participants: [AppUser]
 }
 
 class ActivitiesViewModel: ObservableObject {
@@ -71,7 +71,7 @@ class ActivitiesViewModel: ObservableObject {
 
     }
     
-    func addActivity(name: String, startDate: Date, endDate: Date, participants: [User], completion: @escaping (Result<Activity, Error>) -> Void) {
+    func addActivity(name: String, startDate: Date, endDate: Date, participants: [AppUser], completion: @escaping (Result<Activity, Error>) -> Void) {
         guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
         let newActivity = CKRecord(recordType: "ActivityData")
         var participantsUID = convertUserToUID(Users: participants)
@@ -94,7 +94,7 @@ class ActivitiesViewModel: ObservableObject {
         }
     }
     
-    func convertUserToUID(Users: [User]) -> [String] {
+    func convertUserToUID(Users: [AppUser]) -> [String] {
         var result: [String] = []
         for user in Users {
             result.append(user.uid)
@@ -114,8 +114,8 @@ class ActivitiesViewModel: ObservableObject {
         }
     }
     
-    func fetchParticipants(UIDs: [String], completion: @escaping ([User]) -> Void) {
-        var users = [User]()
+    func fetchParticipants(UIDs: [String], completion: @escaping ([AppUser]) -> Void) {
+        var users = [AppUser]()
             
         // Predicate to find users with UIDs in the participantUIDs array
         let predicate = NSPredicate(format: "uid IN %@", UIDs)
@@ -127,7 +127,7 @@ class ActivitiesViewModel: ObservableObject {
             case .success(let record):
                 // Successfully fetched a record, map it to a User
                 if let name = record["name"] as? String, let uid = record["uid"] as? String {
-                    let user = User(recordID: recordID, name: name, uid: uid)
+                    let user = AppUser(name: name, uid: uid)
                     users.append(user)
                 }
             case .failure(let error):

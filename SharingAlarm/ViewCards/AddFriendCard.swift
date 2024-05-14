@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct AddFriendCard: View {
-    var friend: User
+    var friend: AppUser
     var viewModel: FriendsViewModel
     @State private var requestSent = false
     var body: some View {
@@ -22,13 +23,8 @@ struct AddFriendCard: View {
             Spacer()
             Button(action: {
                 // Trigger the friend request action
-                viewModel.sendFriendRequest(to: friend.uid) { result in
-                    switch result {
-                    case .success():
-                        print("Friend requested successfully.")
-                    case .failure(let error):
-                        print("Failed to request friend: \(error.localizedDescription)")
-                    }}
+                print("FR sent to \(friend.id!)")
+                viewModel.saveFriendRequest(user2ID: friend.id!)
                 requestSent = true
             }) {
                 Text("Request")
