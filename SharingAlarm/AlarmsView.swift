@@ -116,7 +116,7 @@ struct AlarmsView: View {
 //                }
             }
             .onAppear{
-                viewModel.fetchUpdatedRecords()
+                viewModel.fetchAlarmData()
             }
             .onChange(of: viewModel.selectedAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {
@@ -173,12 +173,15 @@ struct AddAlarmView: View {
                     }
                 }
             }
+            .onDisappear {
+                viewModel.fetchAlarmData()
+            }
             .navigationBarTitle("Add Alarm", displayMode: .inline)
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
-                let newAlarmR = CKRecord(recordType: "AlarmData")
-                let newAlarm = Alarm(recordID: newAlarmR.recordID, time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval)
+                viewModel.saveAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval)
+                let newAlarm = Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval)
                 scheduleNotification(for: newAlarm, viewModel: viewModel)
                 isPresented = false
             })
@@ -228,20 +231,23 @@ struct AlarmDetailView: View {
                         }
                     }
                     
-                    Button("Delete Alarm", role: .destructive) {
-                        viewModel.removeAlarm(recordID: viewModel.alarms[alarmIndex].recordID) { result in
-                            viewModel.selectedAlarm = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                switch result {
-                                case .success():
-                                    viewModel.alarms.remove(at: alarmIndex)
-                                case .failure(let error):
-                                    print("Failed to remove alarm: \(error.localizedDescription)")
-                                }
-                            }
-                        }
-                    }
-                    .foregroundColor(.red)
+//                    Button("Delete Alarm", role: .destructive) {
+//                        viewModel.removeAlarm(recordID: viewModel.alarms[alarmIndex].recordID) { result in
+//                            viewModel.selectedAlarm = nil
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                                switch result {
+//                                case .success():
+//                                    viewModel.alarms.remove(at: alarmIndex)
+//                                case .failure(let error):
+//                                    print("Failed to remove alarm: \(error.localizedDescription)")
+//                                }
+//                            }
+//                        }
+//                    }
+//                    .foregroundColor(.red)
+                }
+                .onDisappear {
+                    viewModel.fetchAlarmData()
                 }
                 .navigationBarTitle("Edit Alarm", displayMode: .inline)
                 .navigationBarItems(leading: Button("Cancel") {
@@ -250,7 +256,7 @@ struct AlarmDetailView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         viewModel.alarms.remove(at: alarmIndex)
                     }
-                    let newAlarm = Alarm(recordID: selectedAlarm.recordID, time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, notificationIdentifier: selectedAlarm.notificationIdentifier)
+                    let newAlarm = Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, notificationIdentifier: selectedAlarm.notificationIdentifier)
                     modifyNotification(for: newAlarm, viewModel: viewModel)
                     isPresented = false
                 })

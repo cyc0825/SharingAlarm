@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct AddFriendCard: View {
+    let uid = UserDefaults.standard.value(forKey: "uid") as? String
     var friend: AppUser
     var viewModel: FriendsViewModel
     @State private var requestSent = false
@@ -21,20 +22,25 @@ struct AddFriendCard: View {
                     .font(.subheadline)
             }
             Spacer()
-            Button(action: {
-                // Trigger the friend request action
-                print("FR sent to \(friend.id!)")
-                viewModel.saveFriendRequest(user2ID: friend.id!)
-                requestSent = true
-            }) {
-                Text("Request")
+            if friend.uid == uid {
+                Text("you")
+            } else if !viewModel.friends.contains(where: { $0.friendRef.uid == friend.uid }) {
+                Button(action: {
+                    // Trigger the friend request action
+                    print("FR sent to \(friend.id!)")
+                    viewModel.saveFriendRequest(user2ID: friend.id!)
+                    requestSent = true
+                }) {
+                    isRequestDisabled() ? Text("Requested") : Text("Request")
+                }
+                .disabled(isRequestDisabled())
             }
-            .disabled(requestSent)
         }
     }
     
-    private func sendRequest() {
-            requestSent = true
-        }
+    @MainActor
+    private func isRequestDisabled() -> Bool {
+        friend.uid == uid || requestSent || viewModel.ownRequests.contains(where: { $0.friendRef.uid == friend.uid })
+    }
 }
 

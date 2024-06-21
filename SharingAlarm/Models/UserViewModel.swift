@@ -41,7 +41,6 @@ class UserViewModel: ObservableObject {
       $user
         .compactMap { $0 }
         .sink { user in
-            self.appUser.id = user.uid
             UserDefaults.standard.setValue(user.uid, forKey: "userID")
         }
         .store(in: &cancellables)
@@ -61,12 +60,17 @@ class UserViewModel: ObservableObject {
     func fetchUserData() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
+            debugPrint("[fetchUserData] starts for \(userID)")
             do {
                 self.appUser = try await db.collection("UserData").document(userID).getDocument(as: AppUser.self)
+                UserDefaults.standard.setValue(self.appUser.name, forKey: "name")
+                UserDefaults.standard.setValue(self.appUser.uid, forKey: "uid")
             }
             catch {
+                debugPrint("[fetchUserData] fails")
                 print(error.localizedDescription)
             }
+            debugPrint("[fetchUserData] ends with \(self.appUser)")
         }
     }
     

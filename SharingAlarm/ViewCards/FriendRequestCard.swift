@@ -32,6 +32,7 @@ struct FriendRequestCard: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             animatePop = false
                             viewModel.saveFriendShip(fromRequest: viewModel.friendRequests[index])
+                            viewModel.removeFriendRequest(fromRequest: viewModel.friendRequests[index])
                         }
                     }
                 }) {

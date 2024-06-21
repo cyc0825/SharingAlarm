@@ -20,8 +20,11 @@ struct FriendsView: View {
         NavigationView {
             ZStack {
                 if viewModel.friends.isEmpty {
-                    Text("Tap the add button and add your friends.")
-                        .padding()
+                    ScrollView {
+                        Text("Tap the add button and add your friends.")
+                            .padding()
+                    }
+                    
                 } else {
                     List(viewModel.friends.indices, id: \.self) { index in
                         Text(viewModel.friends[index].friendRef.name)
@@ -34,31 +37,25 @@ struct FriendsView: View {
                                     Label("Delete", systemImage: "trash")
                                 }
                                 .tint(.red)
-                            }
-                    }
-                    .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
-                        Button("Delete", role: .destructive) {
-                            guard let friendIDToDelete = friendIDToDelete else { return }
-//                            viewModel.removeFriendship(recordID: viewModel.friends[friendIDToDelete].recordID) { result in
-//                                switch result {
-//                                case .success():
-//                                    viewModel.friends.remove(at: friendIDToDelete)
-//                                case .failure(let error):
-//                                    print("Failed to remove friend: \(error.localizedDescription)")
-//                                }
-//                            }
-                        }
-                        Button("Cancel", role: .cancel) {}
-                    } message: {
-                        if let friendIDToDelete = friendIDToDelete {
-                            Text("Would you like to remove \(friendToDelete!) from your friends list?")
                         }
                     }
                 }
             }
             .refreshable {
                 viewModel.fetchFriends()
+                viewModel.fetchOwnRequest()
                 viewModel.fetchFriendsRequest()
+            }
+            .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                Button("Delete", role: .destructive) {
+                    guard let friendIDToDelete = friendIDToDelete else { return }
+                    viewModel.removeFriend(for: friendIDToDelete)
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                if let friendIDToDelete = friendIDToDelete {
+                    Text("Would you like to remove \(friendToDelete!) from your friends list?")
+                }
             }
             .navigationTitle("Friends")
             .toolbar {
@@ -112,8 +109,10 @@ struct AddFriendView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .frame(height: UIScreen.main.bounds.height / 10)
             }
-            .onAppear{
+            .onDisappear {
                 viewModel.fetchFriendsRequest()
+                viewModel.fetchFriends()
+                viewModel.fetchOwnRequest()
             }
             .navigationBarTitle("Add Friends", displayMode: .inline)
             .toolbar {

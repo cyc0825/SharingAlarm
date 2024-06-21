@@ -9,9 +9,11 @@ import Foundation
 import CloudKit
 import AudioToolbox
 import UserNotifications
+import FirebaseAuth
+import FirebaseFirestore
 
-struct Alarm: Hashable {
-    var recordID: CKRecord.ID
+struct Alarm: Hashable, Codable, Identifiable {
+    @DocumentID var id: String?
     var time: Date
     var sound: String
     var repeatInterval: String
@@ -22,17 +24,9 @@ struct Alarm: Hashable {
         max(0, time.timeIntervalSince(Date()))
     }
     
-    func toCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: "AlarmData", recordID: recordID)
-        record["time"] = time
-        record["sound"] = sound
-        record["interval"] = repeatInterval
-        record["notificationIdentifier"] = notificationIdentifier
-        return record
-    }
-    
 }
 
+@MainActor
 class AlarmsViewModel: ObservableObject {
     @Published var alarms: [Alarm] = []
     @Published var selectedAlarm: Alarm?
@@ -47,6 +41,12 @@ class AlarmsViewModel: ObservableObject {
     var vibrationTimer: Timer?
     var rescheduleTimer: Timer?
     
+    private var db = Firestore.firestore()
+    
+    init() {
+        fetchAlarmData()
+    }
+    
     func startGlobalTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -56,17 +56,9 @@ class AlarmsViewModel: ObservableObject {
     }
     
     func checkAlarms() {
-        for index in alarms.indices {
-            if alarms[index].remainingTime <= 0 {
-                removeAlarm(recordID: alarms[index].recordID) { result in
-                    switch result {
-                    case .success():
-                        self.alarms.remove(at: index)
-                        print("Alarm has finished its Mission")
-                    case .failure(let error):
-                        print("Alarm cannot finished its Mission because \(error.localizedDescription)")
-                    }
-                }
+        for alarm in alarms {
+            if alarm.remainingTime <= 0 {
+                removeAlarm(documentID: alarm.id)
             }
         }
     }
@@ -75,88 +67,71 @@ class AlarmsViewModel: ObservableObject {
         timer?.invalidate()
     }
     
-    func fetchUpdatedRecords() {
-        let lastFetchDate = UserDefaults.standard.value(forKey: "lastAlarmFetchDate") as? Date ?? Date.distantPast
-        let predicate = NSPredicate(format: "modificationDate > %@", lastFetchDate as CVarArg)
-        let query = CKQuery(recordType: "AlarmData", predicate: predicate)
-        
-        // You can also specify sorting if needed
-        let sortDescriptor = NSSortDescriptor(key: "modificationDate", ascending: true)
-        query.sortDescriptors = [sortDescriptor]
-        let operation = CKQueryOperation(query: query)
-        var mostRecentUpdate: Date = lastFetchDate
-        operation.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                DispatchQueue.main.async {
-                    guard !self.alarms.contains(where: { $0.recordID == recordID }) else {
-                        return
+    func fetchAlarmData() {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                let querySnapshot = try await db.collection("UserData").document(userID)
+                    .collection("Alarms")
+                    .getDocuments()
+                if !querySnapshot.isEmpty {
+                    for document in querySnapshot.documents {
+                        Task {
+                            do {
+                                let alarm = try document.data(as: Alarm.self)
+                                if !self.alarms.contains(where: { $0.id == alarm.id }) {
+                                    self.alarms.append(alarm)
+                                }
+                            }
+                            catch {
+                                print(error.localizedDescription)
+                            }
+                        }
                     }
-                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
-                        mostRecentUpdate = modificationDate
-                    }
-                    let alarm = Alarm(
-                        recordID: recordID,
-                        time: record["time"] as? Date ?? Date(),
-                        sound: record["sound"] as? String ?? "Nil",
-                        repeatInterval: record["interval"] as? String ?? "Nil",
-                        notificationIdentifier: record["notificationIdentifier"]
-                    )
-                    self.alarms.append(alarm)
-                    self.alarms.sort {
-                        $0.time < $1.time
-                    }
-                }
-            case .failure(let error):
-                print("Error fetching record: \(error)")
-            }
-        }
-        operation.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
                 } else {
-                    print("Fetched all data. No additional data to fetch.")
+                    self.alarms = []
                 }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
             }
-        }
-        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastAlarmFetchDate")
-        CKContainer.default().publicCloudDatabase.add(operation)
-    }
-    
-    func addAlarm(time: Date, sound: String, repeatInterval: String, completion: @escaping (Result<Alarm, Error>) -> Void) {
-        let newAlarm = CKRecord(recordType: "AlarmData")
-        newAlarm["time"] = time
-        newAlarm["sound"] = sound
-        newAlarm["interval"] = repeatInterval
-        
-        CKContainer.default().publicCloudDatabase.save(newAlarm) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else if let recordID = record?.recordID {
-                    let newAlarm = Alarm(recordID: recordID, time: time, sound: sound, repeatInterval: repeatInterval)
-                    self.alarms.append(newAlarm)
-                    completion(.success((newAlarm)))
-                }
+            catch {
+                print(error.localizedDescription)
             }
         }
     }
     
-    func removeAlarm(recordID: CKRecord.ID, completion: @escaping (Result<Void, Error>) -> Void) {
-        print("Removing")
-        CKContainer.default().publicCloudDatabase.delete(withRecordID: recordID) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
+    func saveAlarm(time: Date, sound: String, repeatInterval: String) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                try await db.collection("UserData").document(userID)
+                    .collection("Alarms")
+                    .addDocument(data: ["time": time,
+                                        "sound": sound,
+                                        "repeatInterval": repeatInterval
+                                       ])
+            }
+            catch {
+                print(error.localizedDescription)
             }
         }
+    }
+    
+    func removeAlarm(documentID: String?) {
+        guard let documentID = documentID else { return }
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                debugPrint("[removeAlarm] starts")
+                try await db.collection("UserData").document(userID)
+                    .collection("Alarms")
+                    .document(documentID).delete()
+            } catch {
+                debugPrint("Error removing alarm: \(error.localizedDescription)")
+            }
+            self.alarms.remove(at: 0)
+            print("Alarm has finished its Mission")
+            debugPrint("[removeAlarm] ends")
+        }
+        
     }
 }
 

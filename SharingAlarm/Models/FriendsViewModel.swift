@@ -24,23 +24,26 @@ class FriendsViewModel: ObservableObject {
     
     private var db = Firestore.firestore()
     
+    init() {
+        fetchFriends()
+        fetchOwnRequest()
+        fetchFriendsRequest()
+    }
+    
     func fetchOwnRequest() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        db.collection("Friends").document(userID)
-            .collection("ownRequests")
-            .getDocuments { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("Error fetching own requests: \(error.localizedDescription)")
-                    return
-                }
-
-                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+        Task {
+            do {
+                self.ownRequests = []
+                let querySnapshot = try await db.collection("Friends").document(userID)
+                    .collection("ownRequests")
+                    .getDocuments()
+                        
+                if !querySnapshot.isEmpty {
                     for document in querySnapshot.documents {
                         let id = document.documentID
                         let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
-
+                        
                         if let friendRef = document.get("friendRef") as? DocumentReference {
                             Task {
                                 do {
@@ -57,26 +60,28 @@ class FriendsViewModel: ObservableObject {
                     self.ownRequests = []
                 }
             }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func fetchFriendsRequest() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        print("Start fetching friend Request for \(userID)")
-        db.collection("Friends").document(userID)
-            .collection("friendRequests")
-            .getDocuments { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
-
-                if let error = error {
-                    print("Error fetching friend requests: \(error.localizedDescription)")
-                    return
-                }
-
-                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+        Task {
+            do {
+                print("Start fetching friend Request for \(userID)")
+                self.friendRequests = []
+                let querySnapshot = try await db.collection("Friends").document(userID)
+                    .collection("friendRequests")
+                    .getDocuments()
+                        
+                        
+                if !querySnapshot.isEmpty {
                     for document in querySnapshot.documents {
                         let id = document.documentID
                         let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
-
+                        
                         if let friendRef = document.get("friendRef") as? DocumentReference {
                             Task {
                                 do {
@@ -95,32 +100,36 @@ class FriendsViewModel: ObservableObject {
                     self.friendRequests = []
                 }
             }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func fetchFriends() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        db.collection("Friends").document(userID)
-            .collection("friends")
-            .getDocuments { [weak self] (querySnapshot, error) in
-                guard let self = self else { return }
-                
-                if let error = error {
-                    print("Error fetching friends: \(error.localizedDescription)")
-                    return
-                }
-                
-                if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+        Task {
+            do {
+                debugPrint("[fetchFriends] starts")
+                let querySnapshot = try await db.collection("Friends").document(userID)
+                    .collection("friends")
+                    .getDocuments()
+                       
+                if !querySnapshot.isEmpty {
                     for document in querySnapshot.documents {
                         let id = document.documentID
                         let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
-
+                        
                         if let friendRef = document.get("friendRef") as? DocumentReference {
                             Task {
                                 do {
                                     let appUser = try await friendRef.getDocument(as: AppUser.self)
-                                    self.friends.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                    if !self.friends.contains(where: { $0.friendRef.uid == appUser.uid }) {
+                                        self.friends.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                    }
                                 }
                                 catch {
+                                    debugPrint("[fetchFriends] error")
                                     print(error.localizedDescription)
                                 }
                             }
@@ -130,6 +139,11 @@ class FriendsViewModel: ObservableObject {
                     self.friends = []
                 }
             }
+            catch {
+                print(error.localizedDescription)
+            }
+            debugPrint("[fetchFriends] done")
+        }
     }
     
     // User1 sends FR to User2
@@ -157,30 +171,36 @@ class FriendsViewModel: ObservableObject {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
             do {
+                debugPrint("[SaveFriendship] starts")
+                let currentUserRef = db.collection("UserData").document(userID)
+                let friendUserRef = db.collection("UserData").document(request.friendRef.id ?? "")
                 try await db.collection("Friends").document(userID)
                     .collection("friends")
-                    .addDocument(data: ["friendRef": request.friendRef,
+                    .addDocument(data: ["friendRef": friendUserRef,
                                         "timestamp": Date.now])
                 
-                try await db.collection("Friends").document(request.friendRef.uid)
+                try await db.collection("Friends").document(request.friendRef.id!)
                     .collection("friends")
-                    .addDocument(data: ["friendRef": db.collection("users").document(userID),
+                    .addDocument(data: ["friendRef": currentUserRef,
                                         "timestamp": Date.now])
-                try await print("1st try wait")
-                try await print("2st try wait")
-                print("after try wait")
+                debugPrint("[SaveFriendship] done")
             }
             catch {
-                print(error.localizedDescription)
+                debugPrint("[SaveFriendship] error \(error.localizedDescription)")
             }
         }
-        print("after Task")
     }
     
     func fetchFriendSearch(query: String) {
         Task {
             do {
-                let documentSnapshot = try await db.collection("UserData").whereField("uid", isGreaterThan: query).getDocuments()
+                self.friendSearchResults = []
+                let documentSnapshot: QuerySnapshot
+                if query != "" {
+                    documentSnapshot = try await db.collection("UserData").whereField("uid", isEqualTo: query).getDocuments()
+                } else {
+                    documentSnapshot = try await db.collection("UserData").getDocuments()
+                }
                 if !documentSnapshot.isEmpty {
                     for document in documentSnapshot.documents {
                         let id = document.documentID
@@ -202,21 +222,83 @@ class FriendsViewModel: ObservableObject {
     
     func removeFriendRequest(fromRequest request: FriendReference) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        
+        let userRef = db.collection("UserData").document(userID)
+        let friendRef = db.collection("UserData").document(request.friendRef.id!)
+        
         Task {
+            debugPrint("[removeFriendRequest] starts")
+            let friendRequestsQuery = db.collection("Friends").document(userID)
+                .collection("friendRequests")
+                .whereField("friendRef", isEqualTo: friendRef)
+            
             do {
-                try await db.collection("Friends").document(userID)
-                    .collection("friendRequests")
-                    .document(request.id!)
-                    .delete()
-                print("Trying to remove FR for \(request.friendRef.id!)")
-                try await db.collection("Friends").document(request.friendRef.id!)
-                    .collection("ownRequests")
-                    .document(request.id!)
-                    .delete()
+                let querySnapshot = try await friendRequestsQuery.getDocuments()
+                for document in querySnapshot.documents {
+                    try await document.reference.delete()
+                }
+                print("Removed friend request from 'friendRequests'")
+            } catch {
+                debugPrint("Error removing friend request from 'friendRequests': \(error.localizedDescription)")
             }
-            catch {
-                print(error.localizedDescription)
+            
+            // Query and delete from the 'ownRequests' collection
+            let ownRequestsQuery = db.collection("Friends").document(request.friendRef.id!)
+                .collection("ownRequests")
+                .whereField("friendRef", isEqualTo: userRef)
+            
+            do {
+                let querySnapshot = try await ownRequestsQuery.getDocuments()
+                for document in querySnapshot.documents {
+                    try await document.reference.delete()
+                }
+                print("Removed friend request from 'ownRequests'")
+            } catch {
+                debugPrint("Error removing friend request from 'ownRequests': \(error.localizedDescription)")
             }
+            
+            debugPrint("[removeFriendRequest] ends")
+        }
+    }
+    
+    func removeFriend(for friendIndex: Int) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        
+        let userRef = db.collection("UserData").document(userID)
+        let friendRef = db.collection("UserData").document(friends[friendIndex].friendRef.id!)
+        
+        Task {
+            debugPrint("[removeFriend] starts")
+            let friendRequestsQuery = db.collection("Friends").document(userID)
+                .collection("friends")
+                .whereField("friendRef", isEqualTo: friendRef)
+            
+            do {
+                let querySnapshot = try await friendRequestsQuery.getDocuments()
+                for document in querySnapshot.documents {
+                    try await document.reference.delete()
+                }
+                print("Removed friend for 'user'")
+            } catch {
+                debugPrint("Error removing friend request for 'user': \(error.localizedDescription)")
+            }
+            
+            // Query and delete from the 'ownRequests' collection
+            let ownRequestsQuery = db.collection("Friends").document(friends[friendIndex].friendRef.id!)
+                .collection("friends")
+                .whereField("friendRef", isEqualTo: userRef)
+            
+            do {
+                let querySnapshot = try await ownRequestsQuery.getDocuments()
+                for document in querySnapshot.documents {
+                    try await document.reference.delete()
+                }
+                print("Removed friend for 'friend'")
+            } catch {
+                debugPrint("Error removing friend for 'friend': \(error.localizedDescription)")
+            }
+            friends.remove(at: friendIndex)
+            debugPrint("[removeFriend] ends")
         }
     }
 }

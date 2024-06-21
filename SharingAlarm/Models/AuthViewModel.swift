@@ -182,7 +182,7 @@ extension AuthViewModel {
                 let appleIDCredential = try await signInWithApple()
                 
                 guard let appleIDToken = appleIDCredential.identityToken else {
-                    print("Unable to fetdch identify token.")
+                    print("Unable to fetch identify token.")
                     return false
                 }
                 guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
