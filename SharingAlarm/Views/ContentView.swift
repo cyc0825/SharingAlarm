@@ -13,6 +13,7 @@ struct ContentView: View {
     @EnvironmentObject var friendViewModel: FriendsViewModel
     @EnvironmentObject var activityViewModel: ActivitiesViewModel
     @EnvironmentObject var alarmviewModel: AlarmsViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var loaded = false
     @State private var showingAlarmView = false
     // var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String

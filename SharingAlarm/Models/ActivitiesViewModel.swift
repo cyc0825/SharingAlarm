@@ -7,88 +7,141 @@
 
 import Foundation
 import CloudKit
+import FirebaseFirestore
 
-struct Activity {
-    var recordID: CKRecord.ID
+struct Activity: Hashable, Codable, Identifiable  {
+    @DocumentID var id: String?
     var from: Date
     var to: Date
     var name: String
     var participants: [AppUser]
+    
+    static func == (lhs: Activity, rhs: Activity) -> Bool {
+        return lhs.id == rhs.id
+    }
+        
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
+
+//struct ActivityReference: Hashable, Codable, Identifiable {
+//    static func == (lhs: ActivityReference, rhs: ActivityReference) -> Bool {
+//        return lhs.id == rhs.id
+//    }
+//    
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(timestamp)
+//    }
+//    
+//    @DocumentID var id: String?
+//    var activityRef: Activity
+//    var timestamp: Date
+//}
 
 class ActivitiesViewModel: ObservableObject {
     @Published var activities: [Activity] = []
     
+    private var db = Firestore.firestore()
+    
     init() {
+        fetchActivity()
     }
     
     func fetchActivity() {
-        let lastFetchDate = UserDefaults.standard.value(forKey: "lastActivityFetchDate") as? Date ?? Date.distantPast
-        let predicate = NSPredicate(format: "modificationDate > %@", lastFetchDate as CVarArg)
-        let query = CKQuery(recordType: "ActivityData", predicate: predicate)
-        
-        // You can also specify sorting if needed
-        let sortDescriptor = NSSortDescriptor(key: "modificationDate", ascending: true)
-        query.sortDescriptors = [sortDescriptor]
-        let operation = CKQueryOperation(query: query)
-        var mostRecentUpdate: Date = lastFetchDate
-        operation.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                DispatchQueue.main.async {
-                    guard !self.activities.contains(where: { $0.recordID == recordID }) else {
-                        return
-                    }
-                    if let modificationDate = record.modificationDate, modificationDate > mostRecentUpdate {
-                        mostRecentUpdate = modificationDate
-                    }
-                    if let participantIDs = record["participants"] as? [String] {
-                        self.fetchParticipants(UIDs: participantIDs) { users in
-                            // Now 'users' contains the fetched User objects for the participant IDs
-                            let activity = Activity(recordID: recordID, from: record["startDate"] as? Date ?? Date(), to: record["endDate"] as? Date ?? Date(), name: record["name"] as? String ?? "No Name", participants: users)
-                            self.activities.append(activity)
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                debugPrint("[fetchActivities] starts")
+                let querySnapshot = try await db.collection("UserData").document(userID)
+                    .collection("activities")
+                    .getDocuments()
+                
+                if !querySnapshot.isEmpty {
+                    for document in querySnapshot.documents {
+                        let id = document.documentID
+                        // let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
+                        if let activityRef = document.get("activityRef") as? DocumentReference {
+                            Task {
+                                do {
+                                    let activityData = try await activityRef.getDocument()
+                                    var resolvedParticipants: [AppUser] = []
+                                    let participantsCollectionRef = activityRef.collection("participants")
+                                    let participantsSnapshot = try await participantsCollectionRef.getDocuments()
+                                    for doc in participantsSnapshot.documents {
+                                        if let userRef = doc.get("userRef") as? DocumentReference {
+                                            let user = try await userRef.getDocument(as: AppUser.self)
+                                            resolvedParticipants.append(user)
+                                        }
+                                    }
+                                    if !self.activities.contains(where: { $0.id == id }) {
+                                        let activity = Activity(id: id,
+                                                                from: activityData["from"] as? Date ?? Date(),
+                                                                to: activityData["to"] as? Date ?? Date(),
+                                                                name: activityData["name"] as? String ?? "",
+                                                                participants: resolvedParticipants)
+                                        DispatchQueue.main.async {
+                                            self.activities.append(activity)
+                                        }
+                                    }
+                                }
+                                catch {
+                                    debugPrint("[fetchFriends] error")
+                                    print(error.localizedDescription)
+                                }
+                            }
                         }
                     }
-                }
-            case .failure(let error):
-                print("Error fetching record: \(error)")
-            }
-        }
-        operation.queryResultBlock = { result in
-            switch result {
-            case .success(let cursor):
-                if let cursor = cursor {
-                    print("Additional data available with cursor: \(cursor)")
                 } else {
-                    print("Fetched all Activity. No additional data to fetch.")
+                    DispatchQueue.main.async {
+                        self.activities = []
+                    }
                 }
-            case .failure(let error):
-                print("Query failed with error: \(error.localizedDescription)")
             }
+            catch {
+                print(error.localizedDescription)
+            }
+            debugPrint("[fetchActivities] done")
         }
-        UserDefaults.standard.set(mostRecentUpdate, forKey: "lastActivityFetchDate")
-        CKContainer.default().publicCloudDatabase.add(operation)
-
     }
     
     func addActivity(name: String, startDate: Date, endDate: Date, participants: [AppUser], completion: @escaping (Result<Activity, Error>) -> Void) {
-        guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
-        let newActivity = CKRecord(recordType: "ActivityData")
-        var participantsUID = convertUserToUID(Users: participants)
-        
-        participantsUID.append(uid)
-        newActivity["name"] = name
-        newActivity["startDate"] = startDate
-        newActivity["endDate"] = endDate
-        newActivity["participants"] = participantsUID
-        
-        CKContainer.default().publicCloudDatabase.save(newActivity) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
+        // guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                debugPrint("[addActivity] starts")
+                let activityRef = try await db.collection("Activity")
+                    .addDocument(data: ["from": startDate,
+                                        "to": endDate,
+                                        "name": name])
+                
+//                try await db.collection("Activity")
+//                    .document(activityRef.documentID)
+//                    .collection("participants")
+//                    .addDocument(data: ["userRef": db.collection("UserData").document(userID)])
+//                try await db.collection("UserData").document(userID)
+//                    .collection("activities")
+//                    .addDocument(data: ["activityRef": activityRef,
+//                                        "timestamp": Date.now])
+//                debugPrint("[addActivity] done for \(userID)")
+//                
+                addParticipant(activityId: activityRef.documentID, participants: participants) { result in
+                    switch result {
+                    case .success(_):
+                        DispatchQueue.main.async {
+                            completion(.success(Activity(id: activityRef.documentID ,from: startDate, to: endDate, name: name, participants: participants)))
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                    }
+                }
+            }
+            catch {
+                debugPrint("[addActivity] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
                     completion(.failure(error))
-                } else  if let record = record{
-                    let activity = Activity(recordID: record.recordID, from: startDate, to: endDate, name: name, participants: participants)
-                    completion(.success((activity)))
                 }
             }
         }
@@ -102,62 +155,133 @@ class ActivitiesViewModel: ObservableObject {
         return result
     }
     
-    func removeActivity(recordID: CKRecord.ID, completion: @escaping (Result<Void, Error>) -> Void){
-        CKContainer.default().publicCloudDatabase.delete(withRecordID: recordID) { (record, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
+    func editActivity(activityId: String, name: String, startDate: Date, endDate: Date, newParticipants: [AppUser], completion: @escaping (Result<[AppUser], Error>) -> Void) {
+        Task {
+            do {
+                debugPrint("[addActivity] starts")
+                try await db.collection("Activity")
+                    .document(activityId)
+                    .setData(["from": startDate,
+                              "to": endDate,
+                              "name": name])
+                addParticipant(activityId: activityId, participants: newParticipants) { result in
+                    switch result {
+                    case .success(_):
+                        DispatchQueue.main.async {
+                            completion(.success(newParticipants))
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
+                        }
+                    }
                 }
             }
         }
     }
     
-    func fetchParticipants(UIDs: [String], completion: @escaping ([AppUser]) -> Void) {
-        var users = [AppUser]()
+    func removeActivity(activity: Activity, completion: @escaping (Result<Bool, Error>) -> Void){
+        // guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        
+        Task {
+            debugPrint("[removeActivity] starts")
+            do {
+                for participant in activity.participants{
+                    try await db.collection("UserData").document(participant.id!)
+                        .collection("activities")
+                        .document(activity.id!)
+                        .delete()
+                }
+                
+                if let activityId = activity.id {
+                    let activityRef = db.collection("Activity").document(activityId)
+                    let subcollection = activityRef.collection("participants")
+                    let subcollectionDocs = try await subcollection.getDocuments()
+                    for doc in subcollectionDocs.documents {
+                        try await doc.reference.delete()
+                    }
+                    try await activityRef.delete()
+                }
+            }
+            catch {
+                debugPrint("[removeActivity] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+            debugPrint("[removeActivity] ends")
+            DispatchQueue.main.async {
+                completion(.success(true))
+            }
             
-        // Predicate to find users with UIDs in the participantUIDs array
-        let predicate = NSPredicate(format: "uid IN %@", UIDs)
-        let query = CKQuery(recordType: "UserData", predicate: predicate)
-        let operation = CKQueryOperation(query: query)
-        
-        operation.recordMatchedBlock = { (recordID, result) in
-            switch result {
-            case .success(let record):
-                // Successfully fetched a record, map it to a User
-                if let name = record["name"] as? String, let uid = record["uid"] as? String {
-                    let user = AppUser(name: name, uid: uid)
-                    users.append(user)
-                }
-            case .failure(let error):
-                print("Failed to fetch record with ID \(recordID): \(error)")
-            }
         }
-        
-        operation.queryResultBlock = { result in
-            switch result {
-            case .success(_):
-                // Completed fetching all records
-                DispatchQueue.main.async {
-                    completion(users)
+    }
+    
+    func addParticipant(activityId: String, participants: [AppUser], completion: @escaping (Result<Bool, Error>) -> Void) {
+        Task {
+            debugPrint("[addParticipant] starts")
+            do {
+                let activityRef = db.collection("Activity").document(activityId)
+                for participant in participants {
+                    if let userId = participant.id {
+                        try await db.collection("Activity")
+                            .document(activityRef.documentID)
+                            .collection("participants")
+                            .document(participant.id!)
+                            .setData(["userRef": db.collection("UserData").document(participant.id!)])
+                    
+                        try await db.collection("UserData").document(userId)
+                            .collection("activities")
+                            .document(activityRef.documentID)
+                            .setData(["activityRef": activityRef,
+                                      "timestamp": Date.now])
+                    }
+                    debugPrint("[addParticipant] done for \(participant.uid)")
                 }
-            case .failure(let error):
-                print("Failed to fetch participants: \(error)")
                 DispatchQueue.main.async {
-                    completion([])
+                    completion(.success(true))
                 }
             }
+            catch {
+                debugPrint("[addParticipant] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
         }
-        CKContainer.default().publicCloudDatabase.add(operation)
+    }
+    
+    func removeParticipant(activityId: String, participantId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        Task {
+            debugPrint("[removeParticipant] starts")
+            do {
+                try await db.collection("Activity")
+                    .document(activityId)
+                    .collection("participants")
+                    .document(participantId).delete()
+                
+                try await db.collection("UserData").document(participantId)
+                    .collection("activities")
+                    .document(activityId)
+                    .delete()
+                DispatchQueue.main.async {
+                    completion(.success(true))
+                }
+            }
+            catch {
+                debugPrint("[removeParticipant] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 }
 
 extension ActivitiesViewModel {
     static func withSampleData() -> ActivitiesViewModel {
         let sampleViewModel = ActivitiesViewModel()
-        // Add a sample activity to your view model
-        sampleViewModel.activities.append(Activity(recordID: CKRecord(recordType: "ActivityData").recordID, from: Date(), to: Date(), name: "Name", participants: []))
+        sampleViewModel.activities.append(Activity(from: Date(), to: Date(), name: "test", participants: []))
         
         return sampleViewModel
     }

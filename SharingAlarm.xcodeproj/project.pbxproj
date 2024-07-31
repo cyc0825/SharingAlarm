@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FB1972BC3172700C88BBC /* AddFriendCard.swift */; };
 		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
+		D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */; };
+		D337DFB02C56F1BA00D33713 /* AlarmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAF2C56F1BA00D33713 /* AlarmDetailView.swift */; };
+		D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB22C56F20100D33713 /* AddFriendView.swift */; };
+		D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB42C56F22400D33713 /* AddActivityView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
@@ -67,6 +71,10 @@
 /* Begin PBXFileReference section */
 		D30FB1972BC3172700C88BBC /* AddFriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCard.swift; sourceTree = "<group>"; };
 		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlarmView.swift; sourceTree = "<group>"; };
+		D337DFAF2C56F1BA00D33713 /* AlarmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmDetailView.swift; sourceTree = "<group>"; };
+		D337DFB22C56F20100D33713 /* AddFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendView.swift; sourceTree = "<group>"; };
+		D337DFB42C56F22400D33713 /* AddActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivityView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
@@ -145,6 +153,55 @@
 			path = ViewCards;
 			sourceTree = "<group>";
 		};
+		D337DFAA2C56F13100D33713 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D337DFB12C56F1D500D33713 /* Relationship */,
+				D337DFAC2C56F14E00D33713 /* Auth */,
+				D337DFAB2C56F14200D33713 /* Alarm */,
+				D38EEB842BA3719F0099D382 /* ContentView.swift */,
+				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
+				D3E7E8372BC0962500E36A4D /* StyleView.swift */,
+				D31605762BC074F400A4089E /* LoadingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D337DFAB2C56F14200D33713 /* Alarm */ = {
+			isa = PBXGroup;
+			children = (
+				D3717E452BC9796600440099 /* AlarmInterfaceView.swift */,
+				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
+				D3B53B2E2BC4E66000B41769 /* AlarmView.swift */,
+				D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */,
+				D337DFAF2C56F1BA00D33713 /* AlarmDetailView.swift */,
+			);
+			path = Alarm;
+			sourceTree = "<group>";
+		};
+		D337DFAC2C56F14E00D33713 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				D3ABC8322BDE9799003D2265 /* AuthView.swift */,
+				D3ABC8342BDE99FA003D2265 /* AuthedView.swift */,
+				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
+				D3ABC83E2BDF12D3003D2265 /* SignupView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		D337DFB12C56F1D500D33713 /* Relationship */ = {
+			isa = PBXGroup;
+			children = (
+				D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */,
+				D3632D282BCF2420004F02FD /* ActivityDetailView.swift */,
+				D337DFB42C56F22400D33713 /* AddActivityView.swift */,
+				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
+				D337DFB22C56F20100D33713 /* AddFriendView.swift */,
+			);
+			path = Relationship;
+			sourceTree = "<group>";
+		};
 		D35372F02BBB7D9500B56F32 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,20 +244,7 @@
 				D35372F02BBB7D9500B56F32 /* Models */,
 				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
 				D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */,
-				D3ABC8322BDE9799003D2265 /* AuthView.swift */,
-				D3ABC8342BDE99FA003D2265 /* AuthedView.swift */,
-				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
-				D3ABC83E2BDF12D3003D2265 /* SignupView.swift */,
-				D38EEB842BA3719F0099D382 /* ContentView.swift */,
-				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
-				D3717E452BC9796600440099 /* AlarmInterfaceView.swift */,
-				D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */,
-				D3632D282BCF2420004F02FD /* ActivityDetailView.swift */,
-				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
-				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
-				D3E7E8372BC0962500E36A4D /* StyleView.swift */,
-				D31605762BC074F400A4089E /* LoadingView.swift */,
-				D3B53B2E2BC4E66000B41769 /* AlarmView.swift */,
+				D337DFAA2C56F13100D33713 /* Views */,
 				D38EEB862BA371A00099D382 /* Assets.xcassets */,
 				D38EEB8B2BA371A00099D382 /* Persistence.swift */,
 				D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */,
@@ -397,11 +441,14 @@
 				D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */,
 				D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */,
 				D31605772BC074F400A4089E /* LoadingView.swift in Sources */,
+				D337DFB02C56F1BA00D33713 /* AlarmDetailView.swift in Sources */,
 				D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
 				D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
+				D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
+				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
 				D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
@@ -411,6 +458,7 @@
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
 				D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
+				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,
 				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

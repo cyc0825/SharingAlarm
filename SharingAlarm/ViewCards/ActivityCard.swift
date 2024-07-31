@@ -9,7 +9,7 @@ import SwiftUI
 import CloudKit
 
 struct ActivityCard: View {
-    var viewModel: ActivitiesViewModel
+    @StateObject var viewModel: ActivitiesViewModel
     var index: Int
     var body: some View {
         ZStack {

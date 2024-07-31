@@ -21,6 +21,11 @@ struct AppUser: Codable, Identifiable {
     }
 }
 
+struct UserReference: Codable, Identifiable {
+    @DocumentID var id: String?
+    var userRef: AppUser
+}
+
 enum AuthMethod {
     case apple
     case google
