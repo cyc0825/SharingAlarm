@@ -112,6 +112,17 @@ class AuthViewModel: ObservableObject {
       emailLink = nil
       errorMessage = ""
     }
+    
+    func updateUserToken(userId: String, token: String) {
+        let db = Firestore.firestore()
+        db.collection("UserData").document(userId).setData(["fcmToken": token], merge: true) { error in
+            if let error = error {
+                print("Error updating FCM token: \(error)")
+            } else {
+                print("FCM token updated successfully")
+            }
+        }
+    }
 }
 
 // MARK: - Email and Password Authentication
@@ -128,6 +139,7 @@ extension AuthViewModel {
 //                await createUserDocument(userID: authResult.user.uid, name: nil, uid: nil)
             }
             print("User \(authResult.user.uid) signed in")
+            
             return true
         }
         catch  {

@@ -14,13 +14,13 @@ struct AddAlarmView: View {
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Harmony"
-    @State private var selectedGroup = "None"
+    @State private var selectedGroup: String?
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
     var body: some View {
         NavigationView {
             Form {
-                DatePicker("Time", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                DatePicker("Time", selection: $selectedTime, displayedComponents: [.date, .hourAndMinute])
                 
                 Picker("Repeat", selection: $repeatInterval) {
                     ForEach(repeatOptions, id: \.self) { option in
@@ -33,14 +33,24 @@ struct AddAlarmView: View {
                         Text(sound).tag(sound)
                     }
                 }
-                Picker("Group", selection: $selectedGroup) {
-                    ForEach(activityViewModel.activities, id: \.self) { activity in
-                        Text(activity.name).tag(activity.id)
+                if let firstActivity = activityViewModel.activities.first {
+                    Picker("Group", selection: $selectedGroup) {
+                        ForEach(activityViewModel.activities, id: \.id) { activity in
+                            Text(activity.name).tag(activity.id)
+                        }
+                    }
+                    .onAppear {
+                        if selectedGroup == nil {
+                            selectedGroup = firstActivity.id
+                        }
+                    }
+                } else {
+                    HStack {
+                        Text("Group")
+                        Spacer()
+                        Text("No activities available")
                     }
                 }
-            }
-            .onDisappear {
-                viewModel.fetchAlarmData()
             }
             .navigationBarTitle("Add Alarm", displayMode: .inline)
             .navigationBarItems(leading: Button("Cancel") {
@@ -54,8 +64,8 @@ struct AddAlarmView: View {
                         debugPrint("Add Activity error: \(error)")
                     }
                 }
-                let newAlarm = Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval)
-                scheduleNotification(for: newAlarm, viewModel: viewModel)
+                // let newAlarm = Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup)
+                // scheduleNotification(for: newAlarm, viewModel: viewModel)
                 isPresented = false
             })
         }

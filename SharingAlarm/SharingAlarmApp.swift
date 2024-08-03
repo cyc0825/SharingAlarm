@@ -12,9 +12,7 @@ import EventKit
 import FirebaseCore
 import FirebaseMessaging
 
-import PushKit
 import UIKit
-import CallKit
 
 @main
 struct SharingAlarmApp: App {
@@ -27,8 +25,6 @@ struct SharingAlarmApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
-        requestNotificationPermission()
-        subscribeToFriendRequests()
     }
     
     var body: some Scene {
@@ -45,38 +41,6 @@ struct SharingAlarmApp: App {
                     Spacer()
                 }
             }
-        }
-    }
-}
-
-func requestNotificationPermission() {
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-        if granted {
-            print("Notification permission granted.")
-        } else if let error = error {
-            print("Notification permission error: \(error.localizedDescription)")
-        }
-    }
-}
-
-func subscribeToFriendRequests() {
-    let predicate = NSPredicate(value: true) // Subscribe to all changes
-    let subscription = CKQuerySubscription(recordType: "FriendRequest",
-                                           predicate: predicate,
-                                           subscriptionID: "friend-request-changes",
-                                           options: [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion])
-
-    let info = CKSubscription.NotificationInfo()
-    info.alertBody = "There's an update to your friend requests!"
-    info.shouldBadge = true
-    info.soundName = "default"
-    subscription.notificationInfo = info
-
-    CKContainer.default().publicCloudDatabase.save(subscription) { subscription, error in
-        if let error = error {
-            print("Subscription failed: \(error.localizedDescription)")
-        } else {
-            print("Subscription successful")
         }
     }
 }
@@ -133,18 +97,14 @@ func updateCloudKitRecord(for alarm: Alarm, viewModel: AlarmsViewModel) {
 //    }
 }
 
-class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var gcmMessageIDKey = "gcm.Message_ID"
-    @StateObject var alarmViewModel = AlarmsViewModel()
-    @StateObject var viewModel = FriendsViewModel()
     static let shared = AppDelegate()
-    
-    var voipRegistry: PKPushRegistry!
-    var callManager: CallManager!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Request notification permissions
+        FirebaseApp.configure()
         
         UNUserNotificationCenter.current().delegate = self
 
@@ -157,10 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
         application.registerForRemoteNotifications()
         
         Messaging.messaging().delegate = self
-
-        setupPushKit()
-        callManager = CallManager()
-        FirebaseApp.configure()
+        
         return true
     }
     
@@ -170,48 +127,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for remote notifications: \(error.localizedDescription)")
-    }
-    
-//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//        let dict = userInfo as! [String: NSObject]
-//        let notification = CKNotification(fromRemoteNotificationDictionary: dict)
-//
-//        if notification?.subscriptionID == "friend-request-changes" {
-//            print("detect changed for friend request")
-////            viewModel.searchRequest()
-//        }
-//
-//        completionHandler(.newData)
-//    }
-//
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        print("Notification will present: \(notification.request.identifier)")
-//        alarmViewModel.startLongVibration()
-//        completionHandler([.banner, .sound, .badge]) // Decide how to present the notification in the foreground.
-//    }
-//    
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-//        NotificationCenter.default.post(name: NSNotification.Name("NotificationTapped"), object: nil)
-//        completionHandler()
-//    }
-    
-    func setupPushKit() {
-            voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
-            voipRegistry.delegate = self
-            voipRegistry.desiredPushTypes = [.voIP]
-        }
-
-    // MARK: - PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        // Process the received push credentials and send them to your server
-    }
-
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
-        // Assume you decode your incoming push and determine it's an incoming call
-        let uuid = UUID()
-        let phoneNumber = "1234567890" // Example phone number
-        callManager.reportIncomingCall(uuid: uuid, phoneNumber: phoneNumber)
-        completion()
     }
 }
 
