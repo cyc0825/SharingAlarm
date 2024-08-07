@@ -31,80 +31,85 @@ struct AddActivityView: View {
     let friends: [AppUser] = []
 
     var body: some View {
-        NavigationView {
-            List {
-                Section(header: Text("Activity Name")) {
-                    TextField("Name", text: $name)
-                }
-                
-                Section(header: Text("Activity Dates")) {
-                    DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
-                    DatePicker("End Date", selection: $endDate, displayedComponents: .date)
-                }
-                
-                Section(header: Text("Participants")) {
-                    if !editActivity {
-                        HStack {
-                            Image(systemName: "star.fill")
-                            Text(userViewModel.appUser.name)
-                                .fontWeight(.bold)
-                        }
+        VStack {
+            Spacer()
+            NavigationView {
+                List {
+                    Section(header: Text("Activity Name")) {
+                        TextField("Name", text: $name)
                     }
-                    ForEach(participants.indices, id: \.self) { index in
-                        Text(participants[index].name)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button {
-                                    participants.remove(at: index)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                                .tint(.red)
+                    
+                    Section(header: Text("Activity Dates")) {
+                        DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
+                        DatePicker("End Date", selection: $endDate, displayedComponents: .date)
+                    }
+                    
+                    Section(header: Text("Participants")) {
+                        if !editActivity {
+                            HStack {
+                                Image(systemName: "star.fill")
+                                Text(userViewModel.appUser.name)
+                                    .fontWeight(.bold)
                             }
-                    }
-                    if editActivity {
-                        ForEach(addedParticipants.indices, id: \.self) { index in
-                            Text(addedParticipants[index].name)
+                        }
+                        ForEach(participants.indices, id: \.self) { index in
+                            Text(participants[index].name)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button {
-                                        addedParticipants.remove(at: index)
+                                        participants.remove(at: index)
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
                                     .tint(.red)
                                 }
                         }
-                    }
-                    Button(action: {
-                        showingFriendPicker = true
-                    }) {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add Participant")
+                        if editActivity {
+                            ForEach(addedParticipants.indices, id: \.self) { index in
+                                Text(addedParticipants[index].name)
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                        Button {
+                                            addedParticipants.remove(at: index)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                        .tint(.red)
+                                    }
+                            }
+                        }
+                        Button(action: {
+                            showingFriendPicker = true
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add Participant")
+                            }
                         }
                     }
                 }
-            }
-            .navigationBarTitle(editActivity ? "Edit Activity" : "Add Activity", displayMode: .inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
+                .navigationBarTitle(editActivity ? "Edit Activity" : "Add Activity", displayMode: .inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            editActivity ? EditActivity() : saveActivity()
+                        }
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        editActivity ? EditActivity() : saveActivity()
+                .sheet(isPresented: $showingFriendPicker) {
+                    // Friend picker view goes here
+                    if editActivity {
+                        AddFriendPicker(selectedFriends: $participants, addedParticipants: $addedParticipants)
+                    } else {
+                        FriendPicker(selectedFriends: $participants)
                     }
                 }
             }
-            .sheet(isPresented: $showingFriendPicker) {
-                // Friend picker view goes here
-                if editActivity {
-                    AddFriendPicker(selectedFriends: $participants, addedParticipants: $addedParticipants)
-                } else {
-                    FriendPicker(selectedFriends: $participants)
-                }
-            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
     }
     func saveActivity() {

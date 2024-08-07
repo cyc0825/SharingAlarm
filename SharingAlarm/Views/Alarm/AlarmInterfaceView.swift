@@ -107,12 +107,13 @@ struct ArcView: View {
     
     @GestureState private var tapped = false // Tracks the tap state
     @State private var drawAnimationProgress: CGFloat = 0.0 // For drawing animation
+    @State var isShowEdit = false
     @State var isShowDetail = false
 
     var body: some View {
         GeometryReader { geometry in
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            let tapGesture = LongPressGesture(minimumDuration: 0.6)
+            let longPressGesture = LongPressGesture(minimumDuration: 0.6)
                 .onChanged {_ in
                     self.action(index)
                 }
@@ -120,7 +121,8 @@ struct ArcView: View {
                     gestureState = currentState
                 }
                 .onEnded { _ in
-                    isShowDetail = true
+                    print("Show Edit Now")
+                    isShowEdit = true
                     UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
                 }
             
@@ -131,7 +133,11 @@ struct ArcView: View {
             .trim(from: 0, to: drawAnimationProgress) // Use trimming for drawing animation
             .stroke(style: StrokeStyle(lineWidth: tapped ? lineWidth * 1.3 : lineWidth, lineCap: .round))
             .foregroundColor(color)
-            .gesture(tapGesture)
+            .onTapGesture {
+                print("Show Detail Now")
+                isShowDetail = true
+            }
+            .simultaneousGesture(longPressGesture)
             .animation(.spring(duration: 0.6), value: tapped)
             .onAppear {
                 // Trigger the drawing animation when the view appears
@@ -144,10 +150,18 @@ struct ArcView: View {
                     drawAnimationProgress = 0
                 }
             }
+            .sheet(isPresented: $isShowEdit) {
+                if let selectedAlarm = viewModel.selectedAlarm {
+                    EditAlarmView(
+                        isPresented: $isShowEdit,
+                        viewModel: viewModel,
+                        alarm: selectedAlarm
+                    )
+                }
+            }
             .sheet(isPresented: $isShowDetail) {
                 if let selectedAlarm = viewModel.selectedAlarm {
                     AlarmDetailView(
-                        isPresented: $isShowDetail,
                         viewModel: viewModel,
                         alarm: selectedAlarm
                     )

@@ -13,7 +13,7 @@ struct AddAlarmView: View {
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
-    @State private var selectedSound = "Harmony"
+    @State private var selectedSound = "Harmony.mp3"
     @State private var selectedGroup: String?
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
@@ -30,7 +30,7 @@ struct AddAlarmView: View {
                 
                 Picker("Sound", selection: $selectedSound) {
                     ForEach(sounds, id: \.self) { sound in
-                        Text(sound).tag(sound)
+                        Text(sound).tag("\(sound).mp3")
                     }
                 }
                 if let firstActivity = activityViewModel.activities.first {

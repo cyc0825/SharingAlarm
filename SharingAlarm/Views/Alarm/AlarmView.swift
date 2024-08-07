@@ -6,61 +6,61 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct AlarmView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var viewModel: AlarmsViewModel
-    
+    var title: String
+    var alarmBody: String
+    var alarmTime: Date
+    var sound: String
+    var onClose: () -> Void
+    var onSnooze: () -> Void
+
     var body: some View {
         ZStack {
             Color.accentColor.ignoresSafeArea(edges: .all)
-            VStack{
-                Spacer()
-                Text("Ring Ring Ring \n Time to wake up others")
+            VStack {
+                Text(title)
+                    .font(.largeTitle)
+                    .padding()
                 
-                Spacer()
+                Text(alarmBody)
+                    .font(.title)
+                    .padding()
                 
-                Button(action: startCall, label: {
-                    Text("Start Call")
-                })
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .frame(maxWidth: UIScreen.main.bounds.width*4/5, minHeight: 50)
-                .background(Color.brown)
-                .cornerRadius(25)
-                .padding(.horizontal)
-                
-                Button(action: closeAlarm, label: {
-                    Text("Close Alarm")
-                })
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-                .frame(maxWidth: UIScreen.main.bounds.width*4/5, minHeight: 50)
-                .background(Color.brown)
-                .cornerRadius(25)
-                .padding(.horizontal)
+                HStack {
+                    Button(action: {
+                        // Stop vibration
+                        AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
+                        onClose()
+                    }) {
+                        Text("Close")
+                            .font(.title)
+                            .padding()
+                            .background(Color.thirdAccent)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    
+                    Button(action: {
+                        // Stop vibration
+                        AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
+                        onSnooze()
+                    }) {
+                        Text("Snooze")
+                            .font(.title)
+                            .padding()
+                            .background(Color.secondary)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .padding()
             }
         }
-    }
-    
-    
-    func closeAlarm() {
-        viewModel.stopVibration()
-        presentationMode.wrappedValue.dismiss()
-        print("Alarm closing")
-    }
-    
-    func startCall() {
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-            let cm = CallManager()
-            let id = UUID()
-            cm.reportIncomingCall(uuid: id, phoneNumber: "XYC")
+        .onAppear {
+            // Start vibration
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         }
     }
-}
-
-#Preview {
-    AlarmView()
 }

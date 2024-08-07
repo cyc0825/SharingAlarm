@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import Combine
+
+import FirebaseMessaging
 import FirebaseAuth
 import FirebaseFirestore
 
@@ -35,29 +37,53 @@ enum AuthMethod {
 @MainActor
 class UserViewModel: ObservableObject {
     @Published var appUser = AppUser.empty
-
+    
     @Published private var user: User?
     private var db = Firestore.firestore()
     private var cancellables = Set<AnyCancellable>()
-
+    
     init() {
-      registerAuthStateHandler()
-
-      $user
-        .compactMap { $0 }
-        .sink { user in
-            UserDefaults.standard.setValue(user.uid, forKey: "userID")
+        registerAuthStateHandler()
+        if let userId = Auth.auth().currentUser?.uid {
+            updateFCMTokenIfNeeded(userId: userId)
         }
-        .store(in: &cancellables)
+        
+        $user
+            .compactMap { $0 }
+            .sink { user in
+                UserDefaults.standard.setValue(user.uid, forKey: "userID")
+            }
+            .store(in: &cancellables)
     }
     
     private var authStateHandler: AuthStateDidChangeListenerHandle?
-
+    
     func registerAuthStateHandler() {
         if authStateHandler == nil {
             authStateHandler = Auth.auth().addStateDidChangeListener { auth, user in
                 self.user = user
                 self.fetchUserData()
+            }
+        }
+    }
+    
+    func updateFCMTokenIfNeeded(userId: String) {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM token: \(error)")
+                return
+            }
+            
+            guard let token = token else {
+                print("FCM token is nil")
+                return
+            }
+            self.db.collection("UserData").document(userId).setData(["fcmToken": token], merge: true) { error in
+                if let error = error {
+                    print("Error updating FCM token: \(error)")
+                } else {
+                    print("FCM token updated successfully")
+                }
             }
         }
     }
@@ -106,4 +132,18 @@ class UserViewModel: ObservableObject {
             }
         }
     }
+    
+    func checkIfUIDExists(uid: String, completion: @escaping (Bool) -> Void) {
+        print("Check \(uid) exist")
+            db.collection("UserData").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error checking UID: \(error)")
+                    completion(false)
+                } else if let querySnapshot = querySnapshot, !querySnapshot.isEmpty {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            }
+        }
 }

@@ -36,11 +36,12 @@ struct SettingsView: View {
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var alarmsViewModel: AlarmsViewModel
     @EnvironmentObject var userViewModel: UserViewModel
     @State private var showingProfileEdit = false
     
-    let userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Give yourself a name so that your friend can remember you"
-    let uid: String = UserDefaults.standard.value(forKey: "uid") as? String ?? "Haven't setup yet"
+    @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Give yourself a name so that your friend can remember you"
+    @State var Uid: String = UserDefaults.standard.value(forKey: "uid") as? String ?? "Haven't setup yet"
     @State var presentingConfirmationDialog = false
     
     private func deleteAccount() {
@@ -66,7 +67,7 @@ struct ProfileView: View {
         VStack(alignment: .leading) {
             // User information
             
-            Text("UID: \(uid)")
+            Text("UID: \(Uid)")
                 .font(.callout)
                 .foregroundColor(.gray)
                 .padding(.bottom)
@@ -87,7 +88,7 @@ struct ProfileView: View {
 //                    NavigationLink(destination: VIPLevelView()) {
 //                        Text("VIP Level")
 //                    }
-                    NavigationLink(destination: AlarmSoundShopView()) {
+                    NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, userViewModel: userViewModel)) {
                         Text("Alarm Sounds")
                     }
                 }
@@ -132,6 +133,8 @@ struct ProfileView: View {
                     UserDefaults.standard.setValue(uid, forKey: "uid")
                     userViewModel.appUser.uid = uid
                     userViewModel.appUser.name = username
+                    userName = username
+                    Uid = uid
                     userViewModel.saveUserData()
                 },
                 initialUsername: userViewModel.appUser.name,
@@ -147,8 +150,6 @@ struct VIPLevelView: View {
     }
 }
 
-struct AlarmSoundShopView: View {
-    var body: some View {
-        Text("Alarm Sound Shop")
-    }
+#Preview {
+    ProfileView()
 }

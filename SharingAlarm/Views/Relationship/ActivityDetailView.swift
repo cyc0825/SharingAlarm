@@ -48,6 +48,19 @@ struct ActivityDetailView: View {
                     }
                 }
                 
+                Section(header:Text("Date")) {
+                    HStack {
+                        Text("From:")
+                        Spacer()
+                        Text(activity.from.formatted(date: .numeric, time: .omitted))
+                    }
+                    HStack {
+                        Text("To:")
+                        Spacer()
+                        Text(activity.to.formatted(date: .numeric, time: .omitted))
+                    }
+                }
+                
                 Section {
                     Button("Delete") {
                         removeActivity()

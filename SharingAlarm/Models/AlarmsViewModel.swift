@@ -36,7 +36,8 @@ class AlarmsViewModel: ObservableObject {
 
     let alarmsKey = "alarmsData"
 
-    let sounds = ["Harmony", "Ripples", "Signal"]
+    @Published var sounds = ["Harmony", "Ripples", "Signal"]
+    @Published var paidSounds = [""]
     let intervals = ["None", "Daily", "Weekly"]
     
     var activityGroupId: String?
@@ -49,6 +50,7 @@ class AlarmsViewModel: ObservableObject {
     
     init() {
         fetchAlarmData()
+        
     }
     
     func startGlobalTimer() {
@@ -112,22 +114,32 @@ class AlarmsViewModel: ObservableObject {
             Task {
                 debugPrint("[addAlarm] starts")
                 do {
+                    var participants: [String] = []
+                    let activityRef = try await db.collection("Activity")
+                        .document(activityId)
+                        .collection("participants")
+                        .getDocuments()
+                    for document in activityRef.documents {
+                        if let userRef = document.get("userRef") as? DocumentReference {
+                            
+                            let participant = try await userRef.getDocument(as: AppUser.self)
+                            participants.append(participant.id!)
+                        }
+                    }
+                    
                     let newAlarm = try await db.collection("Alarm")
                         .addDocument(data: ["time": time,
                                             "sound": sound,
-                                            "repeatInterval": repeatInterval
+                                            "repeatInterval": repeatInterval,
+                                            "activityId": activityId,
+                                            "participants": participants
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId)
-                    addAlarmToParticipants(activityId: activityId, alarmId: newAlarm.documentID, alarm: alarm) { result in
+                    addAlarmToParticipants(participants: participants, alarmId: newAlarm.documentID, alarm: alarm) { result in
                         switch result {
-                        case .success(let participants):
-                            Task {
-                                do {
-                                    try await self.db.collection("Alarm")
-                                        .document(newAlarm.documentID)
-                                        .setData(["participants": participants])
-                                    completion(.success(alarm))
-                                }
+                        case .success(_):
+                            DispatchQueue.main.async {
+                                completion(.success(alarm))
                             }
                         case .failure(let error):
                             DispatchQueue.main.async {
@@ -201,35 +213,22 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    func addAlarmToParticipants(activityId: String, alarmId: String, alarm: Alarm, completion: @escaping (Result<[String], Error>) -> Void) {
+    func addAlarmToParticipants(participants: [String], alarmId: String, alarm: Alarm, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task {
             debugPrint("[addAlarmToParticipants] starts")
             do {
-                var participants: [String] = []
-                let activityRef = try await db.collection("Activity")
-                    .document(activityId)
-                    .collection("participants")
-                    .getDocuments()
-                for document in activityRef.documents {
-                    if let userRef = document.get("userRef") as? DocumentReference {
-                        
-                        let participant = try await userRef.getDocument(as: AppUser.self)
-                        participants.append(participant.id!)
-                        
-                        if let userId = participant.id {
-                            try await db.collection("UserData").document(userId)
-                                .collection("alarms")
-                                .document(alarmId)
-                                .setData(["time": alarm.time,
-                                          "sound": alarm.sound,
-                                          "repeatInterval": alarm.repeatInterval
-                                         ])
-                        }
-                        debugPrint("[addAlarmToParticipants] done for \(participant.uid)")
-                    }
+                for participantID in participants {
+                    try await db.collection("UserData").document(participantID)
+                        .collection("alarms")
+                        .document(alarmId)
+                        .setData(["time": alarm.time,
+                                  "sound": alarm.sound,
+                                  "repeatInterval": alarm.repeatInterval
+                                 ])
+                    debugPrint("[addAlarmToParticipants] done for \(participantID)")
                 }
                 DispatchQueue.main.async {
-                    completion(.success(participants))
+                    completion(.success(true))
                 }
             }
             catch {
@@ -241,9 +240,45 @@ class AlarmsViewModel: ObservableObject {
         }
     } 
     
-    func updateAlarmData(updates: [String: Any]) {
-        
-    }
+//    func editAlarm(activityId: String?, alarmId: String, updates: [String: Any]) {
+//        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+//        if let activityId = activityId {
+//            // For sharing alarm
+//            Task {
+//                debugPrint("[editAlarm] starts")
+//                do {
+//                    try await db.collection("Alarm")
+//                        .document(alarmId)
+//                        .setData(updates)
+//                    var participants = updates["participants"] as! [String]
+//                    for participantID in participants {
+//                        try await db.collection("UserData").document(participantID)
+//                            .collection("Alarms")
+//                            .document(alarmId)
+//                            .setData(Dictionary(uniqueKeysWithValues: Array(updates.prefix(3))))
+//                    }
+//                }
+//                catch {
+//                    debugPrint("[editAlarm] error \(error.localizedDescription)")
+//                }
+//            }
+//        }
+//        else {
+//            // For creating alarm only for self
+//            Task {
+//                do {
+//                    try await db.collection("UserData").document(userID)
+//                        .collection("Alarms")
+//                        .document(alarmId)
+//                        .setData(Dictionary(uniqueKeysWithValues: Array(updates.prefix(3))))
+//                    
+//                }
+//                catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        }
+//    }
 }
 
 extension AlarmsViewModel {

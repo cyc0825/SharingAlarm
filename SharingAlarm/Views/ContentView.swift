@@ -75,17 +75,17 @@ struct ContentView: View {
                 //                AlarmView()
                 //            }
                 //        }
-                ////        NavigationView {
-                ////            Text("Welcome")
-                ////            .toolbar {
-                ////                ToolbarItem(placement: .navigationBarLeading) {
-                ////                    Button(action: logout) {
-                ////                        Text("Log out")
-                ////                    }
-                ////                }
-                ////            }
-                ////            Text("Select an item")
-                ////        }
+                //        NavigationView {
+                //            Text("Welcome")
+                //            .toolbar {
+                //                ToolbarItem(placement: .navigationBarLeading) {
+                //                    Button(action: logout) {
+                //                        Text("Log out")
+                //                    }
+                //                }
+                //            }
+                //            Text("Select an item")
+                //        }
             }
         }
     }

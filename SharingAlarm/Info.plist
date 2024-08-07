@@ -7,9 +7,12 @@
 		<string>audio</string>
 		<string>fetch</string>
 		<string>processing</string>
-		<string>push-to-talk</string>
 		<string>remote-notification</string>
 		<string>voip</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
 </dict>
 </plist>

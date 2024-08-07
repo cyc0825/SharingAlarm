@@ -53,45 +53,44 @@ struct AlarmsView: View {
                 
                 VStack{
                     Spacer()
-                    VStack{
-                        Text("Alarm Details").font(.headline)
-                            .padding(.vertical)
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading, spacing: 10) {
-                                
-                                DetailRow(key: "Time", value: selectedTime?.formatted(date: .omitted, time: .shortened) ?? "")
-                                DetailRow(key: "Repeat", value: repeatInterval)
-                                DetailRow(key: "Remaining", value: formatTimeInterval(remainingTime))
-                            }
-                            .frame(maxWidth: .infinity)
-                            
-                            Spacer()
-                            
-                            VStack(alignment: .leading, spacing: 10) {
-                                DetailRow(key: "Group", value: selectedGroup)
-                                DetailRow(key: "Sound", value: selectedSound)
-                                DetailRow(key: "Next Auto-Schedule", value: selectedGroup)
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        .listStyle(GroupedListStyle())
-                    }
+//                    VStack{
+//                        Text("Alarm Details").font(.headline)
+//                            .padding(.vertical)
+//                        HStack(alignment: .top) {
+//                            VStack(alignment: .leading, spacing: 10) {
+//                                
+//                                DetailRow(key: "Time", value: selectedTime?.formatted(date: .omitted, time: .shortened) ?? "")
+//                                DetailRow(key: "Repeat", value: repeatInterval)
+//                                DetailRow(key: "Remaining", value: formatTimeInterval(remainingTime))
+//                            }
+//                            .frame(maxWidth: .infinity)
+//                            
+//                            Spacer()
+//                            
+//                            VStack(alignment: .leading, spacing: 10) {
+//                                DetailRow(key: "Group", value: selectedGroup)
+//                                DetailRow(key: "Sound", value: selectedSound)
+//                                DetailRow(key: "Next Auto-Schedule", value: selectedGroup)
+//                            }
+//                            .frame(maxWidth: .infinity)
+//                        }
+//                        .listStyle(GroupedListStyle())
+//                    }
+//                    .frame(width: UIScreen.main.bounds.width*7/8)
                     
-                    .frame(width: UIScreen.main.bounds.width*7/8)
-                    
-                    if viewModel.selectedAlarm != nil {
-                        Button(action: {showingEditAlarm = true}, label: {
-                            Text("Edit Alarm")
-                                .frame(maxWidth: .infinity, minHeight: 50)
-                        })
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: UIScreen.main.bounds.width*4/5, minHeight: 50)
-                        .background(Color.brown)
-                        .cornerRadius(25)
-                        .padding(.vertical)
-                    } else {
+//                    if viewModel.selectedAlarm != nil {
+//                        Button(action: {showingEditAlarm = true}, label: {
+//                            Text("Edit Alarm")
+//                                .frame(maxWidth: .infinity, minHeight: 50)
+//                        })
+//                        .font(.title2)
+//                        .fontWeight(.semibold)
+//                        .foregroundColor(.white)
+//                        .frame(maxWidth: UIScreen.main.bounds.width*4/5, minHeight: 50)
+//                        .background(Color.brown)
+//                        .cornerRadius(25)
+//                        .padding(.vertical)
+//                    } else {
                         Button(action: {showingAddAlarm = true}, label: {
                             Text("Add Alarm")
                                 .frame(maxWidth: .infinity, minHeight: 50)
@@ -103,7 +102,7 @@ struct AlarmsView: View {
                         .background(Color.brown)
                         .cornerRadius(25)
                         .padding(.vertical)
-                    }
+//                    }
                 }
                 
 //                Section(header: Text("Next Alarm")) {
@@ -137,7 +136,7 @@ struct AlarmsView: View {
             }
             .sheet(isPresented: $showingEditAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {
-                    AlarmDetailView(
+                    EditAlarmView(
                         isPresented: $showingEditAlarm,
                         viewModel: viewModel,
                         alarm: selectedAlarm

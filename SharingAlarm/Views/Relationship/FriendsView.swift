@@ -20,26 +20,28 @@ struct FriendsView: View {
         NavigationView {
             ZStack {
                 if viewModel.friends.isEmpty {
-                    ScrollView {
+                    List {
                         Text("Tap the add button and add your friends.")
                             .padding()
                     }
-                    
                 }
-                List(viewModel.friends.indices, id: \.self) { index in
-                    Text(viewModel.friends[index].friendRef.name)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button {
-                                friendIDToDelete = index
-                                friendToDelete = viewModel.friends[friendIDToDelete!].friendRef.name
-                                showDeleteConfirmation = true
-                            } label: {
-                                Label("Delete", systemImage: "trash")
+                else {
+                    List(viewModel.friends.indices, id: \.self) { index in
+                        Text(viewModel.friends[index].friendRef.name)
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button {
+                                    friendIDToDelete = index
+                                    friendToDelete = viewModel.friends[friendIDToDelete!].friendRef.name
+                                    showDeleteConfirmation = true
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(.red)
                             }
-                            .tint(.red)
-                        }
+                    }
                 }
             }
+            .navigationTitle("Friends")
             .refreshable {
                 viewModel.fetchFriends()
                 viewModel.fetchOwnRequest()
@@ -52,11 +54,10 @@ struct FriendsView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                if let friendIDToDelete = friendIDToDelete {
-                    Text("Would you like to remove \(friendToDelete!) from your friends list?")
+                if let friendToDelete = friendToDelete {
+                    Text("Would you like to remove \(friendToDelete) from your friends list?")
                 }
             }
-            .navigationTitle("Friends")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
