@@ -7,7 +7,6 @@ exports.sendImmediateAlarmNotification = functions.firestore
     .document('Alarm/{alarmId}')
     .onCreate(async (snap, context) => {
         const alarm = snap.data();
-        const activityId = alarm.activityId;
 
         console.log(`Alarm created with ID: ${context.params.alarmId}`);
         console.log(`Alarm data: ${JSON.stringify(alarm)}`);
@@ -18,15 +17,6 @@ exports.sendImmediateAlarmNotification = functions.firestore
         }
 
         try {
-            // Fetch the activity details
-            const activitySnap = await admin.firestore().collection('Activity').doc(activityId).get();
-            const activity = activitySnap.data();
-            if (!activity) {
-                console.log('No activity found');
-                return;
-            }
-            console.log(`Activity name: ${activity.name}`);
-
             // Fetch participants and their FCM tokens
             const tokens = [];
             for (const participantId of alarm.participants) {
@@ -46,13 +36,17 @@ exports.sendImmediateAlarmNotification = functions.firestore
 		const message = {
                     notification: {
                         title: 'Alarm Notification',
-                        body: `You have an alarm for activity: ${activity.name}`,
+                        body: `You have an alarm for activity: ${alarm.activityName}`,
                     },
                     data: {
-                        title: 'Alarm Notification',
-                        body: `You have an alarm for activity: ${activity.name}`,
-                        alarmTime: new Date(alarm.time._seconds * 1000).toISOString(),
+			id: `${context.params.alarmId}`,
+			title: 'Alarm Notification',
+			body: `You have an alarm for activity: ${alarm.activityName}`,
+                        activityId: `${alarm.activityId}`,
+			activityName: `${alarm.activityName}`,
+			alarmTime: new Date(alarm.time._seconds * 1000).toISOString(),
                         sound: `${alarm.sound}`,
+			repeat: `${alarm.repeatInterval}`,
                         showAlert: "false" // Custom flag to distinguish data-only messages
                     },
                     apns: {

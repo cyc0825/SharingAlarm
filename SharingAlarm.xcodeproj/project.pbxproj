@@ -26,6 +26,7 @@
 		D35372F22BBB7DAC00B56F32 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372F12BBB7DAC00B56F32 /* UserViewModel.swift */; };
 		D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3632D282BCF2420004F02FD /* ActivityDetailView.swift */; };
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
+		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
 		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
 		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
@@ -51,6 +52,8 @@
 		D3C0EF862BDD898000DA1795 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF852BDD898000DA1795 /* FirebaseAuth */; };
 		D3C0EF882BDD898000DA1795 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF872BDD898000DA1795 /* FirebaseFirestore */; };
 		D3C0EF8A2BDD898000DA1795 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF892BDD898000DA1795 /* FirebaseMessaging */; };
+		D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */; };
+		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +94,7 @@
 		D35372F12BBB7DAC00B56F32 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		D3632D282BCF2420004F02FD /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
+		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharingAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmApp.swift; sourceTree = "<group>"; };
 		D38EEB842BA3719F0099D382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		D3C0EF7F2BDD50E600DA1795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimerView.swift; sourceTree = "<group>"; };
+		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,6 +198,8 @@
 				D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */,
 				D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */,
 				D34A27502C642944009BB039 /* AlarmDetailView.swift */,
+				D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */,
+				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
 			);
 			path = Alarm;
 			sourceTree = "<group>";
@@ -227,6 +235,7 @@
 				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
 				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
 				D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */,
+				D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -446,6 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */,
 				D3372A982C63EAA200D33713 /* AlarmSoundView.swift in Sources */,
 				D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */,
 				D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */,
@@ -465,6 +475,7 @@
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
 				D3372A9A2C63FA4500D33713 /* ProfileSetupView.swift in Sources */,
 				D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */,
+				D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
 				D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
@@ -473,6 +484,7 @@
 				D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
 				D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */,
+				D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
 				D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */,
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,

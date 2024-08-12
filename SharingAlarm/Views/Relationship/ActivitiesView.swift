@@ -25,6 +25,8 @@ struct ActivitiesView: View {
                             ActivityCard(viewModel: viewModel, index: index)
                         }
                     }
+                    .listRowBackground(Color.accentColor)
+                    .listStyle(.plain)
                 }
             }
             .navigationTitle("Activities")

@@ -221,10 +221,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     private func handleNotification(userInfo: [AnyHashable: Any]) {
         print("Received data message: \(userInfo)")
-        if let title = userInfo["title"] as? String,
+        if let id = userInfo["id"] as? String,
+           let title = userInfo["title"] as? String,
            let body = userInfo["body"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
-           let sound = userInfo["sound"] as? String {
+           let sound = userInfo["sound"] as? String,
+           let repeatInterval = userInfo["repeat"] as? String,
+           let activityId = userInfo["activityId"] as? String,
+           let activityName = userInfo["activityName"] as? String {
            
             print("alarmTimeString: \(alarmTimeString)")
 
@@ -233,10 +237,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             if let alarmTime = dateFormatter.date(from: alarmTimeString) {
                 // Debug information for parsed date
-                print("Parsed alarmTime: \(alarmTime)")
-                
-                print("Schedule an Alarm at \(alarmTime)")
-                scheduleLocalNotification(title: title, body: body, alarmTime: alarmTime, sound: sound)
+                scheduleLocalNotification(id: id, title: title, body: body, alarmTime: alarmTime, sound: sound)
             } else {
                 // Debug information for date parsing failure
                 print("Failed to parse alarmTimeString: \(alarmTimeString)")
@@ -257,6 +258,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                     window.isHidden = true
                     window.rootViewController = nil
                     self.alarmWindow = nil
+                    self.stopVibration()
                     // Handle alarm close action
                     print("Alarm closed")
                 }, onSnooze: {
@@ -265,7 +267,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                     self.alarmWindow = nil
                     // Reschedule the alarm for 10 minutes later
                     let snoozeTime = alarmTime.addingTimeInterval(600) // 10 minutes later
-                    self.scheduleLocalNotification(title: title, body: body, alarmTime: snoozeTime, sound: sound)
+                    // self.scheduleLocalNotification(title: title, body: body, alarmTime: snoozeTime, sound: sound)
                     print("Alarm snoozed for 10 minutes")
                 })
                 window.rootViewController = UIHostingController(rootView: rootView)
@@ -278,7 +280,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
     
-    private func scheduleLocalNotification(title: String, body: String, alarmTime: Date, sound: String) {
+    public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -286,7 +288,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarmTime), repeats: false)
 
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
@@ -295,6 +297,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 print("Local notification scheduled.")
             }
         }
+        
+    }
+    
+    public func cancelScheduledLocalNotification(id: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }
     
 }

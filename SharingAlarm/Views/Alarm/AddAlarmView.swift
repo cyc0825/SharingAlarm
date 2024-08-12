@@ -14,7 +14,7 @@ struct AddAlarmView: View {
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Harmony.mp3"
-    @State private var selectedGroup: String?
+    @State private var selectedGroup: Activity? = nil
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
     var body: some View {
@@ -36,12 +36,12 @@ struct AddAlarmView: View {
                 if let firstActivity = activityViewModel.activities.first {
                     Picker("Group", selection: $selectedGroup) {
                         ForEach(activityViewModel.activities, id: \.id) { activity in
-                            Text(activity.name).tag(activity.id)
+                            Text(activity.name).tag(activity as Activity?)
                         }
                     }
                     .onAppear {
                         if selectedGroup == nil {
-                            selectedGroup = firstActivity.id
+                            selectedGroup = firstActivity
                         }
                     }
                 } else {
@@ -56,10 +56,13 @@ struct AddAlarmView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
-                viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup) { result in
+//                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
+                viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
                     switch result {
                     case .success(let alarm):
                         viewModel.alarms.append(alarm)
+                        viewModel.backupAlarms.append(alarm)
+                        viewModel.activityNames.insert(alarm.activityName ?? "")
                     case .failure(let error):
                         debugPrint("Add Activity error: \(error)")
                     }

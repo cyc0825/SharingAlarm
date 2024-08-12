@@ -286,21 +286,3 @@ extension ActivitiesViewModel {
         return sampleViewModel
     }
 }
-
-// For Alarm Detail Info
-extension ActivitiesViewModel {
-    public func getActivityName(id: String) -> String{
-        var result: String = ""
-        Task {
-            do{
-                let activityDoc = try await db.collection("Activity")
-                    .document(id)
-                    .getDocument(as: Activity.self)
-                
-//                result = activityDoc.name
-            }
-        }
-        return result
-    }
-    
-}

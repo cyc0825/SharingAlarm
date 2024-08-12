@@ -45,25 +45,50 @@ struct AlarmInterfaceView: View {
                 }
                 
                 ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
-                    let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
-                    let endAngleDegree = 360.0 * viewModel.alarms[index].remainingTime / 3600
-                    ArcView(radius: alarmCircleSize / 2,
-                            startAngle: Angle(degrees: -90),
-                            endAngle: Angle(degrees: endAngleDegree-90),
-                            lineWidth: 20,
-                            color: colorSet[index],
-                            action: self.arcTapped,
-                            index: index,
-                            viewModel: viewModel)
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                    PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
+                    CombineView(alarmID: viewModel.alarms[index].id, timerViewModel: TimerViewModel(targetDate: viewModel.alarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
                 }
-            }
-            .onAppear {
-                viewModel.startGlobalTimer()
-            }
-        }
+            }        }
         .frame(height: 400)
+    }
+}
+
+struct CombineView: View {
+    var alarmID: String?
+    @ObservedObject var timerViewModel: TimerViewModel
+    @StateObject var viewModel: AlarmsViewModel
+    var clockRadius: CGFloat
+    var index: Int
+    var colorSet: [Color] = [Color.accentColor, Color.secondAccent, Color.thirdAccent]
+    var geometry: GeometryProxy
+    
+    func arcTapped(index: Int) {
+        viewModel.selectedAlarm = viewModel.alarms[index]
+    }
+    
+    func setupTimerEndAction() {
+        timerViewModel.onTimerEnd = {
+            viewModel.removeAlarm(documentID: alarmID)
+        }
+    }
+    
+    var body: some View {
+        let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
+        let endAngleDegree = 360.0 * timerViewModel.timeRemaining / 3600
+
+        ArcView(radius: alarmCircleSize / 2,
+                startAngle: Angle(degrees: -90),
+                endAngle: Angle(degrees: endAngleDegree - 90),
+                lineWidth: 20,
+                color: colorSet[index],
+                action: self.arcTapped,
+                index: index,
+                viewModel: viewModel)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .onAppear {
+                setupTimerEndAction()
+            }
+
+        PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
     }
 }
 

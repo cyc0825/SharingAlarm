@@ -52,7 +52,7 @@ struct EditAlarmView: View {
                         HStack {
                             Text("Repeat")
                             Spacer()
-                            Text("\(_repeatInterval)")
+                            Text("\(repeatInterval)")
                         }
                         
                         HStack {

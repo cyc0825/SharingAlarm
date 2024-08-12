@@ -40,3 +40,47 @@ struct LargeTextFieldStyle: TextFieldStyle {
             .shadow(radius: 5)
     }
 }
+
+struct DropdownMenu: View {
+    @Binding var isExpanded: Bool
+    @Binding var selectedOption: String
+    let options: [String]
+    let onSelect: (String) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Button(action: {
+                withAnimation {
+                    isExpanded.toggle()
+                }
+            }) {
+                HStack {
+                    Text(selectedOption.isEmpty ? "Select an option" : selectedOption)
+                    Spacer()
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(8)
+            }
+
+            if isExpanded {
+                ForEach(options, id: \.self) { option in
+                    Button(action: {
+                        withAnimation {
+                            isExpanded = false
+                            selectedOption = option
+                            onSelect(option)
+                        }
+                    }) {
+                        Text(option)
+                            .padding()
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .cornerRadius(8)
+                    }
+                }
+            }
+        }
+    }
+}

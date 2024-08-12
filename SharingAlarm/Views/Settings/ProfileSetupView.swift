@@ -120,12 +120,6 @@ struct ProfileSetupView: View {
                     isValid = false
                 }
             }
-        } else {
-            print("UID Unchanged")
-            // UID not changed, proceed if username check passes
-            if isValid {
-                onSubmit(username, uid)
-            }
         }
     }
 }

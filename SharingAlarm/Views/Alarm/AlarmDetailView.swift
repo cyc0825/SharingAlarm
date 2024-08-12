@@ -12,9 +12,14 @@ import Firebase
 struct AlarmDetailView: View {
     @StateObject var viewModel: AlarmsViewModel
     let alarm: Alarm
-    
     var body: some View {
         VStack {
+            Spacer()
+            
+            CountDownTimerView(viewModel: TimerViewModel(targetDate: alarm.time))
+                .padding(.top, 50)
+            Divider()
+            
             HStack {
                 Text("Alarm Time")
                 Spacer()
@@ -36,13 +41,14 @@ struct AlarmDetailView: View {
             HStack {
                 Text("Activity")
                 Spacer()
-                
+                Text("\(alarm.activityName ?? "")")
             }
             .padding()
+            
+            Spacer()
         }
         .padding()
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.fraction(0.4), .large])
         .presentationDragIndicator(.visible)
     }
 }
-

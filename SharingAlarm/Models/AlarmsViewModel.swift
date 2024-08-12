@@ -18,6 +18,9 @@ struct Alarm: Hashable, Codable, Identifiable {
     var sound: String
     var repeatInterval: String
     var activityID: String?
+    var activityName: String?
+    
+    var isOn: Bool = true
     
     var notificationIdentifier: String?
     
@@ -30,6 +33,8 @@ struct Alarm: Hashable, Codable, Identifiable {
 @MainActor
 class AlarmsViewModel: ObservableObject {
     @Published var alarms: [Alarm] = []
+    public var backupAlarms: [Alarm] = []
+    @Published var activityNames: Set<String> = []
     @Published var selectedAlarm: Alarm?
     private var ongoingDeletions: Set<String> = []
     var timer: Timer?
@@ -50,19 +55,41 @@ class AlarmsViewModel: ObservableObject {
     
     init() {
         fetchAlarmData()
-        
+    }
+
+    func sortAlarmsByTime() {
+        alarms.sort { $0.time < $1.time }
+    }
+    
+    func filterAlarmsByActivity(activityName: String?) {
+        if !backupAlarms.isEmpty {
+            restoreAlarms()
+        }
+        if let activityName = activityName {
+            print("filter to only show \(activityName)")
+            let filteredAlarm = alarms.filter({
+                $0.activityName == activityName
+            })
+            backupAlarms = alarms
+            alarms = filteredAlarm
+        }
+    }
+    
+    func restoreAlarms() {
+        alarms = backupAlarms
     }
     
     func startGlobalTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.objectWillChange.send() // Notify SwiftUI to update the views
-            self.checkAlarms()
+            DispatchQueue.main.async {
+                self.checkAlarms()
+            }
         }
     }
     
     func checkAlarms() {
-        for alarm in alarms {
+        for alarm in backupAlarms {
             guard let alarmID = alarm.id else { continue }
             if alarm.remainingTime <= 0 {
                 removeAlarm(documentID: alarmID)
@@ -89,6 +116,8 @@ class AlarmsViewModel: ObservableObject {
                                 let alarm = try document.data(as: Alarm.self)
                                 if !self.alarms.contains(where: { $0.id == alarm.id }) {
                                     self.alarms.append(alarm)
+                                    self.backupAlarms.append(alarm)
+                                    activityNames.insert(alarm.activityName ?? "")
                                 }
                             }
                             catch {
@@ -98,16 +127,17 @@ class AlarmsViewModel: ObservableObject {
                     }
                 } else {
                     self.alarms = []
+                    self.backupAlarms = []
                 }
             }
             catch {
-                debugPrint("[fetchAlarmData] starts")
+                debugPrint("[fetchAlarmData] error")
                 print(error.localizedDescription)
             }
         }
     }
     
-    func addAlarm(time: Date, sound: String, repeatInterval: String, activityId: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
+    func addAlarm(time: Date, sound: String, repeatInterval: String, activityId: String?, activityName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         if let activityId = activityId {
             // For sharing alarm
@@ -132,9 +162,10 @@ class AlarmsViewModel: ObservableObject {
                                             "sound": sound,
                                             "repeatInterval": repeatInterval,
                                             "activityId": activityId,
+                                            "activityName": activityName ?? "",
                                             "participants": participants
                                            ])
-                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId)
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName)
                     addAlarmToParticipants(participants: participants, alarmId: newAlarm.documentID, alarm: alarm) { result in
                         switch result {
                         case .success(_):
@@ -161,7 +192,7 @@ class AlarmsViewModel: ObservableObject {
             Task {
                 do {
                     try await db.collection("UserData").document(userID)
-                        .collection("Alarms")
+                        .collection("alarms")
                         .addDocument(data: ["time": time,
                                             "sound": sound,
                                             "repeatInterval": repeatInterval
@@ -197,9 +228,8 @@ class AlarmsViewModel: ObservableObject {
                 
                 try await db.collection("Alarm").document(documentID).delete()
                 
-                if let index = self.alarms.firstIndex(where: { $0.id == documentID }) {
-                    self.alarms.remove(at: index)
-                }
+                self.alarms.removeAll(where: {$0.id == documentID })
+                self.backupAlarms.removeAll(where: {$0.id == documentID })
                 
                 if selectedAlarm?.id == documentID {
                     selectedAlarm = nil
@@ -223,7 +253,10 @@ class AlarmsViewModel: ObservableObject {
                         .document(alarmId)
                         .setData(["time": alarm.time,
                                   "sound": alarm.sound,
-                                  "repeatInterval": alarm.repeatInterval
+                                  "repeatInterval": alarm.repeatInterval,
+                                  "activityId": alarm.activityID ?? "",
+                                  "activityName": alarm.activityName ?? "",
+                                  "isOn": alarm.isOn
                                  ])
                     debugPrint("[addAlarmToParticipants] done for \(participantID)")
                 }
