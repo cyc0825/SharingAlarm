@@ -47,7 +47,8 @@ struct AlarmInterfaceView: View {
                 ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
                     CombineView(alarmID: viewModel.alarms[index].id, timerViewModel: TimerViewModel(targetDate: viewModel.alarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
                 }
-            }        }
+            }
+        }
         .frame(height: 400)
     }
 }
@@ -67,7 +68,28 @@ struct CombineView: View {
     
     func setupTimerEndAction() {
         timerViewModel.onTimerEnd = {
-            viewModel.removeAlarm(documentID: alarmID)
+            if let currentTargetDate = timerViewModel.targetDate {
+                let calendar = Calendar.current
+                var newTargetDate: Date?
+                
+                switch viewModel.alarms[index].repeatInterval {
+                case "Daily":
+                    // Add one day to the current target date
+                    newTargetDate = calendar.date(byAdding: .day, value: 1, to: currentTargetDate)
+
+                case "Weekly":
+                    // Add one week to the current target date
+                    newTargetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentTargetDate)
+                default:
+                    viewModel.removeAlarm(documentID: alarmID)
+                }
+                if let newTargetDate = newTargetDate {
+                    // Update the alarm with the new target date
+                    viewModel.editAlarm(alarmId: alarmID, updates: ["time": newTargetDate])
+                }
+            } else {
+                print("Cannot find TargetDate")
+            }
         }
     }
     
@@ -85,7 +107,10 @@ struct CombineView: View {
                 viewModel: viewModel)
             .frame(width: geometry.size.width, height: geometry.size.height)
             .onAppear {
-                setupTimerEndAction()
+                if let alarmID = alarmID {
+                    viewModel.timerViewModels[alarmID] = timerViewModel
+                    setupTimerEndAction()
+                }
             }
 
         PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))

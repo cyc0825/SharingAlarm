@@ -158,6 +158,7 @@
 		D30FB1962BC3171100C88BBC /* ViewCards */ = {
 			isa = PBXGroup;
 			children = (
+				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
 				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
 				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
 				D3B53B372BC85B8A00B41769 /* ActivityCard.swift */,
@@ -199,7 +200,6 @@
 				D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */,
 				D34A27502C642944009BB039 /* AlarmDetailView.swift */,
 				D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */,
-				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
 			);
 			path = Alarm;
 			sourceTree = "<group>";

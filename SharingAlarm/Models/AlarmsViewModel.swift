@@ -34,6 +34,8 @@ struct Alarm: Hashable, Codable, Identifiable {
 class AlarmsViewModel: ObservableObject {
     @Published var alarms: [Alarm] = []
     public var backupAlarms: [Alarm] = []
+    public var timerViewModels: [String: TimerViewModel] = [:]
+    
     @Published var activityNames: Set<String> = []
     @Published var selectedAlarm: Alarm?
     private var ongoingDeletions: Set<String> = []
@@ -77,24 +79,6 @@ class AlarmsViewModel: ObservableObject {
     
     func restoreAlarms() {
         alarms = backupAlarms
-    }
-    
-    func startGlobalTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.checkAlarms()
-            }
-        }
-    }
-    
-    func checkAlarms() {
-        for alarm in backupAlarms {
-            guard let alarmID = alarm.id else { continue }
-            if alarm.remainingTime <= 0 {
-                removeAlarm(documentID: alarmID)
-            }
-        }
     }
     
     deinit {
@@ -145,11 +129,25 @@ class AlarmsViewModel: ObservableObject {
                 debugPrint("[addAlarm] starts")
                 do {
                     var participants: [String] = []
-                    let activityRef = try await db.collection("Activity")
+                    let activityRef = db.collection("Activity")
                         .document(activityId)
+                    
+                    // Count + 1 for activity
+                    DispatchQueue.main.async {
+                        activityRef.updateData([
+                            "alarmCount": FieldValue.increment(Int64(1))
+                        ]) { error in
+                            if let error = error {
+                                completion(.failure(error))
+                            }
+                        }
+                    }
+                        
+                    let participantsDoc = try await activityRef
                         .collection("participants")
                         .getDocuments()
-                    for document in activityRef.documents {
+                    
+                    for document in participantsDoc.documents {
                         if let userRef = document.get("userRef") as? DocumentReference {
                             
                             let participant = try await userRef.getDocument(as: AppUser.self)
@@ -191,22 +189,30 @@ class AlarmsViewModel: ObservableObject {
             // For creating alarm only for self
             Task {
                 do {
-                    try await db.collection("UserData").document(userID)
+                    let newAlarm = try await db.collection("UserData").document(userID)
                         .collection("alarms")
                         .addDocument(data: ["time": time,
                                             "sound": sound,
-                                            "repeatInterval": repeatInterval
+                                            "repeatInterval": repeatInterval,
+                                            "isOn": true
                                            ])
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName)
+                    DispatchQueue.main.async {
+                        completion(.success(alarm))
+                    }
                     
                 }
                 catch {
-                    print(error.localizedDescription)
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
                 }
             }
         }
     }
     
     func removeAlarm(documentID: String?) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         guard let documentID = documentID else { return }
         
         guard !ongoingDeletions.contains(documentID) else { return }
@@ -215,26 +221,49 @@ class AlarmsViewModel: ObservableObject {
         Task {
             do {
                 debugPrint("[removeAlarm] starts")
-                let alarmDoc = try await db.collection("Alarm").document(documentID).getDocument()
-                guard let participants = alarmDoc.get("participants") as? [String] else {
-                    ongoingDeletions.remove(documentID)
-                    return
+                let document = db.collection("UserData").document(userID).collection("alarms").document(documentID)
+                if let activityId = try await document.getDocument().get("activityId") as? String {
+                    // For sharing alarm
+                    print("Remove alarm within a group alarm")
+                    
+                    let activityRef = db.collection("Activity")
+                        .document(activityId)
+                    
+                    // Count - 1 for activity
+                    DispatchQueue.main.async {
+                        activityRef.updateData([
+                            "alarmCount": FieldValue.increment(Int64(-1))
+                        ]) { error in
+                            self.ongoingDeletions.remove(documentID)
+                            print("Cannot -1 count alarm for activity")
+                            return
+                        }
+                    }
+                    
+                    let alarmDoc = try await db.collection("Alarm").document(documentID).getDocument()
+                    guard let participants = alarmDoc.get("participants") as? [String] else {
+                        ongoingDeletions.remove(documentID)
+                        return
+                    }
+                    
+                    for participantID in participants {
+                        try await db.collection("UserData").document(participantID).collection("alarms").document(documentID).delete()
+                        debugPrint("[removeAlarm] done for participant: \(participantID)")
+                    }
+                    
+                    try await db.collection("Alarm").document(documentID).delete()
+                } else {
+                    // For removing alarm only for self
+                    print("Remove alarm within just for u")
+                    try await document.delete()
                 }
-                
-                for participantID in participants {
-                    try await db.collection("UserData").document(participantID).collection("alarms").document(documentID).delete()
-                    debugPrint("[removeAlarm] done for participant: \(participantID)")
-                }
-                
-                try await db.collection("Alarm").document(documentID).delete()
                 
                 self.alarms.removeAll(where: {$0.id == documentID })
                 self.backupAlarms.removeAll(where: {$0.id == documentID })
-                
+                self.timerViewModels[documentID]?.stopTimer()
                 if selectedAlarm?.id == documentID {
                     selectedAlarm = nil
                 }
-                
                 debugPrint("[removeAlarm] ends")
             } catch {
                 debugPrint("Error removing alarm: \(error.localizedDescription)")
@@ -273,45 +302,67 @@ class AlarmsViewModel: ObservableObject {
         }
     } 
     
-//    func editAlarm(activityId: String?, alarmId: String, updates: [String: Any]) {
-//        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-//        if let activityId = activityId {
-//            // For sharing alarm
-//            Task {
-//                debugPrint("[editAlarm] starts")
-//                do {
-//                    try await db.collection("Alarm")
-//                        .document(alarmId)
-//                        .setData(updates)
-//                    var participants = updates["participants"] as! [String]
-//                    for participantID in participants {
-//                        try await db.collection("UserData").document(participantID)
-//                            .collection("Alarms")
-//                            .document(alarmId)
-//                            .setData(Dictionary(uniqueKeysWithValues: Array(updates.prefix(3))))
-//                    }
-//                }
-//                catch {
-//                    debugPrint("[editAlarm] error \(error.localizedDescription)")
-//                }
-//            }
-//        }
-//        else {
-//            // For creating alarm only for self
-//            Task {
-//                do {
-//                    try await db.collection("UserData").document(userID)
-//                        .collection("Alarms")
-//                        .document(alarmId)
-//                        .setData(Dictionary(uniqueKeysWithValues: Array(updates.prefix(3))))
-//                    
-//                }
-//                catch {
-//                    print(error.localizedDescription)
-//                }
-//            }
-//        }
-//    }
+    func editAlarm(alarmId: String?, updates: [String: Any]) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        if let alarmId = alarmId {
+            Task {
+                do {
+                    let document = db.collection("UserData").document(userID).collection("alarms").document(alarmId)
+                    if try await document.getDocument().get("activityId") is String {
+                        // For sharing alarm
+                        debugPrint("[editAlarm] starts")
+                        try await db.collection("Alarm")
+                            .document(alarmId)
+                            .updateData(updates)
+                        if let participants = updates["participants"] as? [String] {
+                            for participantID in participants {
+                                try await db.collection("UserData").document(participantID)
+                                    .collection("alarms")
+                                    .document(alarmId)
+                                    .updateData(updates)
+                            }
+                        }
+                    } else {
+                        // For editing alarm only for self
+                        try await document.updateData(updates)
+                    }
+                    if let newTime = updates["time"] as? Date {
+                        if let index = alarms.firstIndex(where: { $0.id == alarmId }) {
+                            alarms[index].time = newTime
+                        }
+                        if let index = backupAlarms.firstIndex(where: { $0.id == alarmId }) {
+                            backupAlarms[index].time = newTime
+                        }
+                    }
+                    
+                    if selectedAlarm?.id == alarmId {
+                        selectedAlarm = nil
+                    }
+                    debugPrint("[editAlarm] ends")
+                }
+                catch {
+                    debugPrint("[editAlarm] error \(error.localizedDescription)")
+                }
+            }
+        } else {
+            print("No alarmID")
+        }
+    }
+    
+    func toggleAlarm(alarmId: String?, value: Bool) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        if let alarmId = alarmId {
+            Task {
+                do {
+                    let document = db.collection("UserData").document(userID).collection("alarms").document(alarmId)
+                    try await document.updateData(["isOn": value])
+                }
+                catch {
+                    debugPrint("[toggleAlarm] error \(error.localizedDescription)")
+                }
+            }
+        }
+    }
 }
 
 extension AlarmsViewModel {

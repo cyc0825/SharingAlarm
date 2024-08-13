@@ -15,6 +15,7 @@ struct Activity: Hashable, Codable, Identifiable  {
     var to: Date
     var name: String
     var participants: [AppUser]
+    var alarmCount: Int
     
     static func == (lhs: Activity, rhs: Activity) -> Bool {
         return lhs.id == rhs.id
@@ -79,7 +80,8 @@ class ActivitiesViewModel: ObservableObject {
                                                                 from: activityData["from"] as? Date ?? Date(),
                                                                 to: activityData["to"] as? Date ?? Date(),
                                                                 name: activityData["name"] as? String ?? "",
-                                                                participants: resolvedParticipants)
+                                                                participants: resolvedParticipants,
+                                                                alarmCount: activityData["alarmCount"] as? Int ?? 0)
                                         DispatchQueue.main.async {
                                             self.activities.append(activity)
                                         }
@@ -129,7 +131,7 @@ class ActivitiesViewModel: ObservableObject {
                     switch result {
                     case .success(_):
                         DispatchQueue.main.async {
-                            completion(.success(Activity(id: activityRef.documentID ,from: startDate, to: endDate, name: name, participants: participants)))
+                            completion(.success(Activity(id: activityRef.documentID ,from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
@@ -281,7 +283,7 @@ class ActivitiesViewModel: ObservableObject {
 extension ActivitiesViewModel {
     static func withSampleData() -> ActivitiesViewModel {
         let sampleViewModel = ActivitiesViewModel()
-        sampleViewModel.activities.append(Activity(from: Date(), to: Date(), name: "test", participants: []))
+        sampleViewModel.activities.append(Activity(from: Date(), to: Date(), name: "test", participants: [], alarmCount: 0))
         
         return sampleViewModel
     }

@@ -16,22 +16,23 @@ struct ActivityCard: View {
             Color.accentColor.ignoresSafeArea(edges: .all)
             VStack {
                 Text(viewModel.activities[index].name)
-                    .font(.title3)
+                    .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
                     .padding(.top)
                 HStack {
-                    Text(viewModel.activities[index].from.formatted(date: .abbreviated, time: .omitted))
+                    Text("\(viewModel.activities[index].alarmCount) Alarm(s)")
+                        .font(.footnote)
                     Divider()
-                        .rotationEffect(.degrees(90))
-                        .padding(.horizontal)
+                    Text("\(viewModel.activities[index].participants.count) Pariticpant(s)")
+                        .font(.footnote)
+                    Divider()
                     Text(viewModel.activities[index].to.formatted(date: .abbreviated, time: .omitted))
+                        .font(.footnote)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading)
-                Spacer()
+                .padding(.bottom)
             }
         }
         .frame(width: UIScreen.main.bounds.width * 4 / 5, height: 80)

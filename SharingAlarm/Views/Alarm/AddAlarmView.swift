@@ -33,22 +33,11 @@ struct AddAlarmView: View {
                         Text(sound).tag("\(sound).mp3")
                     }
                 }
-                if let firstActivity = activityViewModel.activities.first {
-                    Picker("Group", selection: $selectedGroup) {
-                        ForEach(activityViewModel.activities, id: \.id) { activity in
-                            Text(activity.name).tag(activity as Activity?)
-                        }
-                    }
-                    .onAppear {
-                        if selectedGroup == nil {
-                            selectedGroup = firstActivity
-                        }
-                    }
-                } else {
-                    HStack {
-                        Text("Group")
-                        Spacer()
-                        Text("No activities available")
+                Picker("Group", selection: $selectedGroup) {
+                    Text("Just For You").tag(nil as Activity?)
+                    
+                    ForEach(activityViewModel.activities, id: \.id) { activity in
+                        Text(activity.name).tag(activity as Activity?)
                     }
                 }
             }
@@ -62,13 +51,16 @@ struct AddAlarmView: View {
                     case .success(let alarm):
                         viewModel.alarms.append(alarm)
                         viewModel.backupAlarms.append(alarm)
-                        viewModel.activityNames.insert(alarm.activityName ?? "")
+                        viewModel.activityNames.insert(alarm.activityName ?? "Just For You")
+                        // modify the front-end, local activities should not be too large, thus using firstIndex
+                        if let selectedGroup = selectedGroup,
+                           let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroup.id }) {
+                            activityViewModel.activities[index].alarmCount += 1
+                        }
                     case .failure(let error):
                         debugPrint("Add Activity error: \(error)")
                     }
                 }
-                // let newAlarm = Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup)
-                // scheduleNotification(for: newAlarm, viewModel: viewModel)
                 isPresented = false
             })
         }

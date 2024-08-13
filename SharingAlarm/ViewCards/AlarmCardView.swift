@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlarmCardView: View {
+    @StateObject var viewModel = AlarmsViewModel()
     @Binding var alarm: Alarm
     var body: some View {
         VStack {
@@ -28,6 +29,7 @@ struct AlarmCardView: View {
             }
             .onChange(of: alarm.isOn) {
                 if let alarmId = alarm.id {
+                    viewModel.toggleAlarm(alarmId: alarmId, value: alarm.isOn)
                     if alarm.isOn {
                         AppDelegate.shared.scheduleLocalNotification(id: alarmId, title: "Alarm Notification", body: "Rescheduled Alarm", alarmTime: alarm.time, sound: alarm.sound)
                     } else {

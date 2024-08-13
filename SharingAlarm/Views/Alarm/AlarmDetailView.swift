@@ -39,9 +39,11 @@ struct AlarmDetailView: View {
             }
             .padding()
             HStack {
-                Text("Activity")
-                Spacer()
-                Text("\(alarm.activityName ?? "")")
+                if let activityName = alarm.activityName {
+                    Text("Activity")
+                    Spacer()
+                    Text(activityName)
+                }
             }
             .padding()
             

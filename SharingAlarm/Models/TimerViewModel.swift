@@ -12,9 +12,11 @@ class TimerViewModel: ObservableObject {
     @Published var timeRemaining: TimeInterval = 0
     private var cancellable: AnyCancellable?
     var onTimerEnd: (() -> Void)?
+    var targetDate: Date?
     
     init(targetDate: Date) {
         startTimer(targetDate: targetDate)
+        self.targetDate = targetDate
     }
     
     func startTimer(targetDate: Date) {
@@ -35,5 +37,9 @@ class TimerViewModel: ObservableObject {
                     self.onTimerEnd?()
                 }
             }
+    }
+    
+    func stopTimer() {
+        self.cancellable?.cancel()
     }
 }

@@ -48,7 +48,7 @@ struct AlarmsView: View {
                                 }
                             }
                         } label: {
-                            Text("Filter by activity")
+                            Text("Filter By Activity")
                         }
                     } label: {
                         Image(systemName: "slider.horizontal.3")
@@ -70,6 +70,32 @@ struct AlarmsView: View {
                 AlarmInterfaceView(viewModel: viewModel)
                 GeometryReader { geometry in
                     ZStack {
+                        if viewModel.alarms.isEmpty {
+                            List {
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text("No Alarm")
+                                            .font(.title)
+                                            .foregroundColor(.systemText)
+                                        HStack {
+                                            Text("Tap")
+                                                .foregroundColor(.systemText)
+                                            Image(systemName: "plus.circle.fill")
+                                                .foregroundStyle(.accent)
+                                            Text("to add your alarm")
+                                                .foregroundColor(.systemText)
+                                        }
+                                    }
+                                    .onTapGesture {
+                                        showingAddAlarm = true
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .listRowBackground(Color.clear)
+                            .listStyle(.plain)
+                            .toolbarTitleDisplayMode(.inline)
+                        }
                         // List with fixed height
                         List($viewModel.alarms, id: \.id) { $alarm in
                             Button(action: {
