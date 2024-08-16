@@ -10,7 +10,6 @@
 		D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FB1972BC3172700C88BBC /* AddFriendCard.swift */; };
 		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
 		D3372A982C63EAA200D33713 /* AlarmSoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3372A972C63EAA200D33713 /* AlarmSoundView.swift */; };
-		D3372A9A2C63FA4500D33713 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3372A992C63FA4500D33713 /* ProfileSetupView.swift */; };
 		D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */; };
 		D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */; };
 		D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB22C56F20100D33713 /* AddFriendView.swift */; };
@@ -27,6 +26,7 @@
 		D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3632D282BCF2420004F02FD /* ActivityDetailView.swift */; };
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
+		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
 		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
 		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
 		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
@@ -78,7 +78,6 @@
 		D30FB1972BC3172700C88BBC /* AddFriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCard.swift; sourceTree = "<group>"; };
 		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		D3372A972C63EAA200D33713 /* AlarmSoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSoundView.swift; sourceTree = "<group>"; };
-		D3372A992C63FA4500D33713 /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
 		D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlarmView.swift; sourceTree = "<group>"; };
 		D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmView.swift; sourceTree = "<group>"; };
 		D337DFB22C56F20100D33713 /* AddFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendView.swift; sourceTree = "<group>"; };
@@ -95,6 +94,7 @@
 		D3632D282BCF2420004F02FD /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
+		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
 		D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharingAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmApp.swift; sourceTree = "<group>"; };
 		D38EEB842BA3719F0099D382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 			children = (
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3372A972C63EAA200D33713 /* AlarmSoundView.swift */,
-				D3372A992C63FA4500D33713 /* ProfileSetupView.swift */,
+				D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -473,7 +473,6 @@
 				D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */,
 				D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
-				D3372A9A2C63FA4500D33713 /* ProfileSetupView.swift in Sources */,
 				D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */,
 				D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
@@ -482,6 +481,7 @@
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
 				D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */,
+				D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
 				D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */,
 				D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */,
@@ -652,6 +652,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -671,7 +672,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -685,6 +686,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -704,7 +706,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

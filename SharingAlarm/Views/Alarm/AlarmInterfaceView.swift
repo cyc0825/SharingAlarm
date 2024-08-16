@@ -10,7 +10,6 @@ import SwiftUI
 struct AlarmInterfaceView: View {
     @StateObject var viewModel = AlarmsViewModel()
     @State private var currentTime = Time(hour: 0, minute: 0, second: 0)
-    var colorSet: [Color] = [Color.accentColor, Color.secondAccent, Color.thirdAccent]
 
     func arcTapped(index: Int) {
         viewModel.selectedAlarm = viewModel.alarms[index]
@@ -21,12 +20,11 @@ struct AlarmInterfaceView: View {
             let clockCenter = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
             let clockRadius: CGFloat = min(geometry.size.width, geometry.size.height) * 0.25 // 25% of the smallest dimension
             ZStack {
-                Rectangle()
-                    .fill(BackgroundStyle())
-                    .onTapGesture {
-                        viewModel.selectedAlarm = nil
-                    }
-                
+//                Rectangle()
+//                    .fill(BackgroundStyle())
+//                    .onTapGesture {
+//                        viewModel.selectedAlarm = nil
+//                    }
                 // Draw minute lines around the circle
                 ForEach(0..<60) { i in
                     Path { path in
@@ -45,25 +43,24 @@ struct AlarmInterfaceView: View {
                 }
                 
                 ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
-                    CombineView(alarmID: viewModel.alarms[index].id, timerViewModel: TimerViewModel(targetDate: viewModel.alarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
+                    CombineView(alarm: viewModel.alarms[index], timerViewModel: TimerViewModel(targetDate: viewModel.alarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
                 }
             }
         }
-        .frame(height: 400)
     }
 }
 
 struct CombineView: View {
-    var alarmID: String?
+    var alarm: Alarm
     @ObservedObject var timerViewModel: TimerViewModel
     @StateObject var viewModel: AlarmsViewModel
     var clockRadius: CGFloat
     var index: Int
-    var colorSet: [Color] = [Color.accentColor, Color.secondAccent, Color.thirdAccent]
+    var colorSet: [Color] = [Color.accent, Color.secondAccent, Color.thirdAccent]
     var geometry: GeometryProxy
     
     func arcTapped(index: Int) {
-        viewModel.selectedAlarm = viewModel.alarms[index]
+        viewModel.selectedAlarm = alarm
     }
     
     func setupTimerEndAction() {
@@ -72,7 +69,7 @@ struct CombineView: View {
                 let calendar = Calendar.current
                 var newTargetDate: Date?
                 
-                switch viewModel.alarms[index].repeatInterval {
+                switch alarm.repeatInterval {
                 case "Daily":
                     // Add one day to the current target date
                     newTargetDate = calendar.date(byAdding: .day, value: 1, to: currentTargetDate)
@@ -81,11 +78,16 @@ struct CombineView: View {
                     // Add one week to the current target date
                     newTargetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentTargetDate)
                 default:
-                    viewModel.removeAlarm(documentID: alarmID)
+                    print("Alarm is ringing")
+                    //Present Alarm View
+                    viewModel.startLongVibration()
+                    viewModel.showAlarmView = true
+                    viewModel.ongoingAlarms.append(alarm)
+                    // viewModel.removeAlarm(documentID: alarmID)
                 }
                 if let newTargetDate = newTargetDate {
                     // Update the alarm with the new target date
-                    viewModel.editAlarm(alarmId: alarmID, updates: ["time": newTargetDate])
+                    viewModel.editAlarm(alarmId: alarm.id, updates: ["time": newTargetDate])
                 }
             } else {
                 print("Cannot find TargetDate")
@@ -97,6 +99,7 @@ struct CombineView: View {
         let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
         let endAngleDegree = 360.0 * timerViewModel.timeRemaining / 3600
 
+        // TODO: I need to have a clear indicator of which alarm is tapped
         ArcView(radius: alarmCircleSize / 2,
                 startAngle: Angle(degrees: -90),
                 endAngle: Angle(degrees: endAngleDegree - 90),
@@ -107,13 +110,14 @@ struct CombineView: View {
                 viewModel: viewModel)
             .frame(width: geometry.size.width, height: geometry.size.height)
             .onAppear {
-                if let alarmID = alarmID {
+                if let alarmID = alarm.id {
                     viewModel.timerViewModels[alarmID] = timerViewModel
                     setupTimerEndAction()
                 }
             }
 
         PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
+        
     }
 }
 
@@ -171,7 +175,6 @@ struct ArcView: View {
                     gestureState = currentState
                 }
                 .onEnded { _ in
-                    print("Show Edit Now")
                     isShowEdit = true
                     UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
                 }
@@ -184,7 +187,6 @@ struct ArcView: View {
             .stroke(style: StrokeStyle(lineWidth: tapped ? lineWidth * 1.3 : lineWidth, lineCap: .round))
             .foregroundColor(color)
             .onTapGesture {
-                print("Show Detail Now")
                 isShowDetail = true
             }
             .simultaneousGesture(longPressGesture)

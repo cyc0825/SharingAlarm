@@ -64,6 +64,7 @@ struct EditAlarmView: View {
                     Section {
                         Button("Delete Alarm", role: .destructive) {
                             viewModel.removeAlarm(documentID: alarm.id)
+                            isPresented = false
                         }
                         .foregroundColor(.red)
                     }

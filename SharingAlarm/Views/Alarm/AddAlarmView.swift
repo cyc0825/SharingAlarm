@@ -45,24 +45,35 @@ struct AddAlarmView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
-//                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
-                viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
-                    switch result {
-                    case .success(let alarm):
-                        viewModel.alarms.append(alarm)
-                        viewModel.backupAlarms.append(alarm)
-                        viewModel.activityNames.insert(alarm.activityName ?? "Just For You")
-                        // modify the front-end, local activities should not be too large, thus using firstIndex
-                        if let selectedGroup = selectedGroup,
-                           let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroup.id }) {
-                            activityViewModel.activities[index].alarmCount += 1
+                if viewModel.backupAlarms.count < 10 {
+                    //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
+                    viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
+                        switch result {
+                        case .success(let alarm):
+                            viewModel.alarms.append(alarm)
+                            viewModel.backupAlarms.append(alarm)
+                            viewModel.activityNames.insert(alarm.activityName ?? "Just For You")
+                            if let id = alarm.id {
+                                AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
+                            }
+                            // modify the front-end, local activities should not be too large, thus using firstIndex
+                            if let selectedGroup = selectedGroup,
+                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroup.id }) {
+                                activityViewModel.activities[index].alarmCount += 1
+                            }
+                        case .failure(let error):
+                            debugPrint("Add Activity error: \(error)")
                         }
-                    case .failure(let error):
-                        debugPrint("Add Activity error: \(error)")
                     }
+                    isPresented = false
+                } else {
+                    print("Alarm Maximum Reached")
+                    viewModel.errorMessage = "You have reached the maximum number of alarms trial user can have."
                 }
-                isPresented = false
             })
+            .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
+                Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
+            }
         }
     }
 }

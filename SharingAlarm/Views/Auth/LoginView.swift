@@ -131,14 +131,14 @@ struct LoginView: View {
             }
             .sheet(isPresented: $authViewModel.isNewUser) {
                 ProfileSetupView(
+                    initialUsername: "",
+                    initialUid: "",
                     onSubmit: { username, uid in
                         authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
                         authViewModel.isNewUser = false
                         UserDefaults.standard.setValue(username, forKey: "name")
                         UserDefaults.standard.setValue(uid, forKey: "uid")
-                    },
-                    initialUsername: "",
-                    initialUid: ""
+                    }
                 )
             }
         }

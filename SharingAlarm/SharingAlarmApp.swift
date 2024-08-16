@@ -169,7 +169,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("Notification will present")
         let userInfo = notification.request.content.userInfo
         if userInfo.isEmpty {
-            self.startLongVibration()
+            // self.startLongVibration()
         } else {
             handleNotification(userInfo: userInfo)
         }
@@ -200,7 +200,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 break
             }
         } else {
-            presentAlarmView(title: "Alarm Notification", body: "You have an new alarm", alarmTime: Date(), sound: "Harmony.mp3")
+            // presentAlarmView()
         }
         completionHandler()
     }
@@ -247,38 +247,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
     
-    private func presentAlarmView(title: String, body: String, alarmTime: Date, sound: String) {
-            // Debug statement to verify function call
-            print("Presenting AlarmView with title: \(title), body: \(body), alarmTime: \(alarmTime), sound: \(sound)")
+    func presentAlarmView() {
+        // Create a window and set the root view controller to your custom SwiftUI view
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            let window = UIWindow(windowScene: scene)
+            let rootView = AlarmView(alarmViewModel: AlarmsViewModel())
+            window.rootViewController = UIHostingController(rootView: rootView)
+            window.makeKeyAndVisible()
+            self.alarmWindow = window
 
-            // Create a window and set the root view controller to your custom SwiftUI view
-            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                let window = UIWindow(windowScene: scene)
-                let rootView = AlarmView(title: title, alarmBody: body, alarmTime: alarmTime, sound: sound, onClose: {
-                    window.isHidden = true
-                    window.rootViewController = nil
-                    self.alarmWindow = nil
-                    self.stopVibration()
-                    // Handle alarm close action
-                    print("Alarm closed")
-                }, onSnooze: {
-                    window.isHidden = true
-                    window.rootViewController = nil
-                    self.alarmWindow = nil
-                    // Reschedule the alarm for 10 minutes later
-                    let snoozeTime = alarmTime.addingTimeInterval(600) // 10 minutes later
-                    // self.scheduleLocalNotification(title: title, body: body, alarmTime: snoozeTime, sound: sound)
-                    print("Alarm snoozed for 10 minutes")
-                })
-                window.rootViewController = UIHostingController(rootView: rootView)
-                window.makeKeyAndVisible()
-                self.alarmWindow = window
-
-                // Vibration
-            } else {
-                print("No suitable window scene found.")
-            }
+            // Vibration
+        } else {
+            print("No suitable window scene found.")
         }
+    }
     
     public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String) {
         let content = UNMutableNotificationContent()
@@ -330,6 +312,13 @@ extension AppDelegate {
                 print("vibrationTimer not exist")
             }
             self.vibrationTimer = nil
+            
+            if let rescheduleTimer = self.rescheduleTimer {
+                rescheduleTimer.invalidate()
+            } else {
+                print("rescheduleTimer not exist")
+            }
+            self.rescheduleTimer = nil
         }
     }
 }

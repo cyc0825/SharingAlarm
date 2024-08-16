@@ -12,6 +12,7 @@ struct AlarmsView: View {
     @StateObject var viewModel = AlarmsViewModel()
     @State private var showingAddAlarm = false
     @State private var showingEditAlarm = false
+    @State private var showingOngoingAlarm = false
     
     @State private var selectedTime: Date? = nil
     @State private var selectedGroup = ""
@@ -28,6 +29,17 @@ struct AlarmsView: View {
                     Text("Alarms")
                         .font(.largeTitle.bold())
                     Spacer()
+                    if !viewModel.ongoingAlarms.isEmpty {
+                        Button {
+                            viewModel.showAlarmView = true
+                        } label: {
+                            Image(systemName: "alarm.fill")
+                                .resizable()
+                                .frame(width: 38, height: 40)
+                                .foregroundStyle(.accent)
+                                .padding(.trailing)
+                        }
+                    }
                     Menu {
                         Button {
                             viewModel.sortAlarmsByTime()
@@ -168,6 +180,9 @@ struct AlarmsView: View {
             }
             .sheet(isPresented: $showingAddAlarm) {
                 AddAlarmView(viewModel: viewModel, isPresented: $showingAddAlarm)
+            }
+            .sheet(isPresented: $viewModel.showAlarmView) {
+                AlarmView(alarmViewModel: viewModel)
             }
         }
     }

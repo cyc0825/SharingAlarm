@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ProfileSetupView: View {
-    var onSubmit: (String, String) -> Void
     var initialUsername: String
     var initialUid: String
+    var onSubmit: (String, String) -> Void
         
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var userViewModel: UserViewModel
@@ -22,10 +22,10 @@ struct ProfileSetupView: View {
     @State private var usernameWarning: String?
     @State private var uidWarning: String?
     
-    init(onSubmit: @escaping (String, String) -> Void, initialUsername: String, initialUid: String) {
-        self.onSubmit = onSubmit
+    init(initialUsername: String, initialUid: String, onSubmit: @escaping (String, String) -> Void) {
         self.initialUsername = initialUsername
         self.initialUid = initialUid
+        self.onSubmit = onSubmit
         _username = State(initialValue: initialUsername)
         _uid = State(initialValue: initialUid)
     }

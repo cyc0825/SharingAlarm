@@ -126,6 +126,8 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $showingProfileEdit) {
             ProfileSetupView(
+                initialUsername: userViewModel.appUser.name,
+                initialUid: userViewModel.appUser.uid,
                 onSubmit: { username, uid in
                     // authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
                     showingProfileEdit = false
@@ -136,9 +138,7 @@ struct ProfileView: View {
                     userName = username
                     Uid = uid
                     userViewModel.saveUserData()
-                },
-                initialUsername: userViewModel.appUser.name,
-                initialUid: userViewModel.appUser.uid
+                }
             )
         }
     }

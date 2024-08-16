@@ -11,17 +11,12 @@ exports.sendImmediateAlarmNotification = functions.firestore
         console.log(`Alarm created with ID: ${context.params.alarmId}`);
         console.log(`Alarm data: ${JSON.stringify(alarm)}`);
         
-        if (!Array.isArray(alarm.participants)) {
-            console.error('Participants field is not an array:', alarm.participants);
-            return;
-        }
-
         try {
             // Fetch participants and their FCM tokens
             const tokens = [];
-            for (const participantId of alarm.participants) {
-                console.log(`Fetching data for participant ID: ${participantId}`);
-                const participantSnap = await admin.firestore().collection('UserData').doc(participantId).get();
+            for (const [participantId, participantInfo] of Object.entries(alarm.participants)) {
+   		console.log(`Participant ID: ${participantId}`);
+		const participantSnap = await admin.firestore().collection('UserData').doc(participantId).get();
                 const participantData = participantSnap.data();
                 if (participantData && participantData.fcmToken) {
                     tokens.push(participantData.fcmToken);
@@ -29,8 +24,7 @@ exports.sendImmediateAlarmNotification = functions.firestore
                 } else {
                     console.log(`No token found for participant ID: ${participantId}`);
                 }
-            }
-
+	    }
             if (tokens.length > 0) {
                 // Send the notification with custom sound and data
 		const message = {

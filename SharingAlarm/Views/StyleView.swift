@@ -84,3 +84,78 @@ struct DropdownMenu: View {
         }
     }
 }
+
+struct DraggingComponent: View {
+    @Binding var isLocked: Bool
+    var onClose: () -> Void
+    
+    let maxWidth: CGFloat
+    
+    private let minWidth = CGFloat(60)
+    @State private var width = CGFloat(60)
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 30)
+            .fill(Color.accentColor)
+            .frame(width: width)
+            .overlay(
+                ZStack {
+                    image(name: "alarm.waves.left.and.right", isShown: isLocked)
+                    image(name: "alarm", isShown: !isLocked)
+                },
+                alignment: .trailing
+            )
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        guard isLocked else { return }
+                        if value.translation.width > 0 {
+                            width = min(max(value.translation.width + minWidth, minWidth), maxWidth)
+                        }
+                    }
+                    .onEnded { value in
+                        guard isLocked else { return }
+                        if width < maxWidth {
+                            width = minWidth
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                        } else {
+                            UINotificationFeedbackGenerator().notificationOccurred(.success)
+                            withAnimation(.spring().delay(0.5)) {
+                                isLocked = false
+                            }
+                            onClose()
+                        }
+                    }
+            )
+            .animation(.spring(response: 0, dampingFraction: 1, blendDuration: 0), value: width)
+    }
+    
+    private func image(name: String, isShown: Bool) -> some View {
+        Image(systemName: name)
+          .font(.system(size: 20, weight: .regular, design: .rounded))
+          .foregroundColor(Color.thirdAccent)
+          .frame(width: 50, height: 50)
+          .background(RoundedRectangle(cornerRadius: 25).fill(.white))
+          .padding(5)
+          .opacity(isShown ? 1 : 0)
+          .scaleEffect(isShown ? 1 : 0.01)
+      }
+    
+}
+
+struct BackgroundComponent: View {
+    
+    var body: some View {
+        ZStack(alignment: .leading)  {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.accentColor.opacity(0.4))
+            
+            Text("Slide to Close")
+                .font(.footnote)
+                .bold()
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+        }
+    }
+    
+}
