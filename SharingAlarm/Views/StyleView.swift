@@ -5,6 +5,7 @@
 //  Created by 曹越程 on 2024/4/5.
 //
 import SwiftUI
+import UIKit
 
 struct FloatingFriendRequestsView: View {
     var body: some View {
@@ -158,4 +159,25 @@ struct BackgroundComponent: View {
         }
     }
     
+}
+
+class SheetHostingController<Content: View>: UIViewController {
+    var rootView: Content
+
+    init(rootView: Content) {
+        self.rootView = rootView
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        let hostingController = UIHostingController(rootView: rootView)
+        hostingController.modalPresentationStyle = .pageSheet
+        present(hostingController, animated: true, completion: nil)
+    }
 }

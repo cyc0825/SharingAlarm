@@ -27,6 +27,7 @@
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
+		D37594172C6FFB0C006DB7AA /* AlarmRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594162C6FFB0C006DB7AA /* AlarmRequestView.swift */; };
 		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
 		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
 		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
@@ -95,6 +96,7 @@
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
+		D37594162C6FFB0C006DB7AA /* AlarmRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRequestView.swift; sourceTree = "<group>"; };
 		D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharingAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmApp.swift; sourceTree = "<group>"; };
 		D38EEB842BA3719F0099D382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */,
 				D34A27502C642944009BB039 /* AlarmDetailView.swift */,
 				D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */,
+				D37594162C6FFB0C006DB7AA /* AlarmRequestView.swift */,
 			);
 			path = Alarm;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */,
 				D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */,
 				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
+				D37594172C6FFB0C006DB7AA /* AlarmRequestView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */,

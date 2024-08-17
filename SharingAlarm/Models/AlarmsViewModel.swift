@@ -20,7 +20,7 @@ struct Alarm: Hashable, Codable, Identifiable {
     var activityID: String?
     var activityName: String?
     var participants: [String: [String]] = [:]// Accept, Reject, Stop, Snooze ID: [Name, Status]
-    var isOn: Bool = true
+    var isOn: Bool? = true
     
     var notificationIdentifier: String?
     
@@ -59,6 +59,7 @@ class AlarmsViewModel: ObservableObject {
     
     private var db = Firestore.firestore()
     private var listener: ListenerRegistration?
+    private var alarmsListener: ListenerRegistration?
     
     init() {
         fetchAlarmData()
@@ -102,11 +103,27 @@ class AlarmsViewModel: ObservableObject {
                     for document in querySnapshot.documents {
                         Task {
                             do {
-                                let alarm = try document.data(as: Alarm.self)
-                                if !self.alarms.contains(where: { $0.id == alarm.id }) {
-                                    self.alarms.append(alarm)
-                                    self.backupAlarms.append(alarm)
-                                    activityNames.insert(alarm.activityName ?? "")
+                                if document.get("participants") != nil {
+                                    // Just For You
+                                    print("\(document.documentID) is just for you")
+                                    let alarm = try document.data(as: Alarm.self)
+                                    if !self.alarms.contains(where: { $0.id == alarm.id }) {
+                                        self.alarms.append(alarm)
+                                        self.backupAlarms.append(alarm)
+                                        activityNames.insert(alarm.activityName ?? "")
+                                    }
+                                } else {
+                                    print("\(document.documentID) is for group")
+                                    let alarmQuerySnapshot = try await db.collection("Alarm").document(document.documentID).getDocument()
+                                    var alarm = try alarmQuerySnapshot.data(as: Alarm.self)
+                                    if let isOn = document.get("isOn") as? Bool {
+                                        alarm.isOn = isOn
+                                    }
+                                    if !self.alarms.contains(where: { $0.id == alarm.id }) {
+                                        self.alarms.append(alarm)
+                                        self.backupAlarms.append(alarm)
+                                        activityNames.insert(alarm.activityName ?? "")
+                                    }
                                 }
                             }
                             catch {
@@ -290,12 +307,9 @@ class AlarmsViewModel: ObservableObject {
                     try await db.collection("UserData").document(participant.key)
                         .collection("alarms")
                         .document(alarmId)
-                        .setData(["time": alarm.time,
-                                  "sound": alarm.sound,
-                                  "repeatInterval": alarm.repeatInterval,
+                        .setData([
                                   "activityId": alarm.activityID ?? "",
-                                  "activityName": alarm.activityName ?? "",
-                                  "isOn": alarm.isOn
+                                  "isOn": alarm.isOn ?? true
                                  ])
                     debugPrint("[addAlarmToParticipants] done for \(participant.key)")
                 }
@@ -445,6 +459,92 @@ extension AlarmsViewModel {
         listener = nil
     }
 //    
+//    deinit {
+//        stopListening()
+//    }
+}
+
+extension AlarmsViewModel {
+    func startListeningAlarms() {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        alarmsListener = db.collection("UserData").document(userID).collection("alarms").addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error listening to collection changes: \(error)")
+                return
+            }
+            
+            querySnapshot?.documentChanges.forEach { change in
+                switch change.type {
+                case .added:
+                    self.handleDocumentAdded(change.document)
+                case .modified:
+                    self.handleDocumentModified(change.document)
+                case .removed:
+                    self.handleDocumentRemoved(change.document)
+                }
+            }
+        }
+    }
+    
+    private func handleDocumentAdded(_ document: DocumentSnapshot) {
+        if let activityId = document.get("activityId") as? String {
+            // Fetch the alarm data from the Alarm collection using the document's ID
+            if let isOn = document.get("isOn") as? Bool {
+                fetchAlarmData(from: document.documentID, isOn: isOn)
+            }
+        } else {
+            // Directly convert the document data to Alarm
+            if let alarm = try? document.data(as: Alarm.self) {
+                self.alarms.append(alarm)
+            }
+        }
+    }
+    
+    private func handleDocumentModified(_ document: DocumentSnapshot) {
+        if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
+            if let activityId = document.get("activityId") as? String {
+                // Fetch the updated alarm data from the Alarm collection
+                if let isOn = document.get("isOn") as? Bool {
+                    fetchAlarmData(from: document.documentID, index: index, isOn: isOn)
+                }
+            } else {
+                // Directly update the existing alarm
+                if let updatedAlarm = try? document.data(as: Alarm.self) {
+                    self.alarms[index] = updatedAlarm
+                }
+            }
+        }
+    }
+    
+    private func handleDocumentRemoved(_ document: DocumentSnapshot) {
+        if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
+            self.alarms.remove(at: index)
+        }
+    }
+    
+    private func fetchAlarmData(from documentID: String, index: Int? = nil, isOn: Bool) {
+        let db = Firestore.firestore()
+        db.collection("Alarm").document(documentID).getDocument { [weak self] (document, error) in
+            guard let self = self, let document = document, document.exists else { return }
+            if var alarm = try? document.data(as: Alarm.self) {
+                alarm.isOn = isOn
+                if let index = index {
+                    // Update the existing alarm
+                    self.alarms[index] = alarm
+                } else {
+                    // Add the new alarm
+                    self.alarms.append(alarm)
+                }
+            }
+        }
+    }
+    
+    func stopListeningAlarms() {
+        listener?.remove()
+        listener = nil
+    }
+//
 //    deinit {
 //        stopListening()
 //    }

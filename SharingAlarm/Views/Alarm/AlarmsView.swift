@@ -9,7 +9,7 @@ import SwiftUI
 import CloudKit
 
 struct AlarmsView: View {
-    @StateObject var viewModel = AlarmsViewModel()
+    @EnvironmentObject var viewModel: AlarmsViewModel
     @State private var showingAddAlarm = false
     @State private var showingEditAlarm = false
     @State private var showingOngoingAlarm = false
@@ -155,6 +155,7 @@ struct AlarmsView: View {
             }
             .onAppear{
                 viewModel.fetchAlarmData()
+                // viewModel.startListeningAlarms()
             }
             .onChange(of: viewModel.selectedAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {

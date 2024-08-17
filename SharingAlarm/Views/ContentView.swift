@@ -12,7 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var friendViewModel: FriendsViewModel
     @EnvironmentObject var activityViewModel: ActivitiesViewModel
-    @EnvironmentObject var alarmviewModel: AlarmsViewModel
+    @EnvironmentObject var alarmsViewModel: AlarmsViewModel
     @EnvironmentObject var userViewModel: UserViewModel
     @State private var loaded = false
     @State private var showingAlarmView = false

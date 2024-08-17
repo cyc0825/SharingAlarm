@@ -23,7 +23,7 @@ struct SharingAlarmApp: App {
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var friendViewModel = FriendsViewModel()
     @StateObject private var activityViewModel = ActivitiesViewModel()
-    @StateObject private var alarmViewModel = AlarmsViewModel()
+    @StateObject private var alarmsViewModel = AlarmsViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -39,8 +39,11 @@ struct SharingAlarmApp: App {
                         .environmentObject(userViewModel)
                         .environmentObject(friendViewModel)
                         .environmentObject(activityViewModel)
-                        .environmentObject(alarmViewModel)
+                        .environmentObject(alarmsViewModel)
                     Spacer()
+                }
+                .onAppear {
+                    appDelegate.alarmsViewModel = alarmsViewModel
                 }
             }
         }
@@ -78,6 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rescheduleTimer: Timer?
     
     var alarmWindow: UIWindow?
+    var alarmsViewModel: AlarmsViewModel?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Request notification permissions
@@ -171,7 +175,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if userInfo.isEmpty {
             // self.startLongVibration()
         } else {
-            handleNotification(userInfo: userInfo)
+            // presentAlarmRequestView(userInfo: userInfo)
         }
         completionHandler([.banner, .sound])
     }
@@ -193,6 +197,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 
             case UNNotificationDefaultActionIdentifier,
             UNNotificationDismissActionIdentifier:
+                presentAlarmRequestView(userInfo: userInfo)
                 print("User dismissed")
                 break
                 
@@ -249,18 +254,52 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func presentAlarmView() {
         // Create a window and set the root view controller to your custom SwiftUI view
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            let window = UIWindow(windowScene: scene)
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = scene.windows.first?.rootViewController {
             let rootView = AlarmView(alarmViewModel: AlarmsViewModel())
-            window.rootViewController = UIHostingController(rootView: rootView)
-            window.makeKeyAndVisible()
-            self.alarmWindow = window
+            let sheetController = SheetHostingController(rootView: rootView)
 
-            // Vibration
+            rootViewController.present(sheetController, animated: true, completion: nil)
         } else {
             print("No suitable window scene found.")
         }
     }
+    
+    func presentAlarmRequestView(userInfo: [AnyHashable : Any]) {
+        print("Present request View \(userInfo)")
+        
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = scene.windows.first?.rootViewController,
+              rootViewController.presentedViewController == nil else {
+            print("Another view is already presented, cannot present AlarmRequestView.")
+            return
+        }
+        
+        if let id = userInfo["id"] as? String,
+           let title = userInfo["title"] as? String,
+           let body = userInfo["body"] as? String,
+           let alarmTimeString = userInfo["alarmTime"] as? String,
+           let sound = userInfo["sound"] as? String,
+           let repeatInterval = userInfo["repeat"] as? String,
+           let activityId = userInfo["activityId"] as? String,
+           let activityName = userInfo["activityName"] as? String {
+            
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            
+            if let alarmTime = dateFormatter.date(from: alarmTimeString) {
+                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName))
+                let hostingController = UIHostingController(rootView: rootView)
+                hostingController.modalPresentationStyle = .pageSheet
+                
+                // Present the hosting controller
+                rootViewController.present(hostingController, animated: true, completion: nil)
+            } else {
+                print("Failed to parse alarmTimeString: \(alarmTimeString)")
+            }
+        }
+    }
+
     
     public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String) {
         let content = UNMutableNotificationContent()
