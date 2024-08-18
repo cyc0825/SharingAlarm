@@ -15,20 +15,48 @@ struct AlarmRequestView: View {
     
     var body: some View {
         ZStack {
-            Color.thirdAccent.ignoresSafeArea(edges: .all)
-            HStack {
+            Color.accentColor.ignoresSafeArea(edges: .all)
+            VStack {
+                Spacer()
+                Text(alarm.time.formatted(date: .long, time: .omitted))
+                    .font(.title)
+                    .fontDesign(.serif)
+                Text(alarm.time.formatted(date: .omitted, time: .shortened))
+                    .font(.largeTitle)
+                    .fontDesign(.serif)
+                Spacer()
                 Button {
                     print("Add Alarm \(alarm.id ?? "")")
-                    alarmViewModel.alarms.append(alarm)
+                    if let id = alarm.id {
+                        alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "", isOn: true) { result in
+                            switch result {
+                            case .success(_):
+                                print("Success")
+                            case .failure(_):
+                                print("fail")
+                            }
+                        }
+                    }
                     dismiss()
                 } label: {
-                    Text("Accept")
+                    Image(systemName: "checkmark")
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .foregroundStyle(.systemText)
                 }
+                .background(Color.green)
+                .cornerRadius(25)
+                .padding(.horizontal)
                 Button {
                     dismiss()
                 } label: {
-                    Text("Reject")
+                    Image(systemName: "xmark")
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .foregroundStyle(.systemText)
                 }
+                .background(Color.red)
+                .cornerRadius(25)
+                .padding(.horizontal)
+                .padding(.bottom, 50)
             }
             .padding()
         }

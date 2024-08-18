@@ -154,8 +154,8 @@ struct AlarmsView: View {
 //                }
             }
             .onAppear{
-                viewModel.fetchAlarmData()
-                // viewModel.startListeningAlarms()
+                // viewModel.fetchAlarmData()
+                viewModel.startListeningAlarms()
             }
             .onChange(of: viewModel.selectedAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {

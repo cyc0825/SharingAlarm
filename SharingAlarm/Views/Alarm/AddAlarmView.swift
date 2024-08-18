@@ -49,13 +49,7 @@ struct AddAlarmView: View {
                     //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
                     viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
                         switch result {
-                        case .success(let alarm):
-                            viewModel.alarms.append(alarm)
-                            viewModel.backupAlarms.append(alarm)
-                            viewModel.activityNames.insert(alarm.activityName ?? "Just For You")
-                            if let id = alarm.id {
-                                AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
-                            }
+                        case .success(_):
                             // modify the front-end, local activities should not be too large, thus using firstIndex
                             if let selectedGroup = selectedGroup,
                                let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroup.id }) {

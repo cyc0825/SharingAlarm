@@ -5,7 +5,6 @@
 //  Created by 曹越程 on 2024/4/5.
 //
 import SwiftUI
-import UIKit
 
 struct FloatingFriendRequestsView: View {
     var body: some View {

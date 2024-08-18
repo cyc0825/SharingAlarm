@@ -16,14 +16,16 @@ exports.sendImmediateAlarmNotification = functions.firestore
             const tokens = [];
             for (const [participantId, participantInfo] of Object.entries(alarm.participants)) {
    		console.log(`Participant ID: ${participantId}`);
-		const participantSnap = await admin.firestore().collection('UserData').doc(participantId).get();
-                const participantData = participantSnap.data();
-                if (participantData && participantData.fcmToken) {
-                    tokens.push(participantData.fcmToken);
-                    console.log(`Token found for participant ID: ${participantId}`);
-                } else {
-                    console.log(`No token found for participant ID: ${participantId}`);
-                }
+		if (alarm.creatorID != participantId) {
+		    const participantSnap = await admin.firestore().collection('UserData').doc(participantId).get();
+                    const participantData = participantSnap.data();
+                    if (participantData && participantData.fcmToken) {
+                        tokens.push(participantData.fcmToken);
+                        console.log(`Token found for participant ID: ${participantId}`);
+                    } else {
+                        console.log(`No token found for participant ID: ${participantId}`);
+                    }
+		}
 	    }
             if (tokens.length > 0) {
                 // Send the notification with custom sound and data

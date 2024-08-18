@@ -62,7 +62,7 @@ class AlarmsViewModel: ObservableObject {
     private var alarmsListener: ListenerRegistration?
     
     init() {
-        fetchAlarmData()
+        fetchAlarmsData()
     }
 
     func sortAlarmsByTime() {
@@ -91,10 +91,10 @@ class AlarmsViewModel: ObservableObject {
         timer?.invalidate()
     }
     
-    func fetchAlarmData() {
+    func fetchAlarmsData() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
-            debugPrint("[fetchAlarmData] starts")
+            debugPrint("[fetchAlarmsData] starts")
             do {
                 let querySnapshot = try await db.collection("UserData").document(userID)
                     .collection("alarms")
@@ -137,7 +137,7 @@ class AlarmsViewModel: ObservableObject {
                 }
             }
             catch {
-                debugPrint("[fetchAlarmData] error")
+                debugPrint("[fetchAlarmsData] error")
                 print(error.localizedDescription)
             }
         }
@@ -184,10 +184,11 @@ class AlarmsViewModel: ObservableObject {
                                             "repeatInterval": repeatInterval,
                                             "activityId": activityId,
                                             "activityName": activityName ?? "",
-                                            "participants": participants
+                                            "participants": participants,
+                                            "creatorID": userID
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
-                    addAlarmToParticipants(participants: participants, alarmId: newAlarm.documentID, alarm: alarm) { result in
+                    addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId, isOn: true) { result in
                         switch result {
                         case .success(_):
                             DispatchQueue.main.async {
@@ -198,6 +199,9 @@ class AlarmsViewModel: ObservableObject {
                                 completion(.failure(error))
                             }
                         }
+                    }
+                    DispatchQueue.main.async {
+                        completion(.success(alarm))
                     }
                 }
                 catch {
@@ -272,7 +276,7 @@ class AlarmsViewModel: ObservableObject {
                         return
                     }
                     
-                    for (participantID, status) in participants {
+                    for (participantID, _) in participants {
                         try await db.collection("UserData").document(participantID).collection("alarms").document(documentID).delete()
                         debugPrint("[removeAlarm] done for participant: \(participantID)")
                     }
@@ -283,11 +287,6 @@ class AlarmsViewModel: ObservableObject {
                     print("Remove alarm within just for u")
                     try await document.delete()
                 }
-                
-                self.alarms.removeAll(where: {$0.id == documentID })
-                self.backupAlarms.removeAll(where: {$0.id == documentID })
-                self.ongoingAlarms.removeAll(where: {$0.id == documentID })
-                self.timerViewModels[documentID]?.stopTimer()
                 if selectedAlarm?.id == documentID {
                     selectedAlarm = nil
                 }
@@ -299,6 +298,7 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
+    // LEGACY
     func addAlarmToParticipants(participants: [String: [String]], alarmId: String, alarm: Alarm, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task {
             debugPrint("[addAlarmToParticipants] starts")
@@ -324,7 +324,33 @@ class AlarmsViewModel: ObservableObject {
                 }
             }
         }
-    } 
+    }
+    
+    func addAlarmToParticipant(alarmId: String, activityId: String, isOn: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            debugPrint("[addAlarmToParticipants] starts")
+            do {
+                try await db.collection("UserData").document(userID)
+                    .collection("alarms")
+                    .document(alarmId)
+                    .setData([
+                              "activityId": activityId,
+                              "isOn": isOn
+                             ])
+                debugPrint("[addAlarmToParticipant] done for \(userID)")
+                DispatchQueue.main.async {
+                    completion(.success(true))
+                }
+            }
+            catch {
+                debugPrint("[addAlarmToParticipant] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
     
     func editAlarm(alarmId: String?, updates: [String: Any]) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
@@ -427,9 +453,6 @@ extension AlarmsViewModel {
 // For Alarm Listener
 extension AlarmsViewModel {
     func startListeningAlarm(forDocument alarmId: String) {
-        // Stop any previous listener
-        stopListening()
-        
         // Set up the listener
         listener = db.collection("Alarm").document(alarmId).addSnapshotListener { [weak self] documentSnapshot, error in
             guard let self = self else { return }
@@ -488,7 +511,7 @@ extension AlarmsViewModel {
     }
     
     private func handleDocumentAdded(_ document: DocumentSnapshot) {
-        if let activityId = document.get("activityId") as? String {
+        if document.get("activityId") is String {
             // Fetch the alarm data from the Alarm collection using the document's ID
             if let isOn = document.get("isOn") as? Bool {
                 fetchAlarmData(from: document.documentID, isOn: isOn)
@@ -497,13 +520,18 @@ extension AlarmsViewModel {
             // Directly convert the document data to Alarm
             if let alarm = try? document.data(as: Alarm.self) {
                 self.alarms.append(alarm)
+                self.backupAlarms.append(alarm)
+                self.activityNames.insert(alarm.activityName ?? "Just For You")
+                if let id = alarm.id {
+                    AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
+                }
             }
         }
     }
     
     private func handleDocumentModified(_ document: DocumentSnapshot) {
         if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
-            if let activityId = document.get("activityId") as? String {
+            if document.get("activityId") is String {
                 // Fetch the updated alarm data from the Alarm collection
                 if let isOn = document.get("isOn") as? Bool {
                     fetchAlarmData(from: document.documentID, index: index, isOn: isOn)
@@ -521,6 +549,14 @@ extension AlarmsViewModel {
         if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
             self.alarms.remove(at: index)
         }
+        if let index = self.backupAlarms.firstIndex(where: { $0.id == document.documentID }) {
+            self.backupAlarms.remove(at: index)
+        }
+        if let index = self.ongoingAlarms.firstIndex(where: { $0.id == document.documentID }) {
+            self.ongoingAlarms.remove(at: index)
+        }
+        self.timerViewModels[document.documentID]?.stopTimer()
+        AppDelegate.shared.cancelScheduledLocalNotification(id: document.documentID)
     }
     
     private func fetchAlarmData(from documentID: String, index: Int? = nil, isOn: Bool) {
@@ -535,6 +571,11 @@ extension AlarmsViewModel {
                 } else {
                     // Add the new alarm
                     self.alarms.append(alarm)
+                    self.backupAlarms.append(alarm)
+                    self.activityNames.insert(alarm.activityName ?? "Just For You")
+                    if let id = alarm.id {
+                        AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
+                    }
                 }
             }
         }
@@ -544,7 +585,7 @@ extension AlarmsViewModel {
         listener?.remove()
         listener = nil
     }
-//
+
 //    deinit {
 //        stopListening()
 //    }
