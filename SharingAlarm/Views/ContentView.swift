@@ -14,8 +14,8 @@ struct ContentView: View {
     @EnvironmentObject var activityViewModel: ActivitiesViewModel
     @EnvironmentObject var alarmsViewModel: AlarmsViewModel
     @EnvironmentObject var userViewModel: UserViewModel
-    @State private var loaded = false
-    @State private var showingAlarmView = false
+    @EnvironmentObject var arViewModel: AudioRecorderViewModel
+    @State private var showingEditProfile = false
     // var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String
 
     var body: some View {
@@ -42,50 +42,31 @@ struct ContentView: View {
                             Label("Settings", systemImage: "gearshape.fill")
                         }
                 }
-                //            .onAppear {
-                //                if !loaded {
-                //                    authViewModel.fetchUserByAppleID() { user, error in
-                //                        if user != nil {
-                //                            DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-                //                                friendViewModel.searchRequest()
-                //                                friendViewModel.fetchFriends()
-                //                                activityViewModel.fetchActivity()
-                //                            }
-                //                        }
-                //                    }
-                //                    loaded = true
-                //                }
-                //            }
-                //            .sheet(isPresented: $authViewModel.shouldShowProfileSetup) {
-                //                ProfileSetupView(
-                //                    onSubmit: { username, uid in
-                //                        authViewModel.addUser(name: username, uid: uid) { result, error in
-                //                            authViewModel.setUserExists(true)
-                //                            authViewModel.shouldShowProfileSetup = false
-                //                        }
-                //                    },
-                //                    initialUsername: "",
-                //                    initialUid: "")
-                //                .environment(\.colorScheme, .light)
-                //            }
-                //            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NotificationTapped"))) { _ in
-                //                showingAlarmView = true
-                //            }
-                //            .sheet(isPresented: $showingAlarmView) {
-                //                AlarmView()
-                //            }
-                //        }
-                //        NavigationView {
-                //            Text("Welcome")
-                //            .toolbar {
-                //                ToolbarItem(placement: .navigationBarLeading) {
-                //                    Button(action: logout) {
-                //                        Text("Log out")
-                //                    }
-                //                }
-                //            }
-                //            Text("Select an item")
-                //        }
+                .onAppear {
+                    userViewModel.fetchUserData { success in
+                        if !success {
+                            showingEditProfile = true
+                        }
+                    }
+                    alarmsViewModel.startListeningAlarms()
+//                    friendViewModel.fetchFriends()
+//                    friendViewModel.fetchOwnRequest()
+//                    friendViewModel.fetchFriendsRequest()
+//                    activityViewModel.fetchActivity()
+                }
+                .sheet(isPresented: $showingEditProfile) {
+                    ProfileSetupView(
+                        initialUsername: "",
+                        initialUid: "",
+                        onSubmit: { username, uid in
+                            authViewModel.createUserDocument(userID: authViewModel.user?.uid ?? uid, name: username, uid: uid)
+                            authViewModel.isNewUser = false
+                            UserDefaults.standard.setValue(username, forKey: "name")
+                            UserDefaults.standard.setValue(uid, forKey: "uid")
+                            showingEditProfile = false
+                        }
+                    )
+                }
             }
         }
     }

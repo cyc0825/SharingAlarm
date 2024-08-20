@@ -18,11 +18,15 @@ struct AlarmRequestView: View {
             Color.accentColor.ignoresSafeArea(edges: .all)
             VStack {
                 Spacer()
+                Text("You have an alarm request for")
+                    .fontDesign(.serif)
                 Text(alarm.time.formatted(date: .long, time: .omitted))
-                    .font(.title)
+                    .font(.largeTitle)
                     .fontDesign(.serif)
                 Text(alarm.time.formatted(date: .omitted, time: .shortened))
-                    .font(.largeTitle)
+                    .font(.system(size: 60))
+                    .fontDesign(.serif)
+                Text("In group: \(alarm.activityName ?? "")")
                     .fontDesign(.serif)
                 Spacer()
                 Button {
@@ -43,7 +47,7 @@ struct AlarmRequestView: View {
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .foregroundStyle(.systemText)
                 }
-                .background(Color.green)
+                .background(Color.thirdAccent)
                 .cornerRadius(25)
                 .padding(.horizontal)
                 Button {
@@ -53,7 +57,7 @@ struct AlarmRequestView: View {
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .foregroundStyle(.systemText)
                 }
-                .background(Color.red)
+                .background(Color.secondAccent)
                 .cornerRadius(25)
                 .padding(.horizontal)
                 .padding(.bottom, 50)

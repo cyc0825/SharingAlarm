@@ -35,8 +35,8 @@ struct ProfileSetupView: View {
             NavigationView {
                 VStack {
                     // Welcome Text at the top
-                    Text("Hi, enter your name and your unique identifier to let your friends find you!")
-                        .font(.title)
+                    Text("Enter your name and your unique identifier to let your friends find you!")
+                        .font(.title3)
                         .fontWeight(.medium)
                         .multilineTextAlignment(.leading)
                         .padding()
@@ -82,7 +82,11 @@ struct ProfileSetupView: View {
                 //.background(Color(UIColor.systemGray6))
                 //.edgesIgnoringSafeArea(.all)
                 .onDisappear{
-                    userViewModel.fetchUserData()
+                    userViewModel.fetchUserData { success in
+                        if !success {
+                            print("Error Fetching User Data after update")
+                        }
+                    }
                 }
             }
             .presentationDetents([.fraction(0.4)])
@@ -122,4 +126,10 @@ struct ProfileSetupView: View {
             }
         }
     }
+}
+
+#Preview {
+    ProfileSetupView(initialUsername: "", initialUid: "", onSubmit: {_,_ in 
+        print("Submit")
+    })
 }

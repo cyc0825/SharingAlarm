@@ -26,7 +26,6 @@ struct ActivitiesView: View {
                         }
                     }
                     .listRowBackground(Color.accentColor)
-                    .listStyle(.plain)
                 }
             }
             .navigationTitle("Activities")

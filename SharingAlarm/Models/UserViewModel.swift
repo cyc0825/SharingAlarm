@@ -62,7 +62,6 @@ class UserViewModel: ObservableObject {
         if authStateHandler == nil {
             authStateHandler = Auth.auth().addStateDidChangeListener { auth, user in
                 self.user = user
-                self.fetchUserData()
             }
         }
     }
@@ -88,26 +87,37 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    func fetchUserData() {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    func fetchUserData(completion: @escaping (Bool) -> Void) {
+        guard let userID = user?.uid else {
+            completion(false)
+            return
+        }
+
         Task {
             debugPrint("[fetchUserData] starts for \(userID)")
             do {
-                self.appUser = try await db.collection("UserData").document(userID).getDocument(as: AppUser.self)
-                UserDefaults.standard.setValue(self.appUser.name, forKey: "name")
-                UserDefaults.standard.setValue(self.appUser.uid, forKey: "uid")
-            }
-            catch {
+                let document = try await db.collection("UserData").document(userID).getDocument()
+                if let appUser = try? document.data(as: AppUser.self) {
+                    self.appUser = appUser
+                    UserDefaults.standard.setValue(self.appUser.name, forKey: "name")
+                    UserDefaults.standard.setValue(self.appUser.uid, forKey: "uid")
+                    completion(true)
+                } else {
+                    debugPrint("[fetchUserData] no document found for \(userID)")
+                    completion(false)
+                }
+            } catch {
                 debugPrint("[fetchUserData] fails")
                 print(error.localizedDescription)
+                completion(false)
             }
-            debugPrint("[fetchUserData] ends with \(self.appUser)")
+            debugPrint("[fetchUserData] ends with \(String(describing: self.appUser))")
         }
     }
+
     
     func saveUserData() {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        
+        guard let userID = user?.uid else { return }
         do {
             try db.collection("UserData").document(userID).setData(from: appUser)
         }
@@ -117,7 +127,7 @@ class UserViewModel: ObservableObject {
     }
     
     func updateUserData(updates: [String: String]) {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        guard let userID = user?.uid else { return }
         db.collection("UserData").document(userID).updateData(updates)
         for (key, value) in updates {
             switch key {

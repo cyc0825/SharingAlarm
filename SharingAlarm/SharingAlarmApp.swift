@@ -24,6 +24,7 @@ struct SharingAlarmApp: App {
     @StateObject private var friendViewModel = FriendsViewModel()
     @StateObject private var activityViewModel = ActivitiesViewModel()
     @StateObject private var alarmsViewModel = AlarmsViewModel()
+    @StateObject private var arViewModel = AudioRecorderViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -40,6 +41,7 @@ struct SharingAlarmApp: App {
                         .environmentObject(friendViewModel)
                         .environmentObject(activityViewModel)
                         .environmentObject(alarmsViewModel)
+                        .environmentObject(arViewModel)
                     Spacer()
                 }
                 .onAppear {

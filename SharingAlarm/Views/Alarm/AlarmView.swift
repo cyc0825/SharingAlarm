@@ -27,11 +27,16 @@ struct AlarmView: View {
                     ForEach(alarmViewModel.ongoingAlarms, id: \.self) { alarm in
                         VStack {
                             Spacer()
-                            Text(alarm.activityName ?? "Just For You")
-                                .font(.title)
-                                .padding(.top, 40)
-                            Text("Time: \(alarm.time, style: .time)")
-                                .font(.title3)
+                            HStack {
+                                Text(alarm.activityName ?? "Just For You")
+                                    .font(.largeTitle.bold())
+                                    .padding([.leading, .top], 40)
+                                    .fontDesign(.serif)
+                                Spacer()
+                            }
+                            Text(alarm.time, style: .time)
+                                .font(.system(size: 60))
+                                .fontDesign(.serif)
                                 .padding()
                             
                             // Additional alarm information can go here
@@ -64,7 +69,7 @@ struct AlarmView: View {
                                         }, maxWidth: geometry.size.width)
                                     }
                                 }
-                                .frame(height: 60)
+                                .frame(height: 70)
                                 .padding(.horizontal, 30)
                                 Button(action: {
                                     // Stop vibration
@@ -73,7 +78,7 @@ struct AlarmView: View {
                                 }) {
                                     Text("Snooze")
                                 }
-                                .padding(.bottom, 50)
+                                .padding(.bottom, 60)
                             } else if alarmViewModel.ifAllUserStop(alarmId: alarm.id, participants: alarm.participants) {
                                 Button {
                                     alarmViewModel.removeAlarm(documentID: alarm.id)
@@ -88,12 +93,12 @@ struct AlarmView: View {
                                 
                             }
                         }
-                        .onAppear {
-                            alarmViewModel.startListeningAlarm(forDocument: alarm.id!)
-                        }
-                        .onDisappear {
-                            alarmViewModel.stopListening()
-                        }
+//                        .onAppear {
+//                            alarmViewModel.startListeningAlarm(forDocument: alarm.id!)
+//                        }
+//                        .onDisappear {
+//                            alarmViewModel.stopListening()
+//                        }
                         .tabItem {
                             Text(alarm.sound)
                         }
@@ -105,15 +110,15 @@ struct AlarmView: View {
     }
 }
 
-//struct AlarmView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let sampleAlarms = [
-//            Alarm(time: Date(), sound: "Hi", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
-//            Alarm(time: Date(), sound: "Hello", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
-//        ]
-//        let viewModel = AlarmsViewModel()
-//        viewModel.ongoingAlarms = sampleAlarms
-//
-//        return AlarmView(alarmViewModel: viewModel)
-//    }
-//}
+struct AlarmView_Previews: PreviewProvider {
+    static var previews: some View {
+        let sampleAlarms = [
+            Alarm(time: Date(), sound: "Hi", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
+            Alarm(time: Date(), sound: "Hello", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
+        ]
+        let viewModel = AlarmsViewModel()
+        viewModel.ongoingAlarms = sampleAlarms
+
+        return AlarmView(alarmViewModel: viewModel)
+    }
+}

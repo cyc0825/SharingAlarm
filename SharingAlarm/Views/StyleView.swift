@@ -91,11 +91,11 @@ struct DraggingComponent: View {
     
     let maxWidth: CGFloat
     
-    private let minWidth = CGFloat(60)
-    @State private var width = CGFloat(60)
+    private let minWidth = CGFloat(70)
+    @State private var width = CGFloat(70)
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 30)
+        RoundedRectangle(cornerRadius: 35)
             .fill(Color.accentColor)
             .frame(width: width)
             .overlay(
@@ -132,10 +132,10 @@ struct DraggingComponent: View {
     
     private func image(name: String, isShown: Bool) -> some View {
         Image(systemName: name)
-          .font(.system(size: 20, weight: .regular, design: .rounded))
+          .font(.system(size: 30, weight: .regular, design: .rounded))
           .foregroundColor(Color.thirdAccent)
-          .frame(width: 50, height: 50)
-          .background(RoundedRectangle(cornerRadius: 25).fill(.white))
+          .frame(width: 60, height: 60)
+          .background(RoundedRectangle(cornerRadius: 30).fill(.white))
           .padding(5)
           .opacity(isShown ? 1 : 0)
           .scaleEffect(isShown ? 1 : 0.01)
@@ -147,7 +147,7 @@ struct BackgroundComponent: View {
     
     var body: some View {
         ZStack(alignment: .leading)  {
-            RoundedRectangle(cornerRadius: 30)
+            RoundedRectangle(cornerRadius: 35)
                 .fill(Color.accentColor.opacity(0.4))
             
             Text("Slide to Close")

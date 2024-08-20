@@ -89,6 +89,10 @@ class AlarmsViewModel: ObservableObject {
     
     deinit {
         timer?.invalidate()
+        listener?.remove()
+        listener = nil
+        alarmsListener?.remove()
+        alarmsListener = nil
     }
     
     func fetchAlarmsData() {
@@ -489,6 +493,7 @@ extension AlarmsViewModel {
 
 extension AlarmsViewModel {
     func startListeningAlarms() {
+        print("Start Listening")
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         alarmsListener = db.collection("UserData").document(userID).collection("alarms").addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self else { return }
@@ -582,8 +587,9 @@ extension AlarmsViewModel {
     }
     
     func stopListeningAlarms() {
-        listener?.remove()
-        listener = nil
+        print("Stop Listening")
+        alarmsListener?.remove()
+        alarmsListener = nil
     }
 
 //    deinit {

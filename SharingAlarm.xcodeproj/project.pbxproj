@@ -28,6 +28,8 @@
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
 		D37594172C6FFB0C006DB7AA /* AlarmRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594162C6FFB0C006DB7AA /* AlarmRequestView.swift */; };
+		D375941B2C740566006DB7AA /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D375941A2C740566006DB7AA /* FirebaseStorage */; };
+		D375941D2C74061C006DB7AA /* AudioRecorderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D375941C2C74061C006DB7AA /* AudioRecorderViewModel.swift */; };
 		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
 		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
 		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
@@ -97,6 +99,7 @@
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
 		D37594162C6FFB0C006DB7AA /* AlarmRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRequestView.swift; sourceTree = "<group>"; };
+		D375941C2C74061C006DB7AA /* AudioRecorderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewModel.swift; sourceTree = "<group>"; };
 		D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharingAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmApp.swift; sourceTree = "<group>"; };
 		D38EEB842BA3719F0099D382 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 				D3C0EF8A2BDD898000DA1795 /* FirebaseMessaging in Frameworks */,
 				D3C0EF842BDD898000DA1795 /* FirebaseAnalytics in Frameworks */,
 				D3C0EF862BDD898000DA1795 /* FirebaseAuth in Frameworks */,
+				D375941B2C740566006DB7AA /* FirebaseStorage in Frameworks */,
 				D3C0EF882BDD898000DA1795 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,6 +243,7 @@
 				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
 				D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */,
 				D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */,
+				D375941C2C74061C006DB7AA /* AudioRecorderViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -338,6 +343,7 @@
 				D3C0EF852BDD898000DA1795 /* FirebaseAuth */,
 				D3C0EF872BDD898000DA1795 /* FirebaseFirestore */,
 				D3C0EF892BDD898000DA1795 /* FirebaseMessaging */,
+				D375941A2C740566006DB7AA /* FirebaseStorage */,
 			);
 			productName = SharingAlarm;
 			productReference = D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */;
@@ -467,6 +473,7 @@
 				D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */,
 				D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */,
 				D37594172C6FFB0C006DB7AA /* AlarmRequestView.swift in Sources */,
+				D375941D2C74061C006DB7AA /* AudioRecorderViewModel.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */,
@@ -848,6 +855,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D375941A2C740566006DB7AA /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3C0EF822BDD898000DA1795 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		D3C0EF832BDD898000DA1795 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D3C0EF822BDD898000DA1795 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

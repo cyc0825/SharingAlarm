@@ -116,6 +116,14 @@ struct AlarmsView: View {
                             }, label: {
                                 AlarmCardView(alarm: $alarm)
                             })
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button {
+                                    viewModel.removeAlarm(documentID: alarm.id)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(.red)
+                            }
                         }
                         .listRowBackground(Color.clear)
                         .listStyle(.plain)
@@ -153,10 +161,13 @@ struct AlarmsView: View {
 //                    }
 //                }
             }
-            .onAppear{
-                // viewModel.fetchAlarmData()
-                viewModel.startListeningAlarms()
-            }
+//            .onAppear{
+//                viewModel.fetchAlarmData()
+//                viewModel.startListeningAlarms()
+//            }
+//            .onDisappear{
+//                viewModel.stopListeningAlarms()
+//            }
             .onChange(of: viewModel.selectedAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {
                     selectedTime = selectedAlarm.time
@@ -189,6 +200,6 @@ struct AlarmsView: View {
     }
 }
 
-#Preview {
-    AlarmsView()
-}
+//#Preview {
+//    AlarmsView()
+//}

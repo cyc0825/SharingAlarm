@@ -38,6 +38,7 @@ struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var alarmsViewModel: AlarmsViewModel
     @EnvironmentObject var userViewModel: UserViewModel
+    @EnvironmentObject var arViewModel: AudioRecorderViewModel
     @State private var showingProfileEdit = false
     
     @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Give yourself a name so that your friend can remember you"
@@ -88,7 +89,7 @@ struct ProfileView: View {
 //                    NavigationLink(destination: VIPLevelView()) {
 //                        Text("VIP Level")
 //                    }
-                    NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, userViewModel: userViewModel)) {
+                    NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, userViewModel: userViewModel, arViewModel: arViewModel)) {
                         Text("Alarm Sounds")
                     }
                 }
