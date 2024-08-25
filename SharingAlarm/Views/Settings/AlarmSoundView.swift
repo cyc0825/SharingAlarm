@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct AlarmSoundView: View {
-    @StateObject var viewModel: AlarmsViewModel
+    @ObservedObject var viewModel: AlarmsViewModel
     @StateObject var userViewModel: UserViewModel
     
     @StateObject var arViewModel: AudioRecorderViewModel
     @State var showRecordingView = false
+    // @State private var downloadURL: URL?
+    
     var body: some View {
         VStack {
             Form {
@@ -27,7 +29,6 @@ struct AlarmSoundView: View {
                         Text(sound)
                     }
                 }
-                
                 Section(header: HStack {
                                 Text("Recorded Sound")
                                 Spacer()
@@ -42,22 +43,31 @@ struct AlarmSoundView: View {
                                     Image(systemName: arViewModel.isRecording ? "stop.circle.fill" : "mic.circle.fill")
                                         .font(.title2)
                                 }
-                            }) {
-                                if let recordedAudioURL = arViewModel.recordedAudioURL {
-                                    Button(action: {
-                                        arViewModel.playRecording()
-                                    }) {
-                                        HStack {
-                                            Text("Play Recorded Sound")
-                                            Spacer()
-                                            Image(systemName: arViewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                                                .font(.title2)
-                                        }
-                                    }
-                                } else {
-                                    Text("No recorded sound available.")
-                                }
+                }) {
+                    if arViewModel.recordedAudioURL != nil {
+                        Button(action: {
+                            arViewModel.playRecording()
+                        }) {
+                            HStack {
+                                Text("Play Recorded Sound")
+                                Spacer()
+                                Image(systemName: arViewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                                    .font(.title2)
                             }
+                        }
+                        .swipeActions {
+                            Button {
+                                arViewModel.deleteRecording()
+                                viewModel.personalizedSounds.removeAll()
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            .tint(.red)
+                        }
+                    } else {
+                        Text("No recorded sound available.")
+                    }
+                }
             }
             
         }
@@ -71,9 +81,10 @@ struct AlarmSoundView: View {
                         .font(.largeTitle)
                 }
                 .padding()
-                Button("Save") {
+                Button("Save and Upload") {
+                    arViewModel.uploadRecordingToFirebase()
+                    viewModel.personalizedSounds.append("YourRecording")
                     showRecordingView = false
-                    // Handle saving the recording
                 }
             }
             .presentationDetents([.fraction(0.3), .large])

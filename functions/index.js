@@ -45,10 +45,9 @@ exports.sendImmediateAlarmNotification = functions.firestore
 			repeat: `${alarm.repeatInterval}`,
                         showAlert: "false" // Custom flag to distinguish data-only messages
                     },
-                    apns: {
+		    apns: {
                         payload: {
                             aps: {
-                                sound: 'custom_sound.mp3', // Specify your custom sound file for iOS
                                 category: 'alarm', // Category for iOS
                                 'content-available': 1, // Correctly use quotes around keys with hyphens
                                 'mutable-content': 1 // Allow modification of content on client-side

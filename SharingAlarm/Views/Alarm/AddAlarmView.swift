@@ -13,24 +13,22 @@ struct AddAlarmView: View {
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
-    @State private var selectedSound = "Harmony.mp3"
+    @State private var selectedSound = "Classic.m4a"
     @State private var selectedGroup: Activity? = nil
-    let repeatOptions = ["None", "Daily", "Weekly"]
-    let sounds = ["Harmony", "Ripples", "Signal"]
     var body: some View {
         NavigationView {
             Form {
                 DatePicker("Time", selection: $selectedTime, displayedComponents: [.date, .hourAndMinute])
                 
                 Picker("Repeat", selection: $repeatInterval) {
-                    ForEach(repeatOptions, id: \.self) { option in
+                    ForEach(viewModel.intervals, id: \.self) { option in
                         Text(option).tag(option)
                     }
                 }
                 
                 Picker("Sound", selection: $selectedSound) {
-                    ForEach(sounds, id: \.self) { sound in
-                        Text(sound).tag("\(sound).mp3")
+                    ForEach(viewModel.sounds + viewModel.paidSounds + viewModel.personalizedSounds, id: \.self) { sound in
+                        Text(sound).tag("\(sound).m4a")
                     }
                 }
                 Picker("Group", selection: $selectedGroup) {
@@ -45,7 +43,10 @@ struct AddAlarmView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 isPresented = false
             }, trailing: Button("Save") {
-                if viewModel.backupAlarms.count < 10 {
+                if selectedTime < Date() {
+                    // The selected time has already passed
+                    viewModel.errorMessage = "The selected time has already passed. Please choose a future time."
+                } else if viewModel.alarms.count < 10 {
                     //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
                     viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
                         switch result {
@@ -66,7 +67,7 @@ struct AddAlarmView: View {
                 }
             })
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-                Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
+                Alert(title: Text("Cannot Add Alarm"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
             }
         }
     }

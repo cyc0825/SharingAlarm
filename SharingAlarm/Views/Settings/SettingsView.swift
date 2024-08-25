@@ -66,15 +66,9 @@ struct ProfileView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            // User information
-            
-            Text("UID: \(Uid)")
-                .font(.callout)
-                .foregroundColor(.gray)
-                .padding(.bottom)
-
             // List of options
             List {
+                Section(header: EmptyView()) {}
                 Section {
                     Button("Edit Profile") {
                         showingProfileEdit = true
@@ -117,30 +111,40 @@ struct ProfileView: View {
                   }
                 }
             }
-        }
-        .navigationTitle(userName)
-        .padding()
-        .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
-                            isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
-          Button("Delete Account", role: .destructive, action: deleteAccount)
-          Button("Cancel", role: .cancel, action: { })
-        }
-        .sheet(isPresented: $showingProfileEdit) {
-            ProfileSetupView(
-                initialUsername: userViewModel.appUser.name,
-                initialUid: userViewModel.appUser.uid,
-                onSubmit: { username, uid in
-                    // authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
-                    showingProfileEdit = false
-                    UserDefaults.standard.setValue(username, forKey: "name")
-                    UserDefaults.standard.setValue(uid, forKey: "uid")
-                    userViewModel.appUser.uid = uid
-                    userViewModel.appUser.name = username
-                    userName = username
-                    Uid = uid
-                    userViewModel.saveUserData()
-                }
+            .navigationTitle(userName)
+            .padding(.top)
+            .background(
+                Color(UIColor.systemGroupedBackground)
             )
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Text("UID: \(Uid)")
+                        .font(.callout)
+                        .foregroundStyle(.gray)
+                }
+            }
+            .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
+                                isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
+              Button("Delete Account", role: .destructive, action: deleteAccount)
+              Button("Cancel", role: .cancel, action: { })
+            }
+            .sheet(isPresented: $showingProfileEdit) {
+                ProfileSetupView(
+                    initialUsername: userViewModel.appUser.name,
+                    initialUid: userViewModel.appUser.uid,
+                    onSubmit: { username, uid in
+                        // authViewModel.createUserDocument(userID: uid, name: username, uid: uid)
+                        showingProfileEdit = false
+                        UserDefaults.standard.setValue(username, forKey: "name")
+                        UserDefaults.standard.setValue(uid, forKey: "uid")
+                        userViewModel.appUser.uid = uid
+                        userViewModel.appUser.name = username
+                        userName = username
+                        Uid = uid
+                        userViewModel.saveUserData()
+                    }
+                )
+            }
         }
     }
 }

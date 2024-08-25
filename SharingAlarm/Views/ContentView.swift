@@ -53,6 +53,11 @@ struct ContentView: View {
 //                    friendViewModel.fetchOwnRequest()
 //                    friendViewModel.fetchFriendsRequest()
 //                    activityViewModel.fetchActivity()
+                    arViewModel.loadLocalRecording() { exist in
+                        if exist {
+                            alarmsViewModel.personalizedSounds.append("YourRecording")
+                        }
+                    }
                 }
                 .sheet(isPresented: $showingEditProfile) {
                     ProfileSetupView(

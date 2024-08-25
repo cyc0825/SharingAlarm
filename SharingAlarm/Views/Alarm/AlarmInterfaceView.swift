@@ -10,6 +10,20 @@ import SwiftUI
 struct AlarmInterfaceView: View {
     @StateObject var viewModel = AlarmsViewModel()
     @State private var currentTime = Time(hour: 0, minute: 0, second: 0)
+    
+    var sortActivity: String = ""
+    
+    var filteredAlarms: [Alarm] {
+        viewModel.alarms.filter { alarm in
+            if sortActivity == "Just For You" {
+                return alarm.activityName == nil
+            } else if sortActivity.isEmpty {
+                return true
+            } else {
+                return alarm.activityName == sortActivity
+            }
+        }
+    }
 
     func arcTapped(index: Int) {
         viewModel.selectedAlarm = viewModel.alarms[index]
@@ -42,8 +56,8 @@ struct AlarmInterfaceView: View {
                     .stroke(Color.primary, lineWidth: i % 5 == 0 ? 2 : 1)
                 }
                 
-                ForEach(viewModel.alarms.prefix(3).indices, id: \.self) { index in
-                    CombineView(alarm: viewModel.alarms[index], timerViewModel: TimerViewModel(targetDate: viewModel.alarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
+                ForEach(filteredAlarms.prefix(3).indices, id: \.self) { index in
+                    CombineView(alarm: filteredAlarms[index], timerViewModel: TimerViewModel(targetDate: filteredAlarms[index].time), viewModel: viewModel, clockRadius: clockRadius, index: index, geometry: geometry)
                 }
             }
         }
@@ -54,12 +68,13 @@ struct CombineView: View {
     var alarm: Alarm
     @ObservedObject var timerViewModel: TimerViewModel
     @StateObject var viewModel: AlarmsViewModel
+    @StateObject var arViewModel = AudioRecorderViewModel()
     var clockRadius: CGFloat
     var index: Int
     var colorSet: [Color] = [Color.accent, Color.secondAccent, Color.thirdAccent]
     var geometry: GeometryProxy
     
-    func arcTapped(index: Int) {
+    func arcTapped() {
         viewModel.selectedAlarm = alarm
     }
     
@@ -80,9 +95,10 @@ struct CombineView: View {
                 default:
                     print("Alarm is ringing")
                     //Present Alarm View
-                    viewModel.startLongVibration()
+                    // viewModel.startLongVibration()
                     viewModel.showAlarmView = true
                     viewModel.ongoingAlarms.append(alarm)
+                    // arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
                     // viewModel.removeAlarm(documentID: alarmID)
                 }
                 if let newTargetDate = newTargetDate {
@@ -155,7 +171,7 @@ struct ArcView: View {
     var endAngle: Angle
     var lineWidth: CGFloat
     var color: Color
-    var action: (Int) -> Void
+    var action: () -> Void
     var index: Int
     var viewModel: AlarmsViewModel
     
@@ -169,7 +185,7 @@ struct ArcView: View {
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
             let longPressGesture = LongPressGesture(minimumDuration: 0.6)
                 .onChanged {_ in
-                    self.action(index)
+                    self.action()
                 }
                 .updating($tapped) { currentState, gestureState, transaction in
                     gestureState = currentState

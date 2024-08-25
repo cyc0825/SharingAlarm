@@ -19,6 +19,7 @@ struct AlarmsView: View {
     @State private var repeatInterval = ""
     @State private var selectedSound = ""
     @State private var remainingTime: TimeInterval? = nil
+    @State private var sortActivity = ""
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
     
@@ -48,13 +49,13 @@ struct AlarmsView: View {
                         }
                         Menu {
                             Button {
-                                viewModel.restoreAlarms()
+                                sortActivity = ""
                             } label: {
                                 Text("All")
                             }
                             ForEach(viewModel.activityNames.sorted{$0 < $1}, id: \.self) { name in
                                 Button {
-                                    viewModel.filterAlarmsByActivity(activityName: name)
+                                    sortActivity = name
                                 } label: {
                                     Text(name)
                                 }
@@ -79,7 +80,7 @@ struct AlarmsView: View {
                 }
                 .padding(.top, 20)
                 .padding()
-                AlarmInterfaceView(viewModel: viewModel)
+                AlarmInterfaceView(viewModel: viewModel, sortActivity: sortActivity)
                 GeometryReader { geometry in
                     ZStack {
                         if viewModel.alarms.isEmpty {
@@ -98,10 +99,11 @@ struct AlarmsView: View {
                                                 .foregroundColor(.systemText)
                                         }
                                     }
-                                    .onTapGesture {
-                                        showingAddAlarm = true
-                                    }
                                     Spacer()
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    showingAddAlarm = true
                                 }
                             }
                             .listRowBackground(Color.clear)
@@ -109,26 +111,37 @@ struct AlarmsView: View {
                             .toolbarTitleDisplayMode(.inline)
                         }
                         // List with fixed height
-                        List($viewModel.alarms, id: \.id) { $alarm in
-                            Button(action: {
-                                viewModel.selectedAlarm = alarm
-                                showingEditAlarm = true
-                            }, label: {
-                                AlarmCardView(alarm: $alarm)
-                            })
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button {
-                                    viewModel.removeAlarm(documentID: alarm.id)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                        else {
+                            List($viewModel.alarms.filter { $alarm in
+                                if sortActivity == "Just For You" {
+                                    // Filter by activityName or include "Just For You" alarms (where activityName is empty)
+                                    return alarm.activityName == nil
+                                } else if sortActivity.isEmpty{
+                                    // If no sortActivity is selected, include all alarms
+                                    return true
+                                } else {
+                                    return alarm.activityName == sortActivity
                                 }
-                                .tint(.red)
+                            }, id: \.id) { $alarm in
+                                Button(action: {
+                                    viewModel.selectedAlarm = alarm
+                                    showingEditAlarm = true
+                                }, label: {
+                                    AlarmCardView(alarm: $alarm)
+                                })
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button {
+                                        viewModel.removeAlarm(documentID: alarm.id)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                    .tint(.red)
+                                }
                             }
+                            .listRowBackground(Color.clear)
+                            .listStyle(.plain)
+                            .toolbarTitleDisplayMode(.inline)
                         }
-                        .listRowBackground(Color.clear)
-                        .listStyle(.plain)
-                        .toolbarTitleDisplayMode(.inline)
-                        
                         // Gradient overlay
                         VStack {
                             Spacer()
@@ -137,29 +150,6 @@ struct AlarmsView: View {
                         .allowsHitTesting(false)
                     }
                 }
-//                VStack{
-//                    Spacer()
-//                    Button(action: {showingAddAlarm = true}, label: {
-//                        Text("Add Alarm")
-//                            .frame(maxWidth: .infinity, minHeight: 50)
-//                    })
-//                    .font(.title2)
-//                    .fontWeight(.semibold)
-//                    .foregroundColor(.white)
-//                    .frame(maxWidth: UIScreen.main.bounds.width*4/5, minHeight: 50)
-//                    .background(Color.brown)
-//                    .cornerRadius(25)
-//                    .padding(.vertical)
-//                }
-                
-//                Section(header: Text("Next Alarm")) {
-//                    if let nextAlarm = viewModel.nextAlarm {
-//                        Text("Alarm at \(nextAlarm.time.formatted(date: .omitted, time: .shortened))")
-//                        Text("\(viewModel.timeUntilNextAlarm())")
-//                    } else {
-//                        Text("No upcoming alarms")
-//                    }
-//                }
             }
 //            .onAppear{
 //                viewModel.fetchAlarmData()
@@ -168,19 +158,6 @@ struct AlarmsView: View {
 //            .onDisappear{
 //                viewModel.stopListeningAlarms()
 //            }
-            .onChange(of: viewModel.selectedAlarm) {
-                if let selectedAlarm = viewModel.selectedAlarm {
-                    selectedTime = selectedAlarm.time
-                    repeatInterval = selectedAlarm.repeatInterval
-                    selectedSound = selectedAlarm.sound
-                    remainingTime = selectedAlarm.remainingTime
-                } else {
-                    selectedTime = nil
-                    repeatInterval = ""
-                    selectedSound = ""
-                    remainingTime = nil
-                }
-            }
             .sheet(isPresented: $showingEditAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {
                     EditAlarmView(

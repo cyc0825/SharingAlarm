@@ -93,12 +93,12 @@ struct AlarmView: View {
                                 
                             }
                         }
-//                        .onAppear {
-//                            alarmViewModel.startListeningAlarm(forDocument: alarm.id!)
-//                        }
-//                        .onDisappear {
-//                            alarmViewModel.stopListening()
-//                        }
+                        .onAppear {
+                            alarmViewModel.startListeningAlarm(forDocument: alarm.id!)
+                        }
+                        .onDisappear {
+                            alarmViewModel.stopListening()
+                        }
                         .tabItem {
                             Text(alarm.sound)
                         }
@@ -109,16 +109,16 @@ struct AlarmView: View {
         }
     }
 }
-
-struct AlarmView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleAlarms = [
-            Alarm(time: Date(), sound: "Hi", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
-            Alarm(time: Date(), sound: "Hello", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
-        ]
-        let viewModel = AlarmsViewModel()
-        viewModel.ongoingAlarms = sampleAlarms
-
-        return AlarmView(alarmViewModel: viewModel)
-    }
-}
+//
+//struct AlarmView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let sampleAlarms = [
+//            Alarm(time: Date(), sound: "Hi", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
+//            Alarm(time: Date(), sound: "Hello", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
+//        ]
+//        let viewModel = AlarmsViewModel()
+//        viewModel.ongoingAlarms = sampleAlarms
+//
+//        return AlarmView(alarmViewModel: viewModel)
+//    }
+//}

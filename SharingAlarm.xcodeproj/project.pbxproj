@@ -9,11 +9,16 @@
 /* Begin PBXBuildFile section */
 		D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30FB1972BC3172700C88BBC /* AddFriendCard.swift */; };
 		D31605772BC074F400A4089E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31605762BC074F400A4089E /* LoadingView.swift */; };
+		D31753632C75461F00EF3D55 /* Propaganda.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D31753622C75461F00EF3D55 /* Propaganda.m4a */; };
 		D3372A982C63EAA200D33713 /* AlarmSoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3372A972C63EAA200D33713 /* AlarmSoundView.swift */; };
 		D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */; };
 		D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */; };
 		D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB22C56F20100D33713 /* AddFriendView.swift */; };
 		D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB42C56F22400D33713 /* AddActivityView.swift */; };
+		D33B87392C77117C002C11D4 /* Chiptune.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87352C77117C002C11D4 /* Chiptune.m4a */; };
+		D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87372C77117C002C11D4 /* Oversimplified.m4a */; };
+		D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87382C77117C002C11D4 /* StarDust.m4a */; };
+		D33B873C2C77117C002C11D4 /* Classic.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87362C77117C002C11D4 /* Classic.m4a */; };
 		D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34A27502C642944009BB039 /* AlarmDetailView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */; };
@@ -43,10 +48,12 @@
 		D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC8322BDE9799003D2265 /* AuthView.swift */; };
 		D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC8342BDE99FA003D2265 /* AuthedView.swift */; };
 		D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC83E2BDF12D3003D2265 /* SignupView.swift */; };
+		D3AFBFE02C796898008DA9DD /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AFBFDF2C796898008DA9DD /* NotificationService.swift */; };
+		D3AFBFE42C796898008DA9DD /* Notification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D3AFBFDD2C796898008DA9DD /* Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
 		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
 		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
-		D3B53B342BC6204B00B41769 /* Harmony.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* Harmony.mp3 */; };
+		D3B53B342BC6204B00B41769 /* Harmony.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* Harmony.m4a */; };
 		D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */; };
 		D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* ActivityCard.swift */; };
 		D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */; };
@@ -75,16 +82,42 @@
 			remoteGlobalIDString = D38EEB7E2BA3719F0099D382;
 			remoteInfo = SharingAlarm;
 		};
+		D3AFBFE22C796898008DA9DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D38EEB772BA3719F0099D382 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3AFBFDC2C796898008DA9DD;
+			remoteInfo = Notification;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D3AFBFE82C796898008DA9DD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D3AFBFE42C796898008DA9DD /* Notification.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D30FB1972BC3172700C88BBC /* AddFriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCard.swift; sourceTree = "<group>"; };
 		D31605762BC074F400A4089E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		D31753622C75461F00EF3D55 /* Propaganda.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Propaganda.m4a; sourceTree = "<group>"; };
 		D3372A972C63EAA200D33713 /* AlarmSoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSoundView.swift; sourceTree = "<group>"; };
 		D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlarmView.swift; sourceTree = "<group>"; };
 		D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmView.swift; sourceTree = "<group>"; };
 		D337DFB22C56F20100D33713 /* AddFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendView.swift; sourceTree = "<group>"; };
 		D337DFB42C56F22400D33713 /* AddActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivityView.swift; sourceTree = "<group>"; };
+		D33B87352C77117C002C11D4 /* Chiptune.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chiptune.m4a; sourceTree = "<group>"; };
+		D33B87362C77117C002C11D4 /* Classic.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Classic.m4a; sourceTree = "<group>"; };
+		D33B87372C77117C002C11D4 /* Oversimplified.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Oversimplified.m4a; sourceTree = "<group>"; };
+		D33B87382C77117C002C11D4 /* StarDust.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = StarDust.m4a; sourceTree = "<group>"; };
 		D34A27502C642944009BB039 /* AlarmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmDetailView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
@@ -117,10 +150,13 @@
 		D3ABC8322BDE9799003D2265 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		D3ABC8342BDE99FA003D2265 /* AuthedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthedView.swift; sourceTree = "<group>"; };
 		D3ABC83E2BDF12D3003D2265 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		D3AFBFDD2C796898008DA9DD /* Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Notification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3AFBFDF2C796898008DA9DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		D3AFBFE12C796898008DA9DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
 		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		D3B53B332BC6204B00B41769 /* Harmony.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Harmony.mp3; sourceTree = "<group>"; };
+		D3B53B332BC6204B00B41769 /* Harmony.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Harmony.m4a; sourceTree = "<group>"; };
 		D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
 		D3B53B372BC85B8A00B41769 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
 		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
@@ -152,6 +188,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D38EEB9B2BA371A00099D382 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3AFBFDA2C796898008DA9DD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -254,6 +297,7 @@
 				D38EEB812BA3719F0099D382 /* SharingAlarm */,
 				D38EEB972BA371A00099D382 /* SharingAlarmTests */,
 				D38EEBA12BA371A00099D382 /* SharingAlarmUITests */,
+				D3AFBFDE2C796898008DA9DD /* Notification */,
 				D38EEB802BA3719F0099D382 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -264,6 +308,7 @@
 				D38EEB7F2BA3719F0099D382 /* SharingAlarm.app */,
 				D38EEB942BA371A00099D382 /* SharingAlarmTests.xctest */,
 				D38EEB9E2BA371A00099D382 /* SharingAlarmUITests.xctest */,
+				D3AFBFDD2C796898008DA9DD /* Notification.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -314,10 +359,24 @@
 			path = SharingAlarmUITests;
 			sourceTree = "<group>";
 		};
+		D3AFBFDE2C796898008DA9DD /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				D3AFBFDF2C796898008DA9DD /* NotificationService.swift */,
+				D3AFBFE12C796898008DA9DD /* Info.plist */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 		D3B53B322BC6203500B41769 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D3B53B332BC6204B00B41769 /* Harmony.mp3 */,
+				D33B87352C77117C002C11D4 /* Chiptune.m4a */,
+				D33B87362C77117C002C11D4 /* Classic.m4a */,
+				D33B87372C77117C002C11D4 /* Oversimplified.m4a */,
+				D33B87382C77117C002C11D4 /* StarDust.m4a */,
+				D31753622C75461F00EF3D55 /* Propaganda.m4a */,
+				D3B53B332BC6204B00B41769 /* Harmony.m4a */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -332,10 +391,12 @@
 				D38EEB7B2BA3719F0099D382 /* Sources */,
 				D38EEB7C2BA3719F0099D382 /* Frameworks */,
 				D38EEB7D2BA3719F0099D382 /* Resources */,
+				D3AFBFE82C796898008DA9DD /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D3AFBFE32C796898008DA9DD /* PBXTargetDependency */,
 			);
 			name = SharingAlarm;
 			packageProductDependencies = (
@@ -385,6 +446,23 @@
 			productReference = D38EEB9E2BA371A00099D382 /* SharingAlarmUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		D3AFBFDC2C796898008DA9DD /* Notification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3AFBFE52C796898008DA9DD /* Build configuration list for PBXNativeTarget "Notification" */;
+			buildPhases = (
+				D3AFBFD92C796898008DA9DD /* Sources */,
+				D3AFBFDA2C796898008DA9DD /* Frameworks */,
+				D3AFBFDB2C796898008DA9DD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Notification;
+			productName = Notification;
+			productReference = D3AFBFDD2C796898008DA9DD /* Notification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -392,7 +470,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1520;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					D38EEB7E2BA3719F0099D382 = {
@@ -405,6 +483,9 @@
 					D38EEB9D2BA371A00099D382 = {
 						CreatedOnToolsVersion = 15.2;
 						TestTargetID = D38EEB7E2BA3719F0099D382;
+					};
+					D3AFBFDC2C796898008DA9DD = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -427,6 +508,7 @@
 				D38EEB7E2BA3719F0099D382 /* SharingAlarm */,
 				D38EEB932BA371A00099D382 /* SharingAlarmTests */,
 				D38EEB9D2BA371A00099D382 /* SharingAlarmUITests */,
+				D3AFBFDC2C796898008DA9DD /* Notification */,
 			);
 		};
 /* End PBXProject section */
@@ -438,8 +520,13 @@
 			files = (
 				D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */,
 				D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */,
+				D31753632C75461F00EF3D55 /* Propaganda.m4a in Resources */,
+				D33B87392C77117C002C11D4 /* Chiptune.m4a in Resources */,
+				D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */,
+				D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */,
+				D33B873C2C77117C002C11D4 /* Classic.m4a in Resources */,
 				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
-				D3B53B342BC6204B00B41769 /* Harmony.mp3 in Resources */,
+				D3B53B342BC6204B00B41769 /* Harmony.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +538,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D38EEB9C2BA371A00099D382 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3AFBFDB2C796898008DA9DD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -523,6 +617,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D3AFBFD92C796898008DA9DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3AFBFE02C796898008DA9DD /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -535,6 +637,11 @@
 			isa = PBXTargetDependency;
 			target = D38EEB7E2BA3719F0099D382 /* SharingAlarm */;
 			targetProxy = D38EEB9F2BA371A00099D382 /* PBXContainerItemProxy */;
+		};
+		D3AFBFE32C796898008DA9DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3AFBFDC2C796898008DA9DD /* Notification */;
+			targetProxy = D3AFBFE22C796898008DA9DD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -661,12 +768,13 @@
 		D38EEBA92BA371A00099D382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
@@ -695,12 +803,13 @@
 		D38EEBAA2BA371A00099D382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
@@ -802,6 +911,58 @@
 			};
 			name = Release;
 		};
+		D3AFBFE62C796898008DA9DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Notification/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Notification;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm.Notification;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D3AFBFE72C796898008DA9DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 528US555T2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Notification/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Notification;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm.Notification;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -837,6 +998,15 @@
 			buildConfigurations = (
 				D38EEBAF2BA371A00099D382 /* Debug */,
 				D38EEBB02BA371A00099D382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3AFBFE52C796898008DA9DD /* Build configuration list for PBXNativeTarget "Notification" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3AFBFE62C796898008DA9DD /* Debug */,
+				D3AFBFE72C796898008DA9DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

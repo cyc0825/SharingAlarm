@@ -39,6 +39,9 @@ class UserViewModel: ObservableObject {
     @Published var appUser = AppUser.empty
     
     @Published private var user: User?
+    
+    static let shared = UserViewModel()
+    
     private var db = Firestore.firestore()
     private var cancellables = Set<AnyCancellable>()
     
@@ -62,6 +65,7 @@ class UserViewModel: ObservableObject {
         if authStateHandler == nil {
             authStateHandler = Auth.auth().addStateDidChangeListener { auth, user in
                 self.user = user
+                self.fetchUserData { _ in}
             }
         }
     }
@@ -114,7 +118,6 @@ class UserViewModel: ObservableObject {
             debugPrint("[fetchUserData] ends with \(String(describing: self.appUser))")
         }
     }
-
     
     func saveUserData() {
         guard let userID = user?.uid else { return }

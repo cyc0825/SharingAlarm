@@ -11,6 +11,7 @@ import Firebase
 
 struct AlarmDetailView: View {
     @StateObject var viewModel: AlarmsViewModel
+    @State var sound: String = ""
     let alarm: Alarm
     var body: some View {
         VStack {
@@ -29,7 +30,9 @@ struct AlarmDetailView: View {
             HStack {
                 Text("Alarm Sound")
                 Spacer()
-                Text("\(alarm.sound)")
+                Text((alarm.sound == "YourRecording.m4a" ?
+                      "\(alarm.creatorName ?? "Unknown")'s Recording" :
+                        alarm.sound.components(separatedBy: ".").first) ?? alarm.sound)
             }
             .padding()
             HStack {

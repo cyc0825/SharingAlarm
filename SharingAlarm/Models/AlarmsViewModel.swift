@@ -20,6 +20,8 @@ struct Alarm: Hashable, Codable, Identifiable {
     var activityID: String?
     var activityName: String?
     var participants: [String: [String]] = [:]// Accept, Reject, Stop, Snooze ID: [Name, Status]
+    var creatorID: String?
+    var creatorName: String?
     var isOn: Bool? = true
     
     var notificationIdentifier: String?
@@ -32,7 +34,6 @@ struct Alarm: Hashable, Codable, Identifiable {
 @MainActor
 class AlarmsViewModel: ObservableObject {
     @Published var alarms: [Alarm] = []
-    public var backupAlarms: [Alarm] = []
     @Published var ongoingAlarms: [Alarm] = []
     public var timerViewModels: [String: TimerViewModel] = [:]
     
@@ -47,8 +48,9 @@ class AlarmsViewModel: ObservableObject {
     
     @Published var showAlarmView: Bool = false
 
-    @Published var sounds = ["Harmony", "Ripples", "Signal"]
-    @Published var paidSounds = [""]
+    @Published var sounds: [String] = ["Classic", "Chiptune", "Oversimplified", "StarDust", "Harmony", "Propaganda"]
+    @Published var paidSounds: [String] = []
+    @Published var personalizedSounds: [String] = []
     let intervals = ["None", "Daily", "Weekly"]
     
     var activityGroupId: String?
@@ -69,23 +71,23 @@ class AlarmsViewModel: ObservableObject {
         alarms.sort { $0.time < $1.time }
     }
     
-    func filterAlarmsByActivity(activityName: String?) {
-        if !backupAlarms.isEmpty {
-            restoreAlarms()
-        }
-        if let activityName = activityName {
-            print("filter to only show \(activityName)")
-            let filteredAlarm = alarms.filter({
-                $0.activityName == activityName
-            })
-            backupAlarms = alarms
-            alarms = filteredAlarm
-        }
-    }
-    
-    func restoreAlarms() {
-        alarms = backupAlarms
-    }
+//    func filterAlarmsByActivity(activityName: String?) {
+//        if !backupAlarms.isEmpty {
+//            restoreAlarms()
+//        }
+//        if let activityName = activityName {
+//            print("filter to only show \(activityName)")
+//            let filteredAlarm = alarms.filter({
+//                $0.activityName == activityName
+//            })
+//            backupAlarms = alarms
+//            alarms = filteredAlarm
+//        }
+//    }
+//    
+//    func restoreAlarms() {
+//        alarms = backupAlarms
+//    }
     
     deinit {
         timer?.invalidate()
@@ -113,7 +115,6 @@ class AlarmsViewModel: ObservableObject {
                                     let alarm = try document.data(as: Alarm.self)
                                     if !self.alarms.contains(where: { $0.id == alarm.id }) {
                                         self.alarms.append(alarm)
-                                        self.backupAlarms.append(alarm)
                                         activityNames.insert(alarm.activityName ?? "")
                                     }
                                 } else {
@@ -125,7 +126,6 @@ class AlarmsViewModel: ObservableObject {
                                     }
                                     if !self.alarms.contains(where: { $0.id == alarm.id }) {
                                         self.alarms.append(alarm)
-                                        self.backupAlarms.append(alarm)
                                         activityNames.insert(alarm.activityName ?? "")
                                     }
                                 }
@@ -137,7 +137,6 @@ class AlarmsViewModel: ObservableObject {
                     }
                 } else {
                     self.alarms = []
-                    self.backupAlarms = []
                 }
             }
             catch {
@@ -189,7 +188,8 @@ class AlarmsViewModel: ObservableObject {
                                             "activityId": activityId,
                                             "activityName": activityName ?? "",
                                             "participants": participants,
-                                            "creatorID": userID
+                                            "creatorID": userID,
+                                            "creatorName": userName
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
                     addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId, isOn: true) { result in
@@ -384,9 +384,6 @@ class AlarmsViewModel: ObservableObject {
                         if let index = alarms.firstIndex(where: { $0.id == alarmId }) {
                             alarms[index].time = newTime
                         }
-                        if let index = backupAlarms.firstIndex(where: { $0.id == alarmId }) {
-                            backupAlarms[index].time = newTime
-                        }
                     }
                     
                     if selectedAlarm?.id == alarmId {
@@ -407,13 +404,8 @@ class AlarmsViewModel: ObservableObject {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         if let alarmId = alarmId {
             Task {
-                do {
-                    let document = db.collection("UserData").document(userID).collection("alarms").document(alarmId)
-                    try await document.updateData(["isOn": value])
-                }
-                catch {
-                    debugPrint("[toggleAlarm] error \(error.localizedDescription)")
-                }
+                let document = db.collection("UserData").document(userID).collection("alarms").document(alarmId)
+                document.updateData(["isOn": value])
             }
         }
     }
@@ -433,13 +425,8 @@ extension AlarmsViewModel {
             var newParticipants = participants
             newParticipants[userID]![1] = "Stopped"
             Task {
-                do {
-                    let document = db.collection("Alarm").document(alarmId)
-                    try await document.updateData(["participants": newParticipants])
-                }
-                catch {
-                    debugPrint("[setUserStop] error \(error.localizedDescription)")
-                }
+                let document = db.collection("Alarm").document(alarmId)
+                document.updateData(["participants": newParticipants])
             }
         }
     }
@@ -523,9 +510,8 @@ extension AlarmsViewModel {
             }
         } else {
             // Directly convert the document data to Alarm
-            if let alarm = try? document.data(as: Alarm.self) {
+            if var alarm = try? document.data(as: Alarm.self) {
                 self.alarms.append(alarm)
-                self.backupAlarms.append(alarm)
                 self.activityNames.insert(alarm.activityName ?? "Just For You")
                 if let id = alarm.id {
                     AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
@@ -554,9 +540,6 @@ extension AlarmsViewModel {
         if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
             self.alarms.remove(at: index)
         }
-        if let index = self.backupAlarms.firstIndex(where: { $0.id == document.documentID }) {
-            self.backupAlarms.remove(at: index)
-        }
         if let index = self.ongoingAlarms.firstIndex(where: { $0.id == document.documentID }) {
             self.ongoingAlarms.remove(at: index)
         }
@@ -576,7 +559,6 @@ extension AlarmsViewModel {
                 } else {
                     // Add the new alarm
                     self.alarms.append(alarm)
-                    self.backupAlarms.append(alarm)
                     self.activityNames.insert(alarm.activityName ?? "Just For You")
                     if let id = alarm.id {
                         AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)

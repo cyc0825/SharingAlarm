@@ -81,6 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var vibrationTimer: Timer?
     var rescheduleTimer: Timer?
+    var soundID: SystemSoundID = 0
     
     var alarmWindow: UIWindow?
     var alarmsViewModel: AlarmsViewModel?
@@ -197,21 +198,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 print("User declined")
                 break
                 
-            case UNNotificationDefaultActionIdentifier,
-            UNNotificationDismissActionIdentifier:
+            case UNNotificationDefaultActionIdentifier:
                 presentAlarmRequestView(userInfo: userInfo)
+                break
+            case UNNotificationDismissActionIdentifier:
                 print("User dismissed")
                 break
-                
             default:
                 break
             }
         } else {
-            // presentAlarmView()
+            startAudioWork()
         }
         completionHandler()
     }
     
+    @MainActor
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
     -> UIBackgroundFetchResult {
@@ -233,9 +235,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            let body = userInfo["body"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
-           let repeatInterval = userInfo["repeat"] as? String,
-           let activityId = userInfo["activityId"] as? String,
-           let activityName = userInfo["activityName"] as? String {
+           let _ = userInfo["repeat"] as? String,
+           let _ = userInfo["activityId"] as? String,
+           let _ = userInfo["activityName"] as? String {
            
             print("alarmTimeString: \(alarmTimeString)")
 
@@ -278,8 +280,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         if let id = userInfo["id"] as? String,
-           let title = userInfo["title"] as? String,
-           let body = userInfo["body"] as? String,
+           let _ = userInfo["title"] as? String,
+           let _ = userInfo["body"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
            let repeatInterval = userInfo["repeat"] as? String,
@@ -307,7 +309,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
+        if sound == "YourRecording.m4a", let soundURL = UserDefaults.standard.string(forKey: "alarmSoundURL") {
+            print("using your recording \(soundURL)")
+            cacheSoundFromURL(soundURL) { cachedURL in
+                guard let cachedURL = cachedURL else { return }
+                let soundName = UNNotificationSoundName(rawValue: cachedURL.lastPathComponent)
+                content.sound = UNNotificationSound(named: soundName)
+            }
+        } else {
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
+        }
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarmTime), repeats: false)
 
@@ -327,39 +338,65 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }
     
+    func cacheSoundFromURL(_ urlString: String, completion: @escaping (URL?) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(nil)
+            return
+        }
+
+        let task = URLSession.shared.downloadTask(with: url) { localURL, response, error in
+            guard let localURL = localURL, error == nil else {
+                completion(nil)
+                return
+            }
+            
+            // Move the file to a permanent location
+            let fileManager = FileManager.default
+            let destinationURL = self.getDocumentsDirectory().appendingPathComponent("YourRecording.m4a")
+            
+            // Check if the file already exists, and remove it if necessary
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                do {
+                    try fileManager.removeItem(at: destinationURL)
+                } catch {
+                    print("Failed to remove existing sound file: \(error.localizedDescription)")
+                    completion(nil)
+                    return
+                }
+            }
+            
+            do {
+                try fileManager.moveItem(at: localURL, to: destinationURL)
+                completion(destinationURL)
+            } catch {
+                print("Failed to move sound file: \(error.localizedDescription)")
+                completion(nil)
+            }
+        }
+        task.resume()
+    }
+    
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
 }
 
 extension AppDelegate {
-    func startLongVibration() {
-        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-        vibrationTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(vibrate), userInfo: nil, repeats: true)
-        rescheduleTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(stopVibrationAndReschedule), userInfo: nil, repeats: false)
+    private func startAudioWork() {
+        let audioPath = Bundle.main.path(forResource: "Classic", ofType: ".m4a")
+        let fileUrl = URL(string: audioPath ?? "")
+        AudioServicesCreateSystemSoundID(fileUrl! as CFURL, &soundID)
+        AudioServicesPlayAlertSound(soundID)
+        AudioServicesAddSystemSoundCompletion(soundID, nil, nil, {sound, clientData in
+            print("Ring")
+            AudioServicesPlayAlertSound(sound)
+        }, nil)
     }
 
-    @objc private func stopVibrationAndReschedule() {
-        stopVibration()
-        // rescheduleAlarm()
-    }
-    
-    @objc private func vibrate() {
-        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-    }
-
-    func stopVibration() {
-        DispatchQueue.main.async {
-            if let vibrationTimer = self.vibrationTimer {
-                vibrationTimer.invalidate()
-            } else {
-                print("vibrationTimer not exist")
-            }
-            self.vibrationTimer = nil
-            
-            if let rescheduleTimer = self.rescheduleTimer {
-                rescheduleTimer.invalidate()
-            } else {
-                print("rescheduleTimer not exist")
-            }
-            self.rescheduleTimer = nil
-        }
+    private func stopAudioWork() {
+        AudioServicesRemoveSystemSoundCompletion(soundID)
+        AudioServicesDisposeSystemSoundID(soundID)
     }
 }

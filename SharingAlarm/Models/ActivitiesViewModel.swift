@@ -40,6 +40,7 @@ struct Activity: Hashable, Codable, Identifiable  {
 //    var timestamp: Date
 //}
 
+@MainActor
 class ActivitiesViewModel: ObservableObject {
     @Published var activities: [Activity] = []
     
@@ -82,9 +83,7 @@ class ActivitiesViewModel: ObservableObject {
                                                                 name: activityData["name"] as? String ?? "",
                                                                 participants: resolvedParticipants,
                                                                 alarmCount: activityData["alarmCount"] as? Int ?? 0)
-                                        DispatchQueue.main.async {
-                                            self.activities.append(activity)
-                                        }
+                                        self.activities.append(activity)
                                     }
                                 }
                                 catch {
@@ -95,9 +94,7 @@ class ActivitiesViewModel: ObservableObject {
                         }
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        self.activities = []
-                    }
+                    self.activities = []
                 }
             }
             catch {
@@ -130,21 +127,15 @@ class ActivitiesViewModel: ObservableObject {
                 addParticipant(activityId: activityRef.documentID, participants: participants) { result in
                     switch result {
                     case .success(_):
-                        DispatchQueue.main.async {
-                            completion(.success(Activity(id: activityRef.documentID ,from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
-                        }
+                        completion(.success(Activity(id: activityRef.documentID, from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
                     case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+                        completion(.failure(error))
                     }
                 }
             }
             catch {
                 debugPrint("[addActivity] error \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
+                completion(.failure(error))
             }
         }
     }
@@ -169,13 +160,9 @@ class ActivitiesViewModel: ObservableObject {
                 addParticipant(activityId: activityId, participants: newParticipants) { result in
                     switch result {
                     case .success(_):
-                        DispatchQueue.main.async {
-                            completion(.success(newParticipants))
-                        }
+                        completion(.success(newParticipants))
                     case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+                        completion(.failure(error))
                     }
                 }
             }
@@ -207,15 +194,10 @@ class ActivitiesViewModel: ObservableObject {
             }
             catch {
                 debugPrint("[removeActivity] error \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
+                completion(.failure(error))
             }
             debugPrint("[removeActivity] ends")
-            DispatchQueue.main.async {
-                completion(.success(true))
-            }
-            
+            completion(.success(true))
         }
     }
     
@@ -240,15 +222,11 @@ class ActivitiesViewModel: ObservableObject {
                     }
                     debugPrint("[addParticipant] done for \(participant.uid)")
                 }
-                DispatchQueue.main.async {
-                    completion(.success(true))
-                }
+                completion(.success(true))
             }
             catch {
                 debugPrint("[addParticipant] error \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
+                completion(.failure(error))
             }
         }
     }
@@ -266,15 +244,11 @@ class ActivitiesViewModel: ObservableObject {
                     .collection("activities")
                     .document(activityId)
                     .delete()
-                DispatchQueue.main.async {
-                    completion(.success(true))
-                }
+                completion(.success(true))
             }
             catch {
                 debugPrint("[removeParticipant] error \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
+                completion(.failure(error))
             }
         }
     }
