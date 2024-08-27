@@ -39,7 +39,6 @@
 		D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */; };
 		D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB842BA3719F0099D382 /* ContentView.swift */; };
 		D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB862BA371A00099D382 /* Assets.xcassets */; };
-		D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB892BA371A00099D382 /* Preview Assets.xcassets */; };
 		D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB8B2BA371A00099D382 /* Persistence.swift */; };
 		D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB8D2BA371A00099D382 /* SharingAlarm.xcdatamodeld */; };
 		D38EEB992BA371A00099D382 /* SharingAlarmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEB982BA371A00099D382 /* SharingAlarmTests.swift */; };
@@ -66,9 +65,14 @@
 		D3C0EF862BDD898000DA1795 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF852BDD898000DA1795 /* FirebaseAuth */; };
 		D3C0EF882BDD898000DA1795 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF872BDD898000DA1795 /* FirebaseFirestore */; };
 		D3C0EF8A2BDD898000DA1795 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF892BDD898000DA1795 /* FirebaseMessaging */; };
+		D3CAA1342C7E491600B93A00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB892BA371A00099D382 /* Preview Assets.xcassets */; };
 		D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */; };
 		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
+		D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870552C7DC03200CDA558 /* icon1@2x.png */; };
+		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
+		D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870572C7DC03200CDA558 /* icon2@2x.png */; };
+		D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870582C7DC03200CDA558 /* icon2@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +176,10 @@
 		D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimerView.swift; sourceTree = "<group>"; };
 		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
+		D3E870552C7DC03200CDA558 /* icon1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@2x.png"; sourceTree = "<group>"; };
+		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
+		D3E870572C7DC03200CDA558 /* icon2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@2x.png"; sourceTree = "<group>"; };
+		D3E870582C7DC03200CDA558 /* icon2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -380,6 +388,7 @@
 		D3B53B322BC6203500B41769 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D3E8705A2C7DC03200CDA558 /* AppIcons */,
 				D3AB27FE2C7BE42600E8B3E0 /* beep-04.mp3 */,
 				D33B87352C77117C002C11D4 /* Chiptune.m4a */,
 				D33B87362C77117C002C11D4 /* Classic.m4a */,
@@ -389,6 +398,33 @@
 				D3B53B332BC6204B00B41769 /* Harmony.m4a */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		D3CAA1302C7DC5B900B93A00 /* icon1 */ = {
+			isa = PBXGroup;
+			children = (
+				D3E870552C7DC03200CDA558 /* icon1@2x.png */,
+				D3E870562C7DC03200CDA558 /* icon1@3x.png */,
+			);
+			path = icon1;
+			sourceTree = "<group>";
+		};
+		D3CAA1352C7E4F5500B93A00 /* icon2 */ = {
+			isa = PBXGroup;
+			children = (
+				D3E870572C7DC03200CDA558 /* icon2@2x.png */,
+				D3E870582C7DC03200CDA558 /* icon2@3x.png */,
+			);
+			path = icon2;
+			sourceTree = "<group>";
+		};
+		D3E8705A2C7DC03200CDA558 /* AppIcons */ = {
+			isa = PBXGroup;
+			children = (
+				D3CAA1302C7DC5B900B93A00 /* icon1 */,
+				D3CAA1352C7E4F5500B93A00 /* icon2 */,
+			);
+			path = AppIcons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -528,7 +564,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D38EEB8A2BA371A00099D382 /* Preview Assets.xcassets in Resources */,
+				D3CAA1342C7E491600B93A00 /* Preview Assets.xcassets in Resources */,
 				D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */,
 				D31753632C75461F00EF3D55 /* Propaganda.m4a in Resources */,
 				D33B87392C77117C002C11D4 /* Chiptune.m4a in Resources */,
@@ -536,8 +572,12 @@
 				D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */,
 				D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */,
 				D33B873C2C77117C002C11D4 /* Classic.m4a in Resources */,
-				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
 				D3B53B342BC6204B00B41769 /* Harmony.m4a in Resources */,
+				D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */,
+				D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */,
+				D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */,
+				D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */,
+				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,7 +828,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
@@ -805,7 +845,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -823,7 +863,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
@@ -840,7 +880,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
