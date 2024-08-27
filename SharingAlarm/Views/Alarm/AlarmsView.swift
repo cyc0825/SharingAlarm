@@ -101,12 +101,13 @@ struct AlarmsView: View {
                                     }
                                     Spacer()
                                 }
+                                .listRowBackground(Color.clear)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     showingAddAlarm = true
                                 }
                             }
-                            .listRowBackground(Color.clear)
+                            .scrollDisabled(true)
                             .listStyle(.plain)
                             .toolbarTitleDisplayMode(.inline)
                         }
@@ -125,7 +126,7 @@ struct AlarmsView: View {
                             }, id: \.id) { $alarm in
                                 Button(action: {
                                     viewModel.selectedAlarm = alarm
-                                    showingEditAlarm = true
+                                    viewModel.showAlarmView = true
                                 }, label: {
                                     AlarmCardView(alarm: $alarm)
                                 })
@@ -137,15 +138,15 @@ struct AlarmsView: View {
                                     }
                                     .tint(.red)
                                 }
+                                .listRowBackground(Color.clear)
                             }
-                            .listRowBackground(Color.clear)
                             .listStyle(.plain)
                             .toolbarTitleDisplayMode(.inline)
                         }
                         // Gradient overlay
                         VStack {
                             Spacer()
-                            LinearGradient(gradient: Gradient(colors: [Color.clear, Color.system]), startPoint: .center, endPoint: .bottom)
+                            LinearGradient(gradient: Gradient(colors: [Color.clear, Color(UIColor.systemGroupedBackground)]), startPoint: .center, endPoint: .bottom)
                         }
                         .allowsHitTesting(false)
                     }
@@ -158,6 +159,9 @@ struct AlarmsView: View {
 //            .onDisappear{
 //                viewModel.stopListeningAlarms()
 //            }
+            .background(
+                Color(UIColor.systemGroupedBackground)
+            )
             .sheet(isPresented: $showingEditAlarm) {
                 if let selectedAlarm = viewModel.selectedAlarm {
                     EditAlarmView(

@@ -16,7 +16,84 @@ struct AlarmView: View {
     var body: some View {
         ZStack {
             Color.secondAccent.ignoresSafeArea(edges: .all)
-            if alarmViewModel.ongoingAlarms.isEmpty {
+            if let alarm = alarmViewModel.selectedAlarm {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Text(alarm.activityName ?? "Just For You")
+                            .font(.largeTitle.bold())
+                            .padding([.leading, .top], 40)
+                            .fontDesign(.serif)
+                        Spacer()
+                    }
+                    Text(alarm.time, style: .time)
+                        .font(.system(size: 60))
+                        .fontDesign(.serif)
+                        .padding()
+                    
+                    // Additional alarm information can go here
+                    List {
+                        ForEach(Array(alarm.participants), id: \.key) { participantID, participantStatus in
+                            HStack {
+                                Text(participantStatus[0])
+                                Spacer()
+                                Text(participantStatus[1])
+                            }
+                        }
+                        .listRowBackground(Color.clear)
+                    }
+                    .listStyle(.plain)
+                    if alarm.time < Date() {
+                        if !alarmViewModel.ifUserStopped(participants: alarm.participants) {
+                            GeometryReader { geometry in
+                                ZStack(alignment: .leading) {
+                                    BackgroundComponent()
+                                    DraggingComponent(isLocked: $isLocked, onClose: {
+                                        // Stop vibration
+                                        AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
+                                        alarmViewModel.stopVibration()
+                                        if alarm.participants.count == 1 {
+                                            // Only one participant, no need to wait for others
+                                            alarmViewModel.removeAlarm(documentID: alarm.id)
+                                            dismiss()
+                                        } else {
+                                            alarmViewModel.setUserStop(alarmId: alarm.id, participants: alarm.participants)
+                                        }
+                                    }, maxWidth: geometry.size.width)
+                                }
+                            }
+                            .frame(height: 70)
+                            .padding(.horizontal, 30)
+                            Button(action: {
+                                // Stop vibration
+                                AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
+                                alarmViewModel.stopVibration()
+                            }) {
+                                Text("Snooze")
+                            }
+                            .padding(.bottom, 60)
+                        } else if alarmViewModel.ifAllUserStop(alarmId: alarm.id, participants: alarm.participants) {
+                            Button {
+                                alarmViewModel.removeAlarm(documentID: alarm.id)
+                                dismiss()
+                            } label: {
+                                Text("Remove Alarm")
+                                    .font(.title)
+                                    .padding()
+                                    .background(Color.primary)
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                }
+                .onAppear {
+                    alarmViewModel.startListeningAlarm(forDocument: alarm.id!)
+                }
+                .onDisappear {
+                    alarmViewModel.stopListening()
+                }
+            }
+            else if alarmViewModel.ongoingAlarms.isEmpty {
                 // Show a message if there are no active alarms
                 Text("There are no active alarms")
                     .font(.title)

@@ -180,3 +180,46 @@ class SheetHostingController<Content: View>: UIViewController {
         present(hostingController, animated: true, completion: nil)
     }
 }
+
+class AvatarGenerator {
+
+    static func generateAvatar(for name: String, size: CGSize = CGSize(width: 100, height: 100)) -> UIImage? {
+        let initials = getInitials(from: name)
+        let backgroundColor = UIColor.gray
+        
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            // Draw background circle
+            let circlePath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: size))
+            backgroundColor.setFill()
+            circlePath.fill()
+            
+            // Draw initials
+            let initialsAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: size.width * 0.4, weight: .bold),
+                .foregroundColor: UIColor.white
+            ]
+            let initialsSize = initials.size(withAttributes: initialsAttributes)
+            let initialsRect = CGRect(x: (size.width - initialsSize.width) / 2,
+                                      y: (size.height - initialsSize.height) / 2,
+                                      width: initialsSize.width,
+                                      height: initialsSize.height)
+            initials.draw(in: initialsRect, withAttributes: initialsAttributes)
+        }
+        
+        return image
+    }
+    
+    private static func getInitials(from name: String) -> String {
+        let words = name.split(separator: " ")
+        let initials = words.prefix(2).map { String($0.first ?? Character(" ")) }
+        return initials.joined().uppercased()
+    }
+    
+    private static func generateRandomColor() -> UIColor {
+        let hue = CGFloat(arc4random_uniform(256)) / 255.0
+        let saturation: CGFloat = 0.5 + CGFloat(arc4random_uniform(128)) / 255.0
+        let brightness: CGFloat = 0.7 + CGFloat(arc4random_uniform(128)) / 255.0
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
+    }
+}

@@ -67,7 +67,7 @@ struct AddAlarmView: View {
                 }
             })
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-                Alert(title: Text("Cannot Add Alarm"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
+                Alert(title: Text("Cannot Add"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
             }
         }
     }

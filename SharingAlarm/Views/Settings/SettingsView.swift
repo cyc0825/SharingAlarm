@@ -15,21 +15,11 @@ struct SettingsView: View {
                     Text("Profile")
                 }
                 
-                Button("Change App Icon") {
-                    changeAppIcon(to: "AlternateIconName") // Specify your alternate icon's file name
+                NavigationLink(destination: IconSelectionView()) {
+                    Text("Change App Icon")
                 }
             }
             .navigationTitle("Settings")
-        }
-    }
-    
-    func changeAppIcon(to iconName: String?) {
-        UIApplication.shared.setAlternateIconName(iconName) { error in
-            if let error = error {
-                print("Error changing app icon: \(error.localizedDescription)")
-            } else {
-                print("App icon changed successfully")
-            }
         }
     }
 }
@@ -65,7 +55,25 @@ struct ProfileView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
+            Image(uiImage: AvatarGenerator.generateAvatar(for: userName, size: CGSize(width: 100, height: 100)) ?? UIImage())
+                .resizable()
+                .frame(width: 100, height: 100)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                .shadow(radius: 5)
+            
+            // Username
+            Text(userName)
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(.top, 10)
+            
+            // UID
+            Text("@\(Uid)")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
             // List of options
             List {
                 Section(header: EmptyView()) {}
@@ -111,18 +119,6 @@ struct ProfileView: View {
                   }
                 }
             }
-            .navigationTitle(userName)
-            .padding(.top)
-            .background(
-                Color(UIColor.systemGroupedBackground)
-            )
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Text("UID: \(Uid)")
-                        .font(.callout)
-                        .foregroundStyle(.gray)
-                }
-            }
             .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
                                 isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
               Button("Delete Account", role: .destructive, action: deleteAccount)
@@ -146,6 +142,9 @@ struct ProfileView: View {
                 )
             }
         }
+        .background(
+            Color(UIColor.systemGroupedBackground)
+        )
     }
 }
 

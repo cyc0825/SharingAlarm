@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CloudKit
-import EventKit
 
 import Firebase
 import FirebaseCore
@@ -15,6 +14,7 @@ import FirebaseMessaging
 
 import UIKit
 import AVFoundation
+import AuthenticationServices
 
 @main
 struct SharingAlarmApp: App {
@@ -27,25 +27,52 @@ struct SharingAlarmApp: App {
     @StateObject private var arViewModel = AudioRecorderViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    @State private var showLaunchScreen = true
+    
     init() {
     }
     
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                AuthedView {
-                } content: {
-                    ContentView()
-                        .environmentObject(authViewModel)
-                        .environmentObject(userViewModel)
-                        .environmentObject(friendViewModel)
-                        .environmentObject(activityViewModel)
-                        .environmentObject(alarmsViewModel)
-                        .environmentObject(arViewModel)
-                    Spacer()
-                }
-                .onAppear {
-                    appDelegate.alarmsViewModel = alarmsViewModel
+            if showLaunchScreen {
+                LaunchScreenView()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                showLaunchScreen = false
+                            }
+                        }
+                    }
+            } else if authViewModel.authenticationState == .authenticated {
+                ContentView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(userViewModel)
+                    .environmentObject(friendViewModel)
+                    .environmentObject(activityViewModel)
+                    .environmentObject(alarmsViewModel)
+                    .environmentObject(arViewModel)
+                    .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
+                        authViewModel.signOut()
+                        if let userInfo = event.userInfo, let info = userInfo["info"] {
+                            print(info)
+                        }
+                    }
+            } else {
+                NavigationView {
+                    AuthedView {
+                    } content: {
+                        ContentView()
+                            .environmentObject(authViewModel)
+                            .environmentObject(userViewModel)
+                            .environmentObject(friendViewModel)
+                            .environmentObject(activityViewModel)
+                            .environmentObject(alarmsViewModel)
+                            .environmentObject(arViewModel)
+                        Spacer()
+                    }
+                    .onAppear {
+                        appDelegate.alarmsViewModel = alarmsViewModel
+                    }
                 }
             }
         }
@@ -178,7 +205,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if userInfo.isEmpty {
             // self.startLongVibration()
         } else {
-            // presentAlarmRequestView(userInfo: userInfo)
+            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
+            }
         }
         completionHandler([.banner, .sound])
     }
@@ -208,7 +237,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 break
             }
         } else {
-            startAudioWork()
+            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
+            }
         }
         completionHandler()
     }
@@ -384,19 +415,36 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 }
 
 extension AppDelegate {
-    private func startAudioWork() {
-        let audioPath = Bundle.main.path(forResource: "Classic", ofType: ".m4a")
-        let fileUrl = URL(string: audioPath ?? "")
-        AudioServicesCreateSystemSoundID(fileUrl! as CFURL, &soundID)
-        AudioServicesPlayAlertSound(soundID)
-        AudioServicesAddSystemSoundCompletion(soundID, nil, nil, {sound, clientData in
-            print("Ring")
-            AudioServicesPlayAlertSound(sound)
-        }, nil)
-    }
+    func triggerFirebaseAlarmFunction(fcmToken: String) {
+        print("Triggering Firebase Alarm Function")
+        let urlString = "https://us-central1-sharingalarm.cloudfunctions.net/sendAlarmSound"
+        guard let url = URL(string: urlString) else { return }
 
-    private func stopAudioWork() {
-        AudioServicesRemoveSystemSoundCompletion(soundID)
-        AudioServicesDisposeSystemSoundID(soundID)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let requestBody: [String: Any] = [
+            "fcmToken": fcmToken
+        ]
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: requestBody, options: .prettyPrinted)
+        } catch let error {
+            print("Failed to serialize request body: \(error)")
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error triggering function: \(error)")
+                return
+            }
+            guard let data = data else { return }
+            let responseString = String(data: data, encoding: .utf8)
+            print("Response from Firebase Function: \(responseString ?? "No response")")
+        }
+
+        task.resume()
     }
 }

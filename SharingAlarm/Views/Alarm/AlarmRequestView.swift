@@ -32,7 +32,7 @@ struct AlarmRequestView: View {
                 Button {
                     print("Add Alarm \(alarm.id ?? "")")
                     if let id = alarm.id {
-                        alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "", isOn: true) { result in
+                        alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "") { result in
                             switch result {
                             case .success(_):
                                 print("Success")
@@ -51,6 +51,15 @@ struct AlarmRequestView: View {
                 .cornerRadius(25)
                 .padding(.horizontal)
                 Button {
+                    if let id = alarm.id {
+                        alarmViewModel.rejectAlarm(alarmId: id) { result in
+                            if case .success(_) = result {
+                                print("Success")
+                            } else {
+                                print("fail")
+                            }
+                        }
+                    }
                     dismiss()
                 } label: {
                     Image(systemName: "xmark")

@@ -177,7 +177,7 @@ class AlarmsViewModel: ObservableObject {
                         if let userRef = document.get("userRef") as? DocumentReference {
                             
                             let participant = try await userRef.getDocument(as: AppUser.self)
-                            participants[participant.id!] = [participant.name, "Accept"]
+                            participants[participant.id!] = participant.id == userID ? [participant.name, "Accept"] : [participant.name, "Pending"]
                         }
                     }
                     
@@ -192,7 +192,7 @@ class AlarmsViewModel: ObservableObject {
                                             "creatorName": userName
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
-                    addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId, isOn: true) { result in
+                    addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId) { result in
                         switch result {
                         case .success(_):
                             DispatchQueue.main.async {
@@ -330,7 +330,7 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    func addAlarmToParticipant(alarmId: String, activityId: String, isOn: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func addAlarmToParticipant(alarmId: String, activityId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
             debugPrint("[addAlarmToParticipants] starts")
@@ -340,14 +340,64 @@ class AlarmsViewModel: ObservableObject {
                     .document(alarmId)
                     .setData([
                               "activityId": activityId,
-                              "isOn": isOn
+                              "isOn": true
                              ])
+                
+                let documentRef = db.collection("Alarm").document(alarmId)
+                let document = try await documentRef.getDocument()
+                if var participants = document.data()?["participants"] as? [String: [String]] {
+                    // Update the status for the given userID
+                    if var participantInfo = participants[userID] {
+                        participantInfo[1] = "Accept" // Assuming the status is the second item in the array
+                        participants[userID] = participantInfo
+                        
+                        // Update the document with the modified participants dictionary
+                        try await documentRef.setData(["participants": participants], merge: true)
+                    } else {
+                        print("User ID not found in participants")
+                    }
+                } else {
+                    print("Participants field is missing or has an unexpected format")
+                }
+                
                 debugPrint("[addAlarmToParticipant] done for \(userID)")
                 DispatchQueue.main.async {
                     completion(.success(true))
                 }
             }
             catch {
+                debugPrint("[addAlarmToParticipant] error \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    func rejectAlarm(alarmId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+        Task {
+            do {
+                let documentRef = db.collection("Alarm").document(alarmId)
+                let document = try await documentRef.getDocument()
+                if var participants = document.data()?["participants"] as? [String: [String]] {
+                    // Update the status for the given userID
+                    if var participantInfo = participants[userID] {
+                        participantInfo[1] = "Rejected" // Assuming the status is the second item in the array
+                        participants[userID] = participantInfo
+                        
+                        // Update the document with the modified participants dictionary
+                        try await documentRef.setData(["participants": participants], merge: true)
+                    } else {
+                        print("User ID not found in participants")
+                    }
+                } else {
+                    print("Participants field is missing or has an unexpected format")
+                }
+                DispatchQueue.main.async {
+                    completion(.success(true))
+                }
+            } catch {
                 debugPrint("[addAlarmToParticipant] error \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(.failure(error))
