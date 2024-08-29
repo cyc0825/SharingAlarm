@@ -47,7 +47,7 @@ class ActivitiesViewModel: ObservableObject {
     private var db = Firestore.firestore()
     
     init() {
-        fetchActivity()
+//        fetchActivity()
     }
     
     func fetchActivity() {

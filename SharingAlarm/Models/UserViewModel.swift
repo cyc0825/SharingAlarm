@@ -38,7 +38,7 @@ enum AuthMethod {
 class UserViewModel: ObservableObject {
     @Published var appUser = AppUser.empty
     
-    @Published private var user: User?
+    @Published var user: User?
     
     static let shared = UserViewModel()
     

@@ -20,12 +20,11 @@ struct ActivitiesView: View {
                             .padding()
                     }
                 } else {
-                    List(viewModel.activities.indices, id: \.self) { index in
-                        NavigationLink(destination: ActivityDetailView(viewModel: viewModel, activity: viewModel.activities[index])) {
-                            ActivityCard(viewModel: viewModel, index: index)
+                    List(viewModel.activities, id: \.self) { activity in
+                        NavigationLink(destination: ActivityDetailView(viewModel: viewModel, activity: activity)) {
+                            ActivityCard(viewModel: viewModel, activity: activity)
                         }
                     }
-                    .listRowBackground(Color.accentColor)
                 }
             }
             .navigationTitle("Activities")

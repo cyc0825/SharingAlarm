@@ -18,10 +18,10 @@ struct IconSelectionView: View {
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .center) {
-                Text("Select App Icon")
-                    .font(.headline)
-                    .padding(.top, 20)
+            VStack(alignment: .leading) {
+//                Text("Select App Icon")
+//                    .font(.headline)
+//                    .padding([.leading, .top], 20)
                 
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(iconManager.availableIcons) { icon in
@@ -51,7 +51,7 @@ struct IconItemView: View {
             Image(uiImage: UIImage(named: icon.imageName) ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 80, height: 80)
+                .frame(width: 60, height: 60)
                 .cornerRadius(16)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)

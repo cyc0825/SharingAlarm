@@ -109,8 +109,8 @@ struct ActivityDetailView: View {
         viewModel.removeActivity(activity: viewModel.activities[activityIndex]) { result in
             switch result {
             case .success(_):
-                self.presentationMode.wrappedValue.dismiss()
                 viewModel.activities.remove(at: activityIndex)
+                self.presentationMode.wrappedValue.dismiss()
             case .failure(let error):
                 debugPrint("Remove Activity error \(error.localizedDescription)")
             }

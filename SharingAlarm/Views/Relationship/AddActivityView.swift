@@ -12,6 +12,7 @@ struct AddActivityView: View {
     @StateObject var friendViewModel = FriendsViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var viewModel: ActivitiesViewModel
+    @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? ""
     @State var userViewModel = UserViewModel()
     @State public var name = ""
     @State public var startDate = Date()
@@ -48,7 +49,7 @@ struct AddActivityView: View {
                         if !editActivity {
                             HStack {
                                 Image(systemName: "star.fill")
-                                Text(userViewModel.appUser.name)
+                                Text(userName)
                                     .fontWeight(.bold)
                             }
                         }

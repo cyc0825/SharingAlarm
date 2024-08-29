@@ -152,13 +152,6 @@ struct AlarmsView: View {
                     }
                 }
             }
-//            .onAppear{
-//                viewModel.fetchAlarmData()
-//                viewModel.startListeningAlarms()
-//            }
-//            .onDisappear{
-//                viewModel.stopListeningAlarms()
-//            }
             .background(
                 Color(UIColor.systemGroupedBackground)
             )

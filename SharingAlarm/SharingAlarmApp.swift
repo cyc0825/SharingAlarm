@@ -38,25 +38,33 @@ struct SharingAlarmApp: App {
                 LaunchScreenView()
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation {
+                            withAnimation(.easeInOut) {
                                 showLaunchScreen = false
                             }
                         }
                     }
             } else if authViewModel.authenticationState == .authenticated {
-                ContentView()
-                    .environmentObject(authViewModel)
-                    .environmentObject(userViewModel)
-                    .environmentObject(friendViewModel)
-                    .environmentObject(activityViewModel)
-                    .environmentObject(alarmsViewModel)
-                    .environmentObject(arViewModel)
-                    .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
-                        authViewModel.signOut()
-                        if let userInfo = event.userInfo, let info = userInfo["info"] {
-                            print(info)
+                NavigationView {
+                    ContentView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(userViewModel)
+                        .environmentObject(friendViewModel)
+                        .environmentObject(activityViewModel)
+                        .environmentObject(alarmsViewModel)
+                        .environmentObject(arViewModel)
+                        .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
+                            authViewModel.signOut()
+                            if let userInfo = event.userInfo, let info = userInfo["info"] {
+                                print(info)
+                            }
                         }
-                    }
+                        .onAppear {
+                            friendViewModel.fetchFriends()
+                            friendViewModel.fetchOwnRequest()
+                            friendViewModel.fetchFriendsRequest()
+                            activityViewModel.fetchActivity()
+                        }
+                }
             } else {
                 NavigationView {
                     AuthedView {
@@ -68,6 +76,12 @@ struct SharingAlarmApp: App {
                             .environmentObject(activityViewModel)
                             .environmentObject(alarmsViewModel)
                             .environmentObject(arViewModel)
+                            .onAppear {
+                                friendViewModel.fetchFriends()
+                                friendViewModel.fetchOwnRequest()
+                                friendViewModel.fetchFriendsRequest()
+                                activityViewModel.fetchActivity()
+                            }
                         Spacer()
                     }
                     .onAppear {

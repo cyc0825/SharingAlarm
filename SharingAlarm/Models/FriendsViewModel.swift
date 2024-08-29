@@ -21,13 +21,13 @@ class FriendsViewModel: ObservableObject {
     @Published var friendSearchResults: [AppUser] = []
     @Published var friendRequests: [FriendReference] = []
     @Published var ownRequests: [FriendReference] = []
-    
+    @Published var selectedFriend: FriendReference?
     private var db = Firestore.firestore()
     
     init() {
-        fetchFriends()
-        fetchOwnRequest()
-        fetchFriendsRequest()
+//        fetchFriends()
+//        fetchOwnRequest()
+//        fetchFriendsRequest()
     }
     
     func fetchOwnRequest() {

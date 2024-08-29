@@ -66,6 +66,7 @@
 		D3C0EF882BDD898000DA1795 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF872BDD898000DA1795 /* FirebaseFirestore */; };
 		D3C0EF8A2BDD898000DA1795 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF892BDD898000DA1795 /* FirebaseMessaging */; };
 		D3CAA1342C7E491600B93A00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D38EEB892BA371A00099D382 /* Preview Assets.xcassets */; };
+		D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */; };
 		D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */; };
 		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
@@ -173,6 +174,7 @@
 		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		D3C0EF7F2BDD50E600DA1795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSelectionView.swift; sourceTree = "<group>"; };
 		D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimerView.swift; sourceTree = "<group>"; };
 		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3372A972C63EAA200D33713 /* AlarmSoundView.swift */,
 				D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */,
+				D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -625,6 +628,7 @@
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
+				D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */,
 				D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */,
 				D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */,
 				D31605772BC074F400A4089E /* LoadingView.swift in Sources */,
@@ -828,16 +832,18 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SharingAlarm/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
@@ -863,16 +869,18 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SharingAlarm/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
@@ -969,7 +977,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 528US555T2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Notification/Info.plist;
@@ -981,7 +989,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm.Notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -995,7 +1003,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 528US555T2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Notification/Info.plist;
@@ -1007,7 +1015,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm.Notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

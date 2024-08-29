@@ -100,7 +100,7 @@ struct LoginView: View {
                     .disabled(!authViewModel.isValid)
                     .frame(maxWidth: .infinity)
                     .buttonStyle(.borderedProminent)
-                    .tint(authViewModel.isValid ? .thirdAccent : .gray)
+                    .tint(authViewModel.isValid ? .secondAccent : .gray)
                     
                     HStack {
                         VStack { Divider() }

@@ -64,7 +64,7 @@ class AlarmsViewModel: ObservableObject {
     private var alarmsListener: ListenerRegistration?
     
     init() {
-        fetchAlarmsData()
+        // fetchAlarmsData()
     }
 
     func sortAlarmsByTime() {
@@ -504,8 +504,9 @@ extension AlarmsViewModel {
             
             if let document = documentSnapshot, document.exists {
                 if let participants = document.data()?["participants"] as? [String: [String]] {
-                    if let index = self.ongoingAlarms.firstIndex(where: { $0.id == alarmId }) {
-                        self.ongoingAlarms[index].participants = participants
+                    if let index = self.alarms.firstIndex(where: { $0.id == alarmId }) {
+                        self.alarms[index].participants = participants
+                        self.selectedAlarm?.participants = participants
                         print("Participants updated for alarm \(alarmId): \(participants)")
                     }
                 } else {
@@ -560,7 +561,8 @@ extension AlarmsViewModel {
             }
         } else {
             // Directly convert the document data to Alarm
-            if var alarm = try? document.data(as: Alarm.self) {
+            if let alarm = try? document.data(as: Alarm.self) {
+                print("Alarm ID \(alarm.id ?? "NOID")")
                 self.alarms.append(alarm)
                 self.activityNames.insert(alarm.activityName ?? "Just For You")
                 if let id = alarm.id {
