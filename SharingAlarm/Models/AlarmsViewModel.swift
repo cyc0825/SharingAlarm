@@ -41,7 +41,7 @@ class AlarmsViewModel: ObservableObject {
     @Published var selectedAlarm: Alarm?
     @Published var errorMessage: String? = nil
     
-    private var ongoingDeletions: Set<String> = []
+    @Published var ongoingDeletions: Set<String> = []
     var timer: Timer?
 
     let alarmsKey = "alarmsData"

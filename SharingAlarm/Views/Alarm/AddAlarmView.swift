@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddAlarmView: View {
     @ObservedObject var viewModel: AlarmsViewModel
-    @StateObject var activityViewModel = ActivitiesViewModel()
+    @ObservedObject var activityViewModel: ActivitiesViewModel
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"

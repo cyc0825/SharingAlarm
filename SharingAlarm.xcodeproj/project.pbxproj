@@ -69,6 +69,7 @@
 		D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */; };
 		D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */; };
 		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
+		D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = D3DE34702C80F6C50000C48A /* AppIconDefault.png */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 		D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870552C7DC03200CDA558 /* icon1@2x.png */; };
 		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
@@ -177,6 +178,7 @@
 		D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSelectionView.swift; sourceTree = "<group>"; };
 		D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimerView.swift; sourceTree = "<group>"; };
 		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
+		D3DE34702C80F6C50000C48A /* AppIconDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIconDefault.png; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 		D3E870552C7DC03200CDA558 /* icon1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@2x.png"; sourceTree = "<group>"; };
 		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 		D3E8705A2C7DC03200CDA558 /* AppIcons */ = {
 			isa = PBXGroup;
 			children = (
+				D3DE34702C80F6C50000C48A /* AppIconDefault.png */,
 				D3CAA1302C7DC5B900B93A00 /* icon1 */,
 				D3CAA1352C7E4F5500B93A00 /* icon2 */,
 			);
@@ -520,7 +523,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					D38EEB7E2BA3719F0099D382 = {
 						CreatedOnToolsVersion = 15.2;
@@ -574,6 +577,7 @@
 				D3AB28002C7BE42600E8B3E0 /* beep-04.mp3 in Resources */,
 				D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */,
 				D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */,
+				D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */,
 				D33B873C2C77117C002C11D4 /* Classic.m4a in Resources */,
 				D3B53B342BC6204B00B41769 /* Harmony.m4a in Resources */,
 				D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */,
@@ -826,7 +830,6 @@
 		D38EEBA92BA371A00099D382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -863,7 +866,6 @@
 		D38EEBAA2BA371A00099D382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -900,7 +902,6 @@
 		D38EEBAC2BA371A00099D382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -920,7 +921,6 @@
 		D38EEBAD2BA371A00099D382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -940,7 +940,6 @@
 		D38EEBAF2BA371A00099D382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 528US555T2;
@@ -958,7 +957,6 @@
 		D38EEBB02BA371A00099D382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 528US555T2;

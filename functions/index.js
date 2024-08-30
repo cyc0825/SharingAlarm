@@ -56,7 +56,7 @@ exports.sendImmediateAlarmNotification = functions.firestore
                 },
                 tokens: tokens,
             };
-            const response = await admin.messaging().sendMulticast(message);
+            const response = await admin.messaging().sendEachForMulticast(message);
             response.responses.forEach((resp, idx) => {
                 if (!resp.success) {
                     console.error(`Failed to send to ${tokens[idx]}: ${resp.error}`);

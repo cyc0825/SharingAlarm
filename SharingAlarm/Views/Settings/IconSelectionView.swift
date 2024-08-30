@@ -84,7 +84,7 @@ class AppIconManager: ObservableObject {
     }
     
     let availableIcons: [AppIcon] = [
-        AppIcon(displayName: "Classic", iconName: nil, imageName: "AppIcon"),
+        AppIcon(displayName: "Classic", iconName: nil, imageName: "AppIconDefault"),
         AppIcon(displayName: "CalenderAlarm", iconName: "icon1", imageName: "icon1"),
         AppIcon(displayName: "PunkAlarm", iconName: "icon2", imageName: "icon2"),
         // Add more icons as needed

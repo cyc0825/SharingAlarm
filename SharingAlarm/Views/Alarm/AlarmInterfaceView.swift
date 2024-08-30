@@ -39,6 +39,11 @@ struct AlarmInterfaceView: View {
 //                    .onTapGesture {
 //                        viewModel.selectedAlarm = nil
 //                    }
+//                Image(systemName: "aqi.low")
+//                    .resizable()
+//                    .frame(width: 110, height: 120)
+//                    .symbolEffect(.variableColor.cumulative.hideInactiveLayers.nonReversing, options: .repeat(3), value: $viewModel.ongoingAlarms.count != 0)
+                
                 // Draw minute lines around the circle
                 ForEach(0..<60) { i in
                     Path { path in

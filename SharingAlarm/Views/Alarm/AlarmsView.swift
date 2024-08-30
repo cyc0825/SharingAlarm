@@ -10,6 +10,7 @@ import CloudKit
 
 struct AlarmsView: View {
     @EnvironmentObject var viewModel: AlarmsViewModel
+    @EnvironmentObject var activityViewModel: ActivitiesViewModel
     @State private var showingAddAlarm = false
     @State private var showingEditAlarm = false
     @State private var showingOngoingAlarm = false
@@ -165,7 +166,7 @@ struct AlarmsView: View {
                 }
             }
             .sheet(isPresented: $showingAddAlarm) {
-                AddAlarmView(viewModel: viewModel, isPresented: $showingAddAlarm)
+                AddAlarmView(viewModel: viewModel, activityViewModel: activityViewModel, isPresented: $showingAddAlarm)
             }
             .sheet(isPresented: $viewModel.showAlarmView) {
                 AlarmView(alarmViewModel: viewModel)
