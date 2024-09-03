@@ -149,6 +149,7 @@ class AlarmsViewModel: ObservableObject {
     func addAlarm(time: Date, sound: String, repeatInterval: String, activityId: String?, activityName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         guard let userName = UserDefaults.standard.value(forKey: "name") as? String else { return }
+        guard let fcmToken = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
         if let activityId = activityId {
             // For sharing alarm
             Task {
@@ -192,6 +193,8 @@ class AlarmsViewModel: ObservableObject {
                                             "creatorName": userName
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
+                    
+                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: newAlarm.documentID, deviceToken: fcmToken)
                     addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId) { result in
                         switch result {
                         case .success(_):
@@ -229,6 +232,9 @@ class AlarmsViewModel: ObservableObject {
                                             "participants": [userID: [userName, "Accept"]]
                                            ])
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: [userID: [userName, "Accept"]])
+                    
+                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: newAlarm.documentID, deviceToken: fcmToken)
+                    
                     DispatchQueue.main.async {
                         completion(.success(alarm))
                     }
@@ -634,7 +640,6 @@ extension AlarmsViewModel {
 extension AlarmsViewModel {
 
     func startLongVibration() {
-        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
         vibrationTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(vibrate), userInfo: nil, repeats: true)
         rescheduleTimer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(stopVibrationAndReschedule), userInfo: nil, repeats: false)
     }
@@ -657,6 +662,45 @@ extension AlarmsViewModel {
             }
             self.vibrationTimer = nil
         }
+    }
+}
+
+struct AlarmRequest: Codable {
+    let alarmTime: String
+    let alarmId: String
+    let deviceToken: String
+}
+
+extension AlarmsViewModel {
+    func scheduleAlarm(alarmTime: String, alarmId: String, deviceToken: String) {
+        // Replace `localhost` with your local IP address if testing on a physical device
+        guard let url = URL(string: "https://alarm-scheduler.fly.dev/scheduleAlarm") else { return }
+        print("Schedule alarm now within https://alarm-scheduler.fly.dev/scheduleAlarm")
+        
+        let alarmRequest = AlarmRequest(alarmTime: alarmTime, alarmId: alarmId, deviceToken: deviceToken)
+        
+        // Convert to JSON data
+        guard let jsonData = try? JSONEncoder().encode(alarmRequest) else { return }
+        
+        // Create the URL request
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        // Make the network request
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error scheduling alarm: \(error.localizedDescription)")
+                return
+            }
+            
+            if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                print("Alarm scheduled successfully")
+            } else {
+                print("Failed to schedule alarm")
+            }
+        }.resume()
     }
 }
 

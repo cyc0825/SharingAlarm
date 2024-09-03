@@ -189,11 +189,9 @@ extension AppDelegate: MessagingDelegate {
             object: nil,
             userInfo: dataDict
         )
+        UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
         if let userId = Auth.auth().currentUser?.uid {
             updateUserToken(userId, fcmToken ?? "")
-        } else {
-            // Save the token locally if user is not logged in
-            UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
         }
     }
     
@@ -219,9 +217,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if userInfo.isEmpty {
             // self.startLongVibration()
         } else {
-            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
-                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
-            }
+//            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+//                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
+//            }
         }
         completionHandler([.banner, .sound])
     }
@@ -235,27 +233,25 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case "ACCEPT_ACTION":
                 handleNotification(userInfo: userInfo)
-                break
                 
             case "DECLINE_ACTION":
                 print("User declined")
-                break
                 
             case UNNotificationDefaultActionIdentifier:
-                presentAlarmRequestView(userInfo: userInfo)
-                break
+                presentAlarmRequestView(userInfo: userInfo)  // Ensure this gets triggered for the default action
+                
             case UNNotificationDismissActionIdentifier:
                 print("User dismissed")
-                break
+                
             default:
                 break
             }
+            completionHandler()
         } else {
-            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
-                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
-            }
+//            if let fcmToken = UserDefaults.standard.string(forKey: "fcmToken") {
+//                triggerFirebaseAlarmFunction(fcmToken: fcmToken)
+//            }
         }
-        completionHandler()
     }
     
     @MainActor
@@ -362,6 +358,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 content.sound = UNNotificationSound(named: soundName)
             }
         } else {
+            print("Using sound \(sound)")
             content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
         }
 

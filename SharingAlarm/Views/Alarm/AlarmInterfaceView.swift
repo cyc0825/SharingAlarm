@@ -103,7 +103,7 @@ struct CombineView: View {
                     // viewModel.startLongVibration()
                     viewModel.showAlarmView = true
                     viewModel.ongoingAlarms.append(alarm)
-                    // arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
+//                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
                     // viewModel.removeAlarm(documentID: alarmID)
                 }
                 if let newTargetDate = newTargetDate {
@@ -208,6 +208,7 @@ struct ArcView: View {
             .stroke(style: StrokeStyle(lineWidth: tapped ? lineWidth * 1.3 : lineWidth, lineCap: .round))
             .foregroundColor(color)
             .onTapGesture {
+                viewModel.selectedAlarm = viewModel.alarms[index]
                 isShowDetail = true
             }
             .simultaneousGesture(longPressGesture)

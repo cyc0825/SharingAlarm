@@ -12,6 +12,7 @@ struct AlarmRequestView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var alarmViewModel: AlarmsViewModel
     var alarm: Alarm
+    var fcmToken = UserDefaults.standard.value(forKey: "fcmToken") as? String
     
     var body: some View {
         ZStack {
@@ -35,6 +36,7 @@ struct AlarmRequestView: View {
                         alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "") { result in
                             switch result {
                             case .success(_):
+                                alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: id, deviceToken: fcmToken ?? "")
                                 print("Success")
                             case .failure(_):
                                 print("fail")

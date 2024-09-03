@@ -66,6 +66,9 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = "You have reached the maximum number of alarms trial user can have."
                 }
             })
+            .onAppear {
+                viewModel.errorMessage = nil
+            }
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
                 Alert(title: Text("Cannot Add"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
             }
