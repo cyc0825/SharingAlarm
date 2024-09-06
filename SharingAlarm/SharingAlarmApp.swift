@@ -351,10 +351,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         content.title = title
         content.body = body
         if sound == "YourRecording.m4a", let soundURL = UserDefaults.standard.string(forKey: "alarmSoundURL") {
-            print("using your recording \(soundURL)")
             cacheSoundFromURL(soundURL) { cachedURL in
                 guard let cachedURL = cachedURL else { return }
                 let soundName = UNNotificationSoundName(rawValue: cachedURL.lastPathComponent)
+                print("using your recording \(soundName)")
                 content.sound = UNNotificationSound(named: soundName)
             }
         } else {

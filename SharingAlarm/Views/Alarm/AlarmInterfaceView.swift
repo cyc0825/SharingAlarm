@@ -34,11 +34,6 @@ struct AlarmInterfaceView: View {
             let clockCenter = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
             let clockRadius: CGFloat = min(geometry.size.width, geometry.size.height) * 0.25 // 25% of the smallest dimension
             ZStack {
-//                Rectangle()
-//                    .fill(BackgroundStyle())
-//                    .onTapGesture {
-//                        viewModel.selectedAlarm = nil
-//                    }
 //                Image(systemName: "aqi.low")
 //                    .resizable()
 //                    .frame(width: 110, height: 120)
@@ -74,6 +69,7 @@ struct CombineView: View {
     @ObservedObject var timerViewModel: TimerViewModel
     @StateObject var viewModel: AlarmsViewModel
     @StateObject var arViewModel = AudioRecorderViewModel()
+    @StateObject var activityViewModel = ActivitiesViewModel()
     var clockRadius: CGFloat
     var index: Int
     var colorSet: [Color] = [Color.accent, Color.secondAccent, Color.thirdAccent]
@@ -93,19 +89,44 @@ struct CombineView: View {
                 case "Daily":
                     // Add one day to the current target date
                     newTargetDate = calendar.date(byAdding: .day, value: 1, to: currentTargetDate)
+                    viewModel.addAlarm(time: newTargetDate!, sound: alarm.sound, repeatInterval: alarm.repeatInterval, activityId: alarm.activityID, activityName: alarm.activityName) { result in
+                        switch result {
+                        case .success(_):
+                            // modify the front-end, local activities should not be too large, thus using firstIndex
+                            if let selectedGroupID = alarm.activityID,
+                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroupID }) {
+                                activityViewModel.activities[index].alarmCount += 1
+                            }
+                        case .failure(let error):
+                            debugPrint("Add Activity error: \(error)")
+                        }
+                    }
 
                 case "Weekly":
                     // Add one week to the current target date
                     newTargetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentTargetDate)
+                    viewModel.addAlarm(time: newTargetDate!, sound: alarm.sound, repeatInterval: alarm.repeatInterval, activityId: alarm.activityID, activityName: alarm.activityName) { result in
+                        switch result {
+                        case .success(_):
+                            // modify the front-end, local activities should not be too large, thus using firstIndex
+                            if let selectedGroupID = alarm.activityID,
+                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroupID }) {
+                                activityViewModel.activities[index].alarmCount += 1
+                            }
+                        case .failure(let error):
+                            debugPrint("Add Activity error: \(error)")
+                        }
+                    }
                 default:
-                    print("Alarm is ringing")
-                    //Present Alarm View
-                    // viewModel.startLongVibration()
-                    viewModel.showAlarmView = true
-                    viewModel.ongoingAlarms.append(alarm)
-//                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
-                    // viewModel.removeAlarm(documentID: alarmID)
+                    print("Do not need to reshchedule")
                 }
+                print("Alarm is ringing")
+                //Present Alarm View
+                // viewModel.startLongVibration()
+                viewModel.showAlarmView = true
+                viewModel.ongoingAlarms.append(alarm)
+//                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
+                // viewModel.removeAlarm(documentID: alarmID)
                 if let newTargetDate = newTargetDate {
                     // Update the alarm with the new target date
                     viewModel.editAlarm(alarmId: alarm.id, updates: ["time": newTargetDate])

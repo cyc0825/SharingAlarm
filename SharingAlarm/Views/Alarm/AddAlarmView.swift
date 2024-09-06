@@ -66,7 +66,7 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = "You have reached the maximum number of alarms trial user can have."
                 }
             })
-            .onAppear {
+            .onDisappear {
                 viewModel.errorMessage = nil
             }
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {

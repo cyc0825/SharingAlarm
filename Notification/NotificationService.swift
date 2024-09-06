@@ -11,14 +11,16 @@ import AVFoundation
 class NotificationService: UNNotificationServiceExtension {
     var soundID: SystemSoundID = 0
     var audioPlayer: AVAudioPlayer?
+    var ringToneName: String?
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        print("Did receive")
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-
+        ringToneName = request.content.userInfo["ringTone"] as? String
         // Check the category identifier to decide whether to modify the notification
         if request.content.categoryIdentifier == "alarmVibrate" {
             startAudioWork()
@@ -54,37 +56,27 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func startAudioWork() {
-//        let audioPath = Bundle.main.path(forResource: "Classic", ofType: "m4a")
-//        let fileUrl = URL(string: audioPath ?? "")
-//        AudioServicesCreateSystemSoundID(fileUrl! as CFURL, &soundID)
-//        AudioServicesPlayAlertSound(soundID)
-//        AudioServicesAddSystemSoundCompletion(soundID, nil, nil, {sound, clientData in
-//            AudioServicesPlayAlertSound(sound)
-//        }, nil)
-//        
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         AudioServicesAddSystemSoundCompletion(kSystemSoundID_Vibrate, nil, nil, { sound, clientData in
-            sleep(1)
             AudioServicesPlaySystemSound(sound)  // Replay the vibration
         }, nil)
     }
     
+    
     private func startRingtone() {
-        guard let audioPath = Bundle.main.path(forResource: "beep-04", ofType: "mp3"),
-              let audioURL = URL(string: audioPath) else {
-            print("Audio file not found.")
+        // Safely unwrap the path and create the sound ID
+        guard let audioPath = Bundle.main.path(forResource: ringToneName, ofType: "m4a"),
+              let fileUrl = URL(string: audioPath) else {
+            print("Failed to find the ringtone file.")
             return
         }
-        
-        do {
-            // Initialize AVAudioPlayer with the audio file URL
-            audioPlayer = try AVAudioPlayer(contentsOf: audioURL)
-            audioPlayer?.numberOfLoops = -1  // Loop indefinitely
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-        } catch {
-            print("Failed to play audio: \(error.localizedDescription)")
-        }
+
+        // Create and play the ringtone sound
+        AudioServicesCreateSystemSoundID(fileUrl as CFURL, &soundID)
+        AudioServicesPlayAlertSound(soundID)
+        AudioServicesAddSystemSoundCompletion(soundID, nil, nil, { sound, clientData in
+            AudioServicesPlayAlertSound(sound) // Replay the ringtone
+        }, nil)
     }
 
     private func stopAudioWork() {

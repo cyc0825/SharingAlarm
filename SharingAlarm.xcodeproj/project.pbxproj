@@ -45,8 +45,8 @@
 		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
-		D3AB27FF2C7BE42600E8B3E0 /* beep-04.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.mp3 */; };
-		D3AB28002C7BE42600E8B3E0 /* beep-04.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.mp3 */; };
+		D3AB27FF2C7BE42600E8B3E0 /* beep-04.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.m4a */; };
+		D3AB28002C7BE42600E8B3E0 /* beep-04.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.m4a */; };
 		D3AB28022C7D41DD00E8B3E0 /* IconSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */; };
 		D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC8322BDE9799003D2265 /* AuthView.swift */; };
 		D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC8342BDE99FA003D2265 /* AuthedView.swift */; };
@@ -70,6 +70,7 @@
 		D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */; };
 		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
 		D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = D3DE34702C80F6C50000C48A /* AppIconDefault.png */; };
+		D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 		D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870552C7DC03200CDA558 /* icon1@2x.png */; };
 		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
@@ -158,7 +159,7 @@
 		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
-		D3AB27FE2C7BE42600E8B3E0 /* beep-04.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "beep-04.mp3"; sourceTree = "<group>"; };
+		D3AB27FE2C7BE42600E8B3E0 /* beep-04.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "beep-04.m4a"; sourceTree = "<group>"; };
 		D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSelectionView.swift; sourceTree = "<group>"; };
 		D3ABC8322BDE9799003D2265 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		D3ABC8342BDE99FA003D2265 /* AuthedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthedView.swift; sourceTree = "<group>"; };
@@ -179,6 +180,7 @@
 		D3CB391D2C6459DB00AF7052 /* CountDownTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownTimerView.swift; sourceTree = "<group>"; };
 		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		D3DE34702C80F6C50000C48A /* AppIconDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIconDefault.png; sourceTree = "<group>"; };
+		D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 		D3E870552C7DC03200CDA558 /* icon1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@2x.png"; sourceTree = "<group>"; };
 		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 		D3372A962C63EA8A00D33713 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */,
 				D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3372A972C63EAA200D33713 /* AlarmSoundView.swift */,
@@ -394,7 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				D3E8705A2C7DC03200CDA558 /* AppIcons */,
-				D3AB27FE2C7BE42600E8B3E0 /* beep-04.mp3 */,
+				D3AB27FE2C7BE42600E8B3E0 /* beep-04.m4a */,
 				D33B87352C77117C002C11D4 /* Chiptune.m4a */,
 				D33B87362C77117C002C11D4 /* Classic.m4a */,
 				D33B87372C77117C002C11D4 /* Oversimplified.m4a */,
@@ -574,7 +577,7 @@
 				D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */,
 				D31753632C75461F00EF3D55 /* Propaganda.m4a in Resources */,
 				D33B87392C77117C002C11D4 /* Chiptune.m4a in Resources */,
-				D3AB28002C7BE42600E8B3E0 /* beep-04.mp3 in Resources */,
+				D3AB28002C7BE42600E8B3E0 /* beep-04.m4a in Resources */,
 				D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */,
 				D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */,
 				D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */,
@@ -606,7 +609,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3AB27FF2C7BE42600E8B3E0 /* beep-04.mp3 in Resources */,
+				D3AB27FF2C7BE42600E8B3E0 /* beep-04.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,6 +647,7 @@
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
 				D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
+				D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */,
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
 				D3AB28022C7D41DD00E8B3E0 /* IconSelectionView.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,

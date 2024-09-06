@@ -29,66 +29,13 @@ struct AlarmSoundView: View {
                         Text(sound)
                     }
                 }
-                Section(header: HStack {
-                                Text("Recorded Sound")
-                                Spacer()
-                                Button(action: {
-                                    if arViewModel.isRecording {
-                                        arViewModel.stopRecording()
-                                        showRecordingView = true
-                                    } else {
-                                        arViewModel.startRecording()
-                                    }
-                                }) {
-                                    Image(systemName: arViewModel.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                        .font(.title2)
-                                }
-                }) {
-                    if arViewModel.recordedAudioURL != nil {
-                        Button(action: {
-                            arViewModel.playRecording()
-                        }) {
-                            HStack {
-                                Text("Play Recorded Sound")
-                                Spacer()
-                                Image(systemName: arViewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                                    .font(.title2)
-                            }
-                        }
-                        .swipeActions {
-                            Button {
-                                arViewModel.deleteRecording()
-                                viewModel.personalizedSounds.removeAll()
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                            .tint(.red)
-                        }
-                    } else {
-                        Text("No recorded sound available.")
-                    }
+                Section("Personalized Sound") {
+                    AudioRecorderView(alarmsViewModel: viewModel)
                 }
+                // MARK: VIP can uncomment this out
+//                .disabled(true)
             }
-            
-        }
-        .sheet(isPresented: $showRecordingView) {
-            VStack {
-                Text("Recorded Sound")
-                Button(action: {
-                    arViewModel.playRecording()
-                }) {
-                    Image(systemName: "play.circle.fill")
-                        .font(.largeTitle)
-                }
-                .padding()
-                Button("Save and Upload") {
-                    arViewModel.uploadRecordingToFirebase()
-                    viewModel.personalizedSounds.append("YourRecording")
-                    showRecordingView = false
-                }
-            }
-            .presentationDetents([.fraction(0.3), .large])
-            .presentationDragIndicator(.visible)
+            .edgesIgnoringSafeArea(.bottom)
         }
         .navigationTitle("Alarm Sound")
         .navigationBarTitleDisplayMode(.automatic)

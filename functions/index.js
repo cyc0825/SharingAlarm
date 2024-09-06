@@ -72,9 +72,10 @@ exports.sendImmediateAlarmNotification = functions.firestore
 
 exports.sendAlarmVibrate = functions.https.onRequest(async (req, res) => {
     const fcmToken = req.body.fcmToken;  // FCM Token passed in the request body
+    const ringTone = req.body.ringTone;
 
-    if (!alarmId || !fcmToken) {
-        res.status(400).send('Alarm ID and FCM Token are required');
+    if (!ringTone || !fcmToken) {
+        res.status(400).send('Alarm Ringtone and FCM Token are required');
         return;
     }
 
@@ -83,7 +84,7 @@ exports.sendAlarmVibrate = functions.https.onRequest(async (req, res) => {
         const message = {
             notification: {
                 title: 'Alarm Notification from FB',
-                body: `You have an alarm for activity: ${alarm.activityName}`,
+                body: `You have an alarm for activity`,
             },
             apns: {
                 payload: {
@@ -94,6 +95,9 @@ exports.sendAlarmVibrate = functions.https.onRequest(async (req, res) => {
                     },
                 },
             },
+	    data: {
+		ringTone: ringTone,
+	    },
             token: fcmToken,  // Use the provided FCM token to send the notification
         };
 
