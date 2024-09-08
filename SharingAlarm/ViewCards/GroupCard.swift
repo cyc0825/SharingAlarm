@@ -1,5 +1,5 @@
 //
-//  ActivityCard.swift
+//  GroupCard.swift
 //  SharingAlarm
 //
 //  Created by 曹越程 on 2024/4/11.
@@ -8,23 +8,23 @@
 import SwiftUI
 import CloudKit
 
-struct ActivityCard: View {
-    @StateObject var viewModel: ActivitiesViewModel
-    var activity: Activity
+struct GroupCard: View {
+    @StateObject var viewModel: GroupsViewModel
+    var group: Groups
     var body: some View {
         ZStack {
             VStack {
-                Text(activity.name)
+                Text(group.name)
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
-                    Text("\(activity.alarmCount) Alarm(s)")
+                    Text("\(group.alarmCount) Alarm(s)")
                         .font(.footnote)
                     Divider()
-                    Text("\(activity.participants.count) Pariticpant(s)")
+                    Text("\(group.participants.count) Pariticpant(s)")
                         .font(.footnote)
                     Divider()
-                    Text(activity.to.formatted(date: .abbreviated, time: .omitted))
+                    Text(group.to.formatted(date: .abbreviated, time: .omitted))
                         .font(.footnote)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,10 +36,10 @@ struct ActivityCard: View {
     }
 }
 
-//struct ActivityCard_Previews: PreviewProvider {
+//struct GroupCard_Previews: PreviewProvider {
 //    static var previews: some View {
-//        let sampleViewModel = ActivitiesViewModel.withSampleData()
-//        ActivityCard(viewModel: sampleViewModel, index: 0)
+//        let sampleViewModel = GroupsViewModel.withSampleData()
+//        GroupCard(viewModel: sampleViewModel, index: 0)
 //            .previewLayout(.sizeThatFits) // Adjust the layout as needed
 //    }
 //}

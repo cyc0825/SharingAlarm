@@ -18,18 +18,24 @@ struct AlarmSoundView: View {
     var body: some View {
         VStack {
             Form {
-                Section("Unlocked Alarm Sound") {
-                    List(viewModel.sounds, id: \.self) { sound in
+                Section("Unlocked Ringtone") {
+                    List(viewModel.sounds.prefix(2), id: \.self) { sound in
                         Text(sound)
+                    }
+                    NavigationLink(destination: RingtoneLib(ringToneType: "Free")) {
+                        Text("See More")
                     }
                 }
                 
-                Section("Premium Alarm Sound") {
-                    List(viewModel.paidSounds, id: \.self) { sound in
+                Section("Premium Ringtone") {
+                    List(viewModel.paidSounds.prefix(2), id: \.self) { sound in
                         Text(sound)
                     }
+                    NavigationLink(destination: RingtoneLib(ringToneType: "Premium")) {
+                        Text("See More")
+                    }
                 }
-                Section("Personalized Sound") {
+                Section("Personalized Ringtone") {
                     AudioRecorderView(alarmsViewModel: viewModel)
                 }
                 // MARK: VIP can uncomment this out

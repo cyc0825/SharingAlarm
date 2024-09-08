@@ -10,7 +10,7 @@ import CloudKit
 
 struct AlarmsView: View {
     @EnvironmentObject var viewModel: AlarmsViewModel
-    @EnvironmentObject var activityViewModel: ActivitiesViewModel
+    @EnvironmentObject var groupsViewModel: GroupsViewModel
     @State private var showingAddAlarm = false
     @State private var showingEditAlarm = false
     @State private var showingOngoingAlarm = false
@@ -20,7 +20,7 @@ struct AlarmsView: View {
     @State private var repeatInterval = ""
     @State private var selectedSound = ""
     @State private var remainingTime: TimeInterval? = nil
-    @State private var sortActivity = ""
+    @State private var sortGroup = ""
     let repeatOptions = ["None", "Daily", "Weekly"]
     let sounds = ["Harmony", "Ripples", "Signal"]
     
@@ -50,19 +50,19 @@ struct AlarmsView: View {
                         }
                         Menu {
                             Button {
-                                sortActivity = ""
+                                sortGroup = ""
                             } label: {
                                 Text("All")
                             }
-                            ForEach(viewModel.activityNames.sorted{$0 < $1}, id: \.self) { name in
+                            ForEach(viewModel.groupNames.sorted{$0 < $1}, id: \.self) { name in
                                 Button {
-                                    sortActivity = name
+                                    sortGroup = name
                                 } label: {
                                     Text(name)
                                 }
                             }
                         } label: {
-                            Text("Filter By Activity")
+                            Text("Filter By Group")
                         }
                     } label: {
                         Image(systemName: "slider.horizontal.3")
@@ -81,7 +81,7 @@ struct AlarmsView: View {
                 }
                 .padding(.top, 20)
                 .padding()
-                AlarmInterfaceView(viewModel: viewModel, sortActivity: sortActivity)
+                AlarmInterfaceView(viewModel: viewModel, sortGroup: sortGroup)
                 GeometryReader { geometry in
                     ZStack {
                         if viewModel.alarms.isEmpty {
@@ -115,14 +115,14 @@ struct AlarmsView: View {
                         // List with fixed height
                         else {
                             List($viewModel.alarms.filter { $alarm in
-                                if sortActivity == "Just For You" {
-                                    // Filter by activityName or include "Just For You" alarms (where activityName is empty)
-                                    return alarm.activityName == nil
-                                } else if sortActivity.isEmpty{
-                                    // If no sortActivity is selected, include all alarms
+                                if sortGroup == "Just For You" {
+                                    // Filter by groupName or include "Just For You" alarms (where groupName is empty)
+                                    return alarm.groupName == nil
+                                } else if sortGroup.isEmpty{
+                                    // If no sortGroup is selected, include all alarms
                                     return true
                                 } else {
-                                    return alarm.activityName == sortActivity
+                                    return alarm.groupName == sortGroup
                                 }
                             }, id: \.id) { $alarm in
                                 Button(action: {
@@ -166,7 +166,7 @@ struct AlarmsView: View {
                 }
             }
             .sheet(isPresented: $showingAddAlarm) {
-                AddAlarmView(viewModel: viewModel, activityViewModel: activityViewModel, isPresented: $showingAddAlarm)
+                AddAlarmView(viewModel: viewModel, groupsViewModel: groupsViewModel, isPresented: $showingAddAlarm)
             }
             .sheet(isPresented: $viewModel.showAlarmView) {
                 AlarmView(alarmViewModel: viewModel)

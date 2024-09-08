@@ -1,5 +1,5 @@
 //
-//  ActivityDetailView.swift
+//  GroupDetailView.swift
 //  SharingAlarm
 //
 //  Created by 曹越程 on 2024/4/16.
@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-struct ActivityDetailView: View {
+struct GroupDetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @StateObject var viewModel: ActivitiesViewModel
+    @StateObject var viewModel: GroupsViewModel
     @State private var friendToDelete: String?
     @State private var showDeleteConfirmation: Bool = false
-    @State private var showingEditActivity: Bool = false
+    @State private var showingEditGroup: Bool = false
     @State private var friendIDToDelete: String?
     @State private var friendIndexToDelete: Int?
-    @State var activity: Activity
+    @State var group: Groups
     
-    var activityIndex: Int {
-        viewModel.activities.firstIndex(where: { $0.id == activity.id }) ?? 0
+    var groupIndex: Int {
+        viewModel.groups.firstIndex(where: { $0.id == group.id }) ?? 0
     }
     
     let userID = UserDefaults.standard.value(forKey: "userID") as? String
@@ -27,16 +27,16 @@ struct ActivityDetailView: View {
         NavigationView {
             List {
                 Section(header:Text("Participants")) {
-                    ForEach(activity.participants.indices, id: \.self) { index in
-                        if activity.participants[index].id == userID {
-                            Text(activity.participants[index].name)
+                    ForEach(group.participants.indices, id: \.self) { index in
+                        if group.participants[index].id == userID {
+                            Text(group.participants[index].name)
                                 .bold()
                         } else {
-                            Text(activity.participants[index].name)
+                            Text(group.participants[index].name)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button {
-                                        friendToDelete = activity.participants[index].name
-                                        friendIDToDelete = activity.participants[index].id
+                                        friendToDelete = group.participants[index].name
+                                        friendIDToDelete = group.participants[index].id
                                         friendIndexToDelete = index
                                         showDeleteConfirmation = true
                                     } label: {
@@ -52,18 +52,18 @@ struct ActivityDetailView: View {
                     HStack {
                         Text("From:")
                         Spacer()
-                        Text(activity.from.formatted(date: .numeric, time: .omitted))
+                        Text(group.from.formatted(date: .numeric, time: .omitted))
                     }
                     HStack {
                         Text("To:")
                         Spacer()
-                        Text(activity.to.formatted(date: .numeric, time: .omitted))
+                        Text(group.to.formatted(date: .numeric, time: .omitted))
                     }
                 }
                 
                 Section {
                     Button("Delete") {
-                        removeActivity()
+                        removeGroup()
                     }
                 }
             }
@@ -71,11 +71,11 @@ struct ActivityDetailView: View {
         .confirmationDialog("Are you sure you want to remove this friend from the group?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
                 guard let friendIDToDelete = friendIDToDelete else { return }
-                guard let activityId = activity.id else { return }
+                guard let groupId = group.id else { return }
                 guard let friendIndexToDelete = friendIndexToDelete else { return }
-                viewModel.removeParticipant(activityId: activityId, participantId: friendIDToDelete) { result in
-                    activity.participants.remove(at: friendIndexToDelete)
-                    viewModel.activities[activityIndex].participants.remove(at: friendIndexToDelete)
+                viewModel.removeParticipant(groupId: groupId, participantId: friendIDToDelete) { result in
+                    group.participants.remove(at: friendIndexToDelete)
+                    viewModel.groups[groupIndex].participants.remove(at: friendIndexToDelete)
                 }
             }
             Button("Cancel", role: .cancel) {}
@@ -84,35 +84,35 @@ struct ActivityDetailView: View {
                 Text("Would you like to remove \(friendToDelete) from the group?")
             }
         }
-        .sheet(isPresented: $showingEditActivity) {
-            AddActivityView(viewModel: viewModel,
-                            name: activity.name,
-                            startDate: activity.from,
-                            endDate: activity.to,
-                            participants: activity.participants,
-                            editActivity: true,
-                            activityId: activity.id
+        .sheet(isPresented: $showingEditGroup) {
+            AddGroupView(viewModel: viewModel,
+                            name: group.name,
+                            startDate: group.from,
+                            endDate: group.to,
+                            participants: group.participants,
+                            editGroup: true,
+                            groupId: group.id
             )
         }
-        .navigationTitle("Activity Detail")
+        .navigationTitle("Group Detail")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Edit") {
-                    showingEditActivity = true
+                    showingEditGroup = true
                 }
             }
         }
     }
     
-    func removeActivity() {
-        viewModel.removeActivity(activity: viewModel.activities[activityIndex]) { result in
+    func removeGroup() {
+        viewModel.removeGroup(group: viewModel.groups[groupIndex]) { result in
             switch result {
             case .success(_):
-                viewModel.activities.remove(at: activityIndex)
+                viewModel.groups.remove(at: groupIndex)
                 self.presentationMode.wrappedValue.dismiss()
             case .failure(let error):
-                debugPrint("Remove Activity error \(error.localizedDescription)")
+                debugPrint("Remove Groups error \(error.localizedDescription)")
             }
         }
     }

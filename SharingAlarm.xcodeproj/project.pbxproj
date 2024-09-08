@@ -14,7 +14,7 @@
 		D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */; };
 		D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */; };
 		D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB22C56F20100D33713 /* AddFriendView.swift */; };
-		D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB42C56F22400D33713 /* AddActivityView.swift */; };
+		D337DFB52C56F22400D33713 /* AddGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB42C56F22400D33713 /* AddGroupView.swift */; };
 		D33B87392C77117C002C11D4 /* Chiptune.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87352C77117C002C11D4 /* Chiptune.m4a */; };
 		D33B873A2C77117C002C11D4 /* Oversimplified.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87372C77117C002C11D4 /* Oversimplified.m4a */; };
 		D33B873B2C77117C002C11D4 /* StarDust.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D33B87382C77117C002C11D4 /* StarDust.m4a */; };
@@ -22,14 +22,17 @@
 		D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34A27502C642944009BB039 /* AlarmDetailView.swift */; };
 		D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
-		D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */; };
+		D35372E42BBA7AD200B56F32 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* GroupsView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
 		D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E72BBA7AE400B56F32 /* SettingsView.swift */; };
 		D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */; };
 		D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */; };
 		D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D35372ED2BBB738300B56F32 /* Friendship.xcdatamodeld */; };
 		D35372F22BBB7DAC00B56F32 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372F12BBB7DAC00B56F32 /* UserViewModel.swift */; };
-		D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3632D282BCF2420004F02FD /* ActivityDetailView.swift */; };
+		D3632D292BCF2420004F02FD /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3632D282BCF2420004F02FD /* GroupDetailView.swift */; };
+		D36A0F9F2C8E60A100633E02 /* UIPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */; };
+		D36A0FA12C8E672D00633E02 /* RingtoneLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA02C8E672600633E02 /* RingtoneLib.swift */; };
+		D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA22C8E6E1400633E02 /* Tips.swift */; };
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
@@ -57,8 +60,8 @@
 		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
 		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
 		D3B53B342BC6204B00B41769 /* Harmony.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* Harmony.m4a */; };
-		D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */; };
-		D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* ActivityCard.swift */; };
+		D3B53B362BC85A2D00B41769 /* GroupsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */; };
+		D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* GroupCard.swift */; };
 		D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */; };
 		D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */; };
 		D3C0EF842BDD898000DA1795 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF832BDD898000DA1795 /* FirebaseAnalytics */; };
@@ -125,7 +128,7 @@
 		D337DFAD2C56F18D00D33713 /* AddAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlarmView.swift; sourceTree = "<group>"; };
 		D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmView.swift; sourceTree = "<group>"; };
 		D337DFB22C56F20100D33713 /* AddFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendView.swift; sourceTree = "<group>"; };
-		D337DFB42C56F22400D33713 /* AddActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivityView.swift; sourceTree = "<group>"; };
+		D337DFB42C56F22400D33713 /* AddGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGroupView.swift; sourceTree = "<group>"; };
 		D33B87352C77117C002C11D4 /* Chiptune.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chiptune.m4a; sourceTree = "<group>"; };
 		D33B87362C77117C002C11D4 /* Classic.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Classic.m4a; sourceTree = "<group>"; };
 		D33B87372C77117C002C11D4 /* Oversimplified.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Oversimplified.m4a; sourceTree = "<group>"; };
@@ -133,14 +136,17 @@
 		D34A27502C642944009BB039 /* AlarmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmDetailView.swift; sourceTree = "<group>"; };
 		D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
-		D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
+		D35372E32BBA7AD200B56F32 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		D35372E72BBA7AE400B56F32 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsViewModel.swift; sourceTree = "<group>"; };
 		D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = "<group>"; };
 		D35372EE2BBB738300B56F32 /* Friendship.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Friendship.xcdatamodel; sourceTree = "<group>"; };
 		D35372F12BBB7DAC00B56F32 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
-		D3632D282BCF2420004F02FD /* ActivityDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailView.swift; sourceTree = "<group>"; };
+		D3632D282BCF2420004F02FD /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPlayground.swift; sourceTree = "<group>"; };
+		D36A0FA02C8E672600633E02 /* RingtoneLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtoneLib.swift; sourceTree = "<group>"; };
+		D36A0FA22C8E6E1400633E02 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
@@ -172,8 +178,8 @@
 		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		D3B53B332BC6204B00B41769 /* Harmony.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Harmony.m4a; sourceTree = "<group>"; };
-		D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
-		D3B53B372BC85B8A00B41769 /* ActivityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCard.swift; sourceTree = "<group>"; };
+		D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewModel.swift; sourceTree = "<group>"; };
+		D3B53B372BC85B8A00B41769 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
 		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		D3C0EF7F2BDD50E600DA1795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -234,7 +240,7 @@
 				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
 				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
 				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
-				D3B53B372BC85B8A00B41769 /* ActivityCard.swift */,
+				D3B53B372BC85B8A00B41769 /* GroupCard.swift */,
 			);
 			path = ViewCards;
 			sourceTree = "<group>";
@@ -246,6 +252,7 @@
 				D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
 				D3372A972C63EAA200D33713 /* AlarmSoundView.swift */,
+				D36A0FA02C8E672600633E02 /* RingtoneLib.swift */,
 				D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */,
 				D3CAA1382C7E94D100B93A00 /* AppearanceSelectionView.swift */,
 			);
@@ -255,6 +262,8 @@
 		D337DFAA2C56F13100D33713 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D36A0FA22C8E6E1400633E02 /* Tips.swift */,
+				D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */,
 				D337DFB12C56F1D500D33713 /* Relationship */,
 				D337DFAC2C56F14E00D33713 /* Auth */,
 				D337DFAB2C56F14200D33713 /* Alarm */,
@@ -296,9 +305,9 @@
 		D337DFB12C56F1D500D33713 /* Relationship */ = {
 			isa = PBXGroup;
 			children = (
-				D35372E32BBA7AD200B56F32 /* ActivitiesView.swift */,
-				D3632D282BCF2420004F02FD /* ActivityDetailView.swift */,
-				D337DFB42C56F22400D33713 /* AddActivityView.swift */,
+				D35372E32BBA7AD200B56F32 /* GroupsView.swift */,
+				D3632D282BCF2420004F02FD /* GroupDetailView.swift */,
+				D337DFB42C56F22400D33713 /* AddGroupView.swift */,
 				D35372E52BBA7ADA00B56F32 /* FriendsView.swift */,
 				D337DFB22C56F20100D33713 /* AddFriendView.swift */,
 			);
@@ -312,7 +321,7 @@
 				D35372F12BBB7DAC00B56F32 /* UserViewModel.swift */,
 				D35372E92BBA7F4E00B56F32 /* AlarmsViewModel.swift */,
 				D35372EB2BBB722D00B56F32 /* FriendsViewModel.swift */,
-				D3B53B352BC85A2D00B41769 /* ActivitiesViewModel.swift */,
+				D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */,
 				D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */,
 				D375941C2C74061C006DB7AA /* AudioRecorderViewModel.swift */,
 			);
@@ -636,7 +645,7 @@
 				D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
-				D3B53B382BC85B8A00B41769 /* ActivityCard.swift in Sources */,
+				D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
 				D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */,
 				D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */,
@@ -645,25 +654,28 @@
 				D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */,
 				D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
-				D3B53B362BC85A2D00B41769 /* ActivitiesViewModel.swift in Sources */,
+				D3B53B362BC85A2D00B41769 /* GroupsViewModel.swift in Sources */,
 				D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
-				D337DFB52C56F22400D33713 /* AddActivityView.swift in Sources */,
+				D337DFB52C56F22400D33713 /* AddGroupView.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
 				D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */,
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
+				D36A0F9F2C8E60A100633E02 /* UIPlayground.swift in Sources */,
 				D3AB28022C7D41DD00E8B3E0 /* IconSelectionView.swift in Sources */,
 				D38EEB852BA3719F0099D382 /* ContentView.swift in Sources */,
 				D3ABC8332BDE9799003D2265 /* AuthView.swift in Sources */,
 				D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
-				D35372E42BBA7AD200B56F32 /* ActivitiesView.swift in Sources */,
+				D36A0FA12C8E672D00633E02 /* RingtoneLib.swift in Sources */,
+				D35372E42BBA7AD200B56F32 /* GroupsView.swift in Sources */,
 				D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
 				D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */,
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
-				D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */,
+				D3632D292BCF2420004F02FD /* GroupDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
+				D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */,
 				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,
 				D3E611322C8BC58D00EF3CFF /* NotificationBannerCard.swift in Sources */,
 				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,

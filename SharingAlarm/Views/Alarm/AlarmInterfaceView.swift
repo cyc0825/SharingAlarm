@@ -11,16 +11,16 @@ struct AlarmInterfaceView: View {
     @StateObject var viewModel = AlarmsViewModel()
     @State private var currentTime = Time(hour: 0, minute: 0, second: 0)
     
-    var sortActivity: String = ""
+    var sortGroup: String = ""
     
     var filteredAlarms: [Alarm] {
         viewModel.alarms.filter { alarm in
-            if sortActivity == "Just For You" {
-                return alarm.activityName == nil
-            } else if sortActivity.isEmpty {
+            if sortGroup == "Just For You" {
+                return alarm.groupName == nil
+            } else if sortGroup.isEmpty {
                 return true
             } else {
-                return alarm.activityName == sortActivity
+                return alarm.groupName == sortGroup
             }
         }
     }
@@ -69,7 +69,7 @@ struct CombineView: View {
     @ObservedObject var timerViewModel: TimerViewModel
     @StateObject var viewModel: AlarmsViewModel
     @StateObject var arViewModel = AudioRecorderViewModel()
-    @StateObject var activityViewModel = ActivitiesViewModel()
+    @StateObject var groupViewModel = GroupsViewModel()
     var clockRadius: CGFloat
     var index: Int
     var colorSet: [Color] = [Color.accent, Color.secondAccent, Color.thirdAccent]
@@ -93,18 +93,18 @@ struct CombineView: View {
                                        time: newTargetDate!,
                                        sound: alarm.sound,
                                        repeatInterval: alarm.repeatInterval,
-                                       activityId: alarm.activityID,
-                                       activityName: alarm.activityName
+                                       groupId: alarm.groupID,
+                                       groupName: alarm.groupName
                     ) { result in
                         switch result {
                         case .success(_):
-                            // modify the front-end, local activities should not be too large, thus using firstIndex
-                            if let selectedGroupID = alarm.activityID,
-                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroupID }) {
-                                activityViewModel.activities[index].alarmCount += 1
+                            // modify the front-end, local groups should not be too large, thus using firstIndex
+                            if let selectedGroupID = alarm.groupID,
+                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
+                                groupViewModel.groups[index].alarmCount += 1
                             }
                         case .failure(let error):
-                            debugPrint("Add Activity error: \(error)")
+                            debugPrint("Add Group error: \(error)")
                         }
                     }
 
@@ -115,18 +115,18 @@ struct CombineView: View {
                                        time: newTargetDate!,
                                        sound: alarm.sound,
                                        repeatInterval: alarm.repeatInterval,
-                                       activityId: alarm.activityID,
-                                       activityName: alarm.activityName
+                                       groupId: alarm.groupID,
+                                       groupName: alarm.groupName
                     ) { result in
                         switch result {
                         case .success(_):
-                            // modify the front-end, local activities should not be too large, thus using firstIndex
-                            if let selectedGroupID = alarm.activityID,
-                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroupID }) {
-                                activityViewModel.activities[index].alarmCount += 1
+                            // modify the front-end, local groups should not be too large, thus using firstIndex
+                            if let selectedGroupID = alarm.groupID,
+                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
+                                groupViewModel.groups[index].alarmCount += 1
                             }
                         case .failure(let error):
-                            debugPrint("Add Activity error: \(error)")
+                            debugPrint("Add Group error: \(error)")
                         }
                     }
                 default:

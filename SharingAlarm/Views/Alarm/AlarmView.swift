@@ -20,7 +20,7 @@ struct AlarmView: View {
                 VStack {
                     Spacer()
 //                    HStack {
-//                        Text(alarm.activityName ?? "Just For You")
+//                        Text(alarm.groupName ?? "Just For You")
 //                            .font(.largeTitle.bold())
 //                            .padding([.leading, .top], 40)
 //                            .fontDesign(.serif)
@@ -214,8 +214,8 @@ struct AlarmView: View {
 //struct AlarmView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        let sampleAlarms = [
-//            Alarm(time: Date(), sound: "Hi", alarmBody: "cyc wants you to wake up", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
-//            Alarm(time: Date(), sound: "Hello", alarmBody: "cyc wants you to wake up", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
+//            Alarm(time: Date(), sound: "Hi", alarmBody: "cyc wants you to wake up", repeatInterval: "", groupID: "", groupName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
+//            Alarm(time: Date(), sound: "Hello", alarmBody: "cyc wants you to wake up", repeatInterval: "", groupID: "", groupName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
 //        ]
 //        let viewModel = AlarmsViewModel()
 //        viewModel.ongoingAlarms = sampleAlarms

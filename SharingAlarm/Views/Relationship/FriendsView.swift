@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CloudKit
+import TipKit
 
 struct FriendsView: View {
     @EnvironmentObject var viewModel: FriendsViewModel
@@ -76,6 +76,7 @@ struct FriendsView: View {
                             Image(systemName: "plus")
                         }
                     }
+                    .popoverTip(FriendsTip())
                 }
             }
             .sheet(isPresented: $showingAddFriend) {

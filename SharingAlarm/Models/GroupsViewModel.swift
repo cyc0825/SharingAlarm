@@ -1,5 +1,5 @@
 //
-//  ActivitiesViewModel.swift
+//  GroupsViewModel.swift
 //  SharingAlarm
 //
 //  Created by 曹越程 on 2024/4/11.
@@ -9,7 +9,7 @@ import Foundation
 import CloudKit
 import FirebaseFirestore
 
-struct Activity: Hashable, Codable, Identifiable  {
+struct Groups: Hashable, Codable, Identifiable  {
     @DocumentID var id: String?
     var from: Date
     var to: Date
@@ -17,7 +17,7 @@ struct Activity: Hashable, Codable, Identifiable  {
     var participants: [AppUser]
     var alarmCount: Int
     
-    static func == (lhs: Activity, rhs: Activity) -> Bool {
+    static func == (lhs: Groups, rhs: Groups) -> Bool {
         return lhs.id == rhs.id
     }
         
@@ -26,8 +26,8 @@ struct Activity: Hashable, Codable, Identifiable  {
     }
 }
 
-//struct ActivityReference: Hashable, Codable, Identifiable {
-//    static func == (lhs: ActivityReference, rhs: ActivityReference) -> Bool {
+//struct GroupReference: Hashable, Codable, Identifiable {
+//    static func == (lhs: GroupReference, rhs: GroupReference) -> Bool {
 //        return lhs.id == rhs.id
 //    }
 //    
@@ -36,39 +36,39 @@ struct Activity: Hashable, Codable, Identifiable  {
 //    }
 //    
 //    @DocumentID var id: String?
-//    var activityRef: Activity
+//    var GroupRef: Groups
 //    var timestamp: Date
 //}
 
 @MainActor
-class ActivitiesViewModel: ObservableObject {
-    @Published var activities: [Activity] = []
+class GroupsViewModel: ObservableObject {
+    @Published var groups: [Groups] = []
     
     private var db = Firestore.firestore()
     
     init() {
-//        fetchActivity()
+//        fetchGroup()
     }
     
-    func fetchActivity() {
+    func fetchGroup() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
             do {
-                debugPrint("[fetchActivities] starts")
+                debugPrint("[fetchGroups] starts")
                 let querySnapshot = try await db.collection("UserData").document(userID)
-                    .collection("activities")
+                    .collection("groups")
                     .getDocuments()
                 
                 if !querySnapshot.isEmpty {
                     for document in querySnapshot.documents {
                         let id = document.documentID
                         // let timestamp = (document.get("timestamp") as? Timestamp)?.dateValue() ?? Date()
-                        if let activityRef = document.get("activityRef") as? DocumentReference {
+                        if let GroupRef = document.get("groupRef") as? DocumentReference {
                             Task {
                                 do {
-                                    let activityData = try await activityRef.getDocument()
+                                    let GroupData = try await GroupRef.getDocument()
                                     var resolvedParticipants: [AppUser] = []
-                                    let participantsCollectionRef = activityRef.collection("participants")
+                                    let participantsCollectionRef = GroupRef.collection("participants")
                                     let participantsSnapshot = try await participantsCollectionRef.getDocuments()
                                     for doc in participantsSnapshot.documents {
                                         if let userRef = doc.get("userRef") as? DocumentReference {
@@ -76,65 +76,65 @@ class ActivitiesViewModel: ObservableObject {
                                             resolvedParticipants.append(user)
                                         }
                                     }
-                                    if !self.activities.contains(where: { $0.id == id }) {
-                                        let activity = Activity(id: id,
-                                                                from: activityData["from"] as? Date ?? Date(),
-                                                                to: activityData["to"] as? Date ?? Date(),
-                                                                name: activityData["name"] as? String ?? "",
+                                    if !self.groups.contains(where: { $0.id == id }) {
+                                        let Groups = Groups(id: id,
+                                                                from: GroupData["from"] as? Date ?? Date(),
+                                                                to: GroupData["to"] as? Date ?? Date(),
+                                                                name: GroupData["name"] as? String ?? "",
                                                                 participants: resolvedParticipants,
-                                                                alarmCount: activityData["alarmCount"] as? Int ?? 0)
-                                        self.activities.append(activity)
+                                                                alarmCount: GroupData["alarmCount"] as? Int ?? 0)
+                                        self.groups.append(Groups)
                                     }
                                 }
                                 catch {
-                                    debugPrint("[fetchFriends] error")
+                                    debugPrint("[fetchGroups] error")
                                     print(error.localizedDescription)
                                 }
                             }
                         }
                     }
                 } else {
-                    self.activities = []
+                    self.groups = []
                 }
             }
             catch {
                 print(error.localizedDescription)
             }
-            debugPrint("[fetchActivities] done")
+            debugPrint("[fetchGroups] done")
         }
     }
     
-    func addActivity(name: String, startDate: Date, endDate: Date, participants: [AppUser], completion: @escaping (Result<Activity, Error>) -> Void) {
+    func addGroup(name: String, startDate: Date, endDate: Date, participants: [AppUser], completion: @escaping (Result<Groups, Error>) -> Void) {
         // guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
             do {
-                debugPrint("[addActivity] starts")
-                let activityRef = try await db.collection("Activity")
+                debugPrint("[addGroup] starts")
+                let groupRef = try await db.collection("Groups")
                     .addDocument(data: ["from": startDate,
                                         "to": endDate,
                                         "name": name])
                 
-//                try await db.collection("Activity")
-//                    .document(activityRef.documentID)
+//                try await db.collection("Groups")
+//                    .document(GroupRef.documentID)
 //                    .collection("participants")
 //                    .addDocument(data: ["userRef": db.collection("UserData").document(userID)])
 //                try await db.collection("UserData").document(userID)
-//                    .collection("activities")
-//                    .addDocument(data: ["activityRef": activityRef,
+//                    .collection("groups")
+//                    .addDocument(data: ["GroupRef": GroupRef,
 //                                        "timestamp": Date.now])
-//                debugPrint("[addActivity] done for \(userID)")
+//                debugPrint("[addGroup] done for \(userID)")
 //                
-                addParticipant(activityId: activityRef.documentID, participants: participants) { result in
+                addParticipant(groupId: groupRef.documentID, participants: participants) { result in
                     switch result {
                     case .success(_):
-                        completion(.success(Activity(id: activityRef.documentID, from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
+                        completion(.success(Groups(id: groupRef.documentID, from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
                     case .failure(let error):
                         completion(.failure(error))
                     }
                 }
             }
             catch {
-                debugPrint("[addActivity] error \(error.localizedDescription)")
+                debugPrint("[addGroup] error \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -148,16 +148,16 @@ class ActivitiesViewModel: ObservableObject {
         return result
     }
     
-    func editActivity(activityId: String, name: String, startDate: Date, endDate: Date, newParticipants: [AppUser], completion: @escaping (Result<[AppUser], Error>) -> Void) {
+    func editGroup(groupId: String, name: String, startDate: Date, endDate: Date, newParticipants: [AppUser], completion: @escaping (Result<[AppUser], Error>) -> Void) {
         Task {
             do {
-                debugPrint("[addActivity] starts")
-                try await db.collection("Activity")
-                    .document(activityId)
+                debugPrint("[addGroup] starts")
+                try await db.collection("Groups")
+                    .document(groupId)
                     .setData(["from": startDate,
                               "to": endDate,
                               "name": name])
-                addParticipant(activityId: activityId, participants: newParticipants) { result in
+                addParticipant(groupId: groupId, participants: newParticipants) { result in
                     switch result {
                     case .success(_):
                         completion(.success(newParticipants))
@@ -169,55 +169,55 @@ class ActivitiesViewModel: ObservableObject {
         }
     }
     
-    func removeActivity(activity: Activity, completion: @escaping (Result<Bool, Error>) -> Void){
+    func removeGroup(group: Groups, completion: @escaping (Result<Bool, Error>) -> Void){
         // guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         
         Task {
-            debugPrint("[removeActivity] starts")
+            debugPrint("[removeGroup] starts")
             do {
-                for participant in activity.participants{
+                for participant in group.participants{
                     try await db.collection("UserData").document(participant.id!)
-                        .collection("activities")
-                        .document(activity.id!)
+                        .collection("groups")
+                        .document(group.id!)
                         .delete()
                 }
                 
-                if let activityId = activity.id {
-                    let activityRef = db.collection("Activity").document(activityId)
-                    let subcollection = activityRef.collection("participants")
+                if let groupId = group.id {
+                    let GroupRef = db.collection("Groups").document(groupId)
+                    let subcollection = GroupRef.collection("participants")
                     let subcollectionDocs = try await subcollection.getDocuments()
                     for doc in subcollectionDocs.documents {
                         try await doc.reference.delete()
                     }
-                    try await activityRef.delete()
+                    try await GroupRef.delete()
                 }
             }
             catch {
-                debugPrint("[removeActivity] error \(error.localizedDescription)")
+                debugPrint("[removeGroup] error \(error.localizedDescription)")
                 completion(.failure(error))
             }
-            debugPrint("[removeActivity] ends")
+            debugPrint("[removeGroup] ends")
             completion(.success(true))
         }
     }
     
-    func addParticipant(activityId: String, participants: [AppUser], completion: @escaping (Result<Bool, Error>) -> Void) {
+    func addParticipant(groupId: String, participants: [AppUser], completion: @escaping (Result<Bool, Error>) -> Void) {
         Task {
             debugPrint("[addParticipant] starts")
             do {
-                let activityRef = db.collection("Activity").document(activityId)
+                let groupRef = db.collection("Groups").document(groupId)
                 for participant in participants {
                     if let userId = participant.id {
-                        try await db.collection("Activity")
-                            .document(activityRef.documentID)
+                        try await db.collection("Groups")
+                            .document(groupRef.documentID)
                             .collection("participants")
                             .document(participant.id!)
                             .setData(["userRef": db.collection("UserData").document(participant.id!)])
                     
                         try await db.collection("UserData").document(userId)
-                            .collection("activities")
-                            .document(activityRef.documentID)
-                            .setData(["activityRef": activityRef,
+                            .collection("groups")
+                            .document(groupRef.documentID)
+                            .setData(["groupRef": groupRef,
                                       "timestamp": Date.now])
                     }
                     debugPrint("[addParticipant] done for \(participant.uid)")
@@ -231,18 +231,18 @@ class ActivitiesViewModel: ObservableObject {
         }
     }
     
-    func removeParticipant(activityId: String, participantId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func removeParticipant(groupId: String, participantId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task {
             debugPrint("[removeParticipant] starts")
             do {
-                try await db.collection("Activity")
-                    .document(activityId)
+                try await db.collection("Groups")
+                    .document(groupId)
                     .collection("participants")
                     .document(participantId).delete()
                 
                 try await db.collection("UserData").document(participantId)
-                    .collection("activities")
-                    .document(activityId)
+                    .collection("groups")
+                    .document(groupId)
                     .delete()
                 completion(.success(true))
             }
@@ -254,10 +254,10 @@ class ActivitiesViewModel: ObservableObject {
     }
 }
 
-extension ActivitiesViewModel {
-    static func withSampleData() -> ActivitiesViewModel {
-        let sampleViewModel = ActivitiesViewModel()
-        sampleViewModel.activities.append(Activity(from: Date(), to: Date(), name: "test", participants: [], alarmCount: 0))
+extension GroupsViewModel {
+    static func withSampleData() -> GroupsViewModel {
+        let sampleViewModel = GroupsViewModel()
+        sampleViewModel.groups.append(Groups(from: Date(), to: Date(), name: "test", participants: [], alarmCount: 0))
         
         return sampleViewModel
     }

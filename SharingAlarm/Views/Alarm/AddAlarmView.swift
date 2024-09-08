@@ -9,13 +9,13 @@ import SwiftUI
 
 struct AddAlarmView: View {
     @ObservedObject var viewModel: AlarmsViewModel
-    @ObservedObject var activityViewModel: ActivitiesViewModel
+    @ObservedObject var groupsViewModel: GroupsViewModel
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Classic.m4a"
     @State private var alarmBody: String = "wake up"
-    @State private var selectedGroup: Activity? = nil
+    @State private var selectedGroup: Groups? = nil
     
     var name = UserDefaults.standard.string(forKey: "name") ?? "SharingAlarm"
     
@@ -47,10 +47,10 @@ struct AddAlarmView: View {
                         }
                     }
                     Picker("Group", selection: $selectedGroup) {
-                        Text("Just For You").tag(nil as Activity?)
+                        Text("Just For You").tag(nil as Groups?)
                         
-                        ForEach(activityViewModel.activities, id: \.id) { activity in
-                            Text(activity.name).tag(activity as Activity?)
+                        ForEach(groupsViewModel.groups, id: \.id) { group in
+                            Text(group.name).tag(group as Groups?)
                         }
                     }
                 }
@@ -63,24 +63,24 @@ struct AddAlarmView: View {
                     // The selected time has already passed
                     viewModel.errorMessage = "The selected time has already passed. Please choose a future time."
                 } else if viewModel.alarms.count < 10 {
-                    //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
+                    //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, groupID: selectedGroup?.id, groupName: selectedGroup?.name))
                     viewModel.addAlarm(
                         alarmBody: "\(name) wants you to \(alarmBody)",
                         time: selectedTime,
                         sound: selectedSound,
                         repeatInterval: repeatInterval,
-                        activityId: selectedGroup?.id,
-                        activityName: selectedGroup?.name
+                        groupId: selectedGroup?.id,
+                        groupName: selectedGroup?.name
                     ) { result in
                         switch result {
                         case .success(_):
-                            // modify the front-end, local activities should not be too large, thus using firstIndex
+                            // modify the front-end, local groups should not be too large, thus using firstIndex
                             if let selectedGroup = selectedGroup,
-                               let index = activityViewModel.activities.firstIndex(where: { $0.id == selectedGroup.id }) {
-                                activityViewModel.activities[index].alarmCount += 1
+                               let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
+                                groupsViewModel.groups[index].alarmCount += 1
                             }
                         case .failure(let error):
-                            debugPrint("Add Activity error: \(error)")
+                            debugPrint("Add Group error: \(error)")
                         }
                     }
                     isPresented = false
@@ -102,6 +102,6 @@ struct AddAlarmView: View {
 struct AddAlarmView_Previews: PreviewProvider {
     @State static var isPresent = true
     static var previews: some View {
-        AddAlarmView(viewModel: AlarmsViewModel(), activityViewModel: ActivitiesViewModel(), isPresented: $isPresent)
+        AddAlarmView(viewModel: AlarmsViewModel(), groupsViewModel: GroupsViewModel(), isPresented: $isPresent)
     }
 }

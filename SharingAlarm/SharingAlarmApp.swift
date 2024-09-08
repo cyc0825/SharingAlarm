@@ -13,6 +13,7 @@ import FirebaseCore
 import FirebaseMessaging
 
 import UIKit
+import TipKit
 import AVFoundation
 import AuthenticationServices
 
@@ -22,7 +23,7 @@ struct SharingAlarmApp: App {
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var friendViewModel = FriendsViewModel()
-    @StateObject private var activityViewModel = ActivitiesViewModel()
+    @StateObject private var groupViewModel = GroupsViewModel()
     @StateObject private var alarmsViewModel = AlarmsViewModel()
     @StateObject private var arViewModel = AudioRecorderViewModel()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -30,6 +31,7 @@ struct SharingAlarmApp: App {
     @State private var showLaunchScreen = true
     
     init() {
+        try? Tips.configure()
     }
     
     var body: some Scene {
@@ -49,7 +51,7 @@ struct SharingAlarmApp: App {
                         .environmentObject(authViewModel)
                         .environmentObject(userViewModel)
                         .environmentObject(friendViewModel)
-                        .environmentObject(activityViewModel)
+                        .environmentObject(groupViewModel)
                         .environmentObject(alarmsViewModel)
                         .environmentObject(arViewModel)
                         .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
@@ -62,7 +64,7 @@ struct SharingAlarmApp: App {
                             friendViewModel.fetchFriends()
                             friendViewModel.fetchOwnRequest()
                             friendViewModel.fetchFriendsRequest()
-                            activityViewModel.fetchActivity()
+                            groupViewModel.fetchGroup()
                         }
                 }
             } else {
@@ -73,14 +75,14 @@ struct SharingAlarmApp: App {
                             .environmentObject(authViewModel)
                             .environmentObject(userViewModel)
                             .environmentObject(friendViewModel)
-                            .environmentObject(activityViewModel)
+                            .environmentObject(groupViewModel)
                             .environmentObject(alarmsViewModel)
                             .environmentObject(arViewModel)
                             .onAppear {
                                 friendViewModel.fetchFriends()
                                 friendViewModel.fetchOwnRequest()
                                 friendViewModel.fetchFriendsRequest()
-                                activityViewModel.fetchActivity()
+                                groupViewModel.fetchGroup()
                             }
                         Spacer()
                     }
@@ -277,8 +279,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
            let _ = userInfo["repeat"] as? String,
-           let _ = userInfo["activityId"] as? String,
-           let _ = userInfo["activityName"] as? String {
+           let _ = userInfo["groupId"] as? String,
+           let _ = userInfo["groupName"] as? String {
            
             print("alarmTimeString: \(alarmTimeString)")
 
@@ -326,14 +328,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
            let repeatInterval = userInfo["repeat"] as? String,
-           let activityId = userInfo["activityId"] as? String,
-           let activityName = userInfo["activityName"] as? String {
+           let groupId = userInfo["groupId"] as? String,
+           let groupName = userInfo["groupName"] as? String {
             
             let dateFormatter = ISO8601DateFormatter()
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             
             if let alarmTime = dateFormatter.date(from: alarmTimeString) {
-                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName))
+                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
                 let hostingController = UIHostingController(rootView: rootView)
                 hostingController.modalPresentationStyle = .pageSheet
                 

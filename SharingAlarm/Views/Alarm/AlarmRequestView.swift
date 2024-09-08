@@ -27,13 +27,13 @@ struct AlarmRequestView: View {
                 Text(alarm.time.formatted(date: .omitted, time: .shortened))
                     .font(.system(size: 60))
                     .fontDesign(.serif)
-                Text("In group: \(alarm.activityName ?? "")")
+                Text("In group: \(alarm.groupName ?? "")")
                     .fontDesign(.serif)
                 Spacer()
                 Button {
                     print("Add Alarm \(alarm.id ?? "")")
                     if let id = alarm.id {
-                        alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "") { result in
+                        alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
                             switch result {
                             case .success(_):
                                 alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarm.alarmBody, alarmId: id, ringTone: alarm.sound, deviceToken: fcmToken ?? "")

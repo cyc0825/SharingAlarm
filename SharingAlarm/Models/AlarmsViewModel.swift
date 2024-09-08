@@ -18,8 +18,8 @@ struct Alarm: Hashable, Codable, Identifiable {
     var sound: String
     var alarmBody: String
     var repeatInterval: String
-    var activityID: String?
-    var activityName: String?
+    var groupID: String?
+    var groupName: String?
     var participants: [String: [String]] = [:]// Accept, Reject, Stop, Snooze ID: [Name, Status]
     var creatorID: String?
     var creatorName: String?
@@ -38,7 +38,7 @@ class AlarmsViewModel: ObservableObject {
     @Published var ongoingAlarms: [Alarm] = []
     public var timerViewModels: [String: TimerViewModel] = [:]
     
-    @Published var activityNames: Set<String> = []
+    @Published var groupNames: Set<String> = []
     @Published var selectedAlarm: Alarm?
     @Published var errorMessage: String? = nil
     
@@ -54,7 +54,7 @@ class AlarmsViewModel: ObservableObject {
     @Published var personalizedSounds: [String] = []
     let intervals = ["None", "Daily", "Weekly"]
     
-    var activityGroupId: String?
+    var groupGroupId: String?
     
     // For notification extension
     var vibrationTimer: Timer?
@@ -72,14 +72,14 @@ class AlarmsViewModel: ObservableObject {
         alarms.sort { $0.time < $1.time }
     }
     
-//    func filterAlarmsByActivity(activityName: String?) {
+//    func filterAlarmsByGroup(groupName: String?) {
 //        if !backupAlarms.isEmpty {
 //            restoreAlarms()
 //        }
-//        if let activityName = activityName {
-//            print("filter to only show \(activityName)")
+//        if let groupName = groupName {
+//            print("filter to only show \(groupName)")
 //            let filteredAlarm = alarms.filter({
-//                $0.activityName == activityName
+//                $0.groupName == groupName
 //            })
 //            backupAlarms = alarms
 //            alarms = filteredAlarm
@@ -116,7 +116,7 @@ class AlarmsViewModel: ObservableObject {
                                     let alarm = try document.data(as: Alarm.self)
                                     if !self.alarms.contains(where: { $0.id == alarm.id }) {
                                         self.alarms.append(alarm)
-                                        activityNames.insert(alarm.activityName ?? "")
+                                        groupNames.insert(alarm.groupName ?? "")
                                     }
                                 } else {
                                     print("\(document.documentID) is for group")
@@ -127,7 +127,7 @@ class AlarmsViewModel: ObservableObject {
                                     }
                                     if !self.alarms.contains(where: { $0.id == alarm.id }) {
                                         self.alarms.append(alarm)
-                                        activityNames.insert(alarm.activityName ?? "")
+                                        groupNames.insert(alarm.groupName ?? "")
                                     }
                                 }
                             }
@@ -147,22 +147,22 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    func addAlarm(alarmBody: String, time: Date, sound: String, repeatInterval: String, activityId: String?, activityName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
+    func addAlarm(alarmBody: String, time: Date, sound: String, repeatInterval: String, groupId: String?, groupName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         guard let userName = UserDefaults.standard.value(forKey: "name") as? String else { return }
         guard let fcmToken = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
-        if let activityId = activityId {
+        if let groupId = groupId {
             // For sharing alarm
             Task {
                 debugPrint("[addAlarm] starts")
                 do {
                     var participants: [String: [String]] = [:]
-                    let activityRef = db.collection("Activity")
-                        .document(activityId)
+                    let groupRef = db.collection("Groups")
+                        .document(groupId)
                     
-                    // Count + 1 for activity
+                    // Count + 1 for group
                     DispatchQueue.main.async {
-                        activityRef.updateData([
+                        groupRef.updateData([
                             "alarmCount": FieldValue.increment(Int64(1))
                         ]) { error in
                             if let error = error {
@@ -171,7 +171,7 @@ class AlarmsViewModel: ObservableObject {
                         }
                     }
                         
-                    let participantsDoc = try await activityRef
+                    let participantsDoc = try await groupRef
                         .collection("participants")
                         .getDocuments()
                     
@@ -188,16 +188,16 @@ class AlarmsViewModel: ObservableObject {
                                             "time": time,
                                             "sound": sound,
                                             "repeatInterval": repeatInterval,
-                                            "activityId": activityId,
-                                            "activityName": activityName ?? "",
+                                            "groupId": groupId,
+                                            "groupName": groupName ?? "",
                                             "participants": participants,
                                             "creatorID": userID,
                                             "creatorName": userName
                                            ])
-                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName, participants: participants)
                     
                     scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarmBody, alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
-                    addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId) { result in
+                    addAlarmToParticipant(alarmId: newAlarm.documentID, groupId: groupId) { result in
                         switch result {
                         case .success(_):
                             DispatchQueue.main.async {
@@ -234,7 +234,7 @@ class AlarmsViewModel: ObservableObject {
                                             "isOn": true,
                                             "participants": [userID: [userName, "Accept"]]
                                            ])
-                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: [userID: [userName, "Accept"]])
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName, participants: [userID: [userName, "Accept"]])
                     
                     scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarmBody, alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
                     
@@ -263,20 +263,20 @@ class AlarmsViewModel: ObservableObject {
             do {
                 debugPrint("[removeAlarm] starts")
                 let document = db.collection("UserData").document(userID).collection("alarms").document(documentID)
-                if let activityId = try await document.getDocument().get("activityId") as? String {
+                if let groupId = try await document.getDocument().get("groupId") as? String {
                     // For sharing alarm
                     print("Remove alarm within a group alarm")
                     
-                    let activityRef = db.collection("Activity")
-                        .document(activityId)
+                    let groupRef = db.collection("Groups")
+                        .document(groupId)
                     
-                    // Count - 1 for activity
+                    // Count - 1 for group
                     DispatchQueue.main.async {
-                        activityRef.updateData([
+                        groupRef.updateData([
                             "alarmCount": FieldValue.increment(Int64(-1))
                         ]) { error in
                             if let error = error {
-                                print("Cannot -1 count alarm for activity: \(error.localizedDescription)")
+                                print("Cannot -1 count alarm for group: \(error.localizedDescription)")
                             } else {
                                 print("Alarm count successfully decremented.")
                             }
@@ -321,7 +321,7 @@ class AlarmsViewModel: ObservableObject {
                         .collection("alarms")
                         .document(alarmId)
                         .setData([
-                                  "activityId": alarm.activityID ?? "",
+                                  "groupId": alarm.groupID ?? "",
                                   "isOn": alarm.isOn ?? true
                                  ])
                     debugPrint("[addAlarmToParticipants] done for \(participant.key)")
@@ -339,7 +339,7 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    func addAlarmToParticipant(alarmId: String, activityId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func addAlarmToParticipant(alarmId: String, groupId: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
             debugPrint("[addAlarmToParticipants] starts")
@@ -348,7 +348,7 @@ class AlarmsViewModel: ObservableObject {
                     .collection("alarms")
                     .document(alarmId)
                     .setData([
-                              "activityId": activityId,
+                              "groupId": groupId,
                               "isOn": true
                              ])
                 
@@ -421,7 +421,7 @@ class AlarmsViewModel: ObservableObject {
             Task {
                 do {
                     let document = db.collection("UserData").document(userID).collection("alarms").document(alarmId)
-                    if try await document.getDocument().get("activityId") is String {
+                    if try await document.getDocument().get("groupId") is String {
                         // For sharing alarm
                         debugPrint("[editAlarm] starts")
                         try await db.collection("Alarm")
@@ -563,7 +563,7 @@ extension AlarmsViewModel {
     }
     
     private func handleDocumentAdded(_ document: DocumentSnapshot) {
-        if document.get("activityId") is String {
+        if document.get("groupId") is String {
             // Fetch the alarm data from the Alarm collection using the document's ID
             if let isOn = document.get("isOn") as? Bool {
                 fetchAlarmData(from: document.documentID, isOn: isOn)
@@ -573,7 +573,7 @@ extension AlarmsViewModel {
             if let alarm = try? document.data(as: Alarm.self) {
                 print("Alarm ID \(alarm.id ?? "NOID")")
                 self.alarms.append(alarm)
-                self.activityNames.insert(alarm.activityName ?? "Just For You")
+                self.groupNames.insert(alarm.groupName ?? "Just For You")
                 if let id = alarm.id {
                     AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
                 }
@@ -583,7 +583,7 @@ extension AlarmsViewModel {
     
     private func handleDocumentModified(_ document: DocumentSnapshot) {
         if let index = self.alarms.firstIndex(where: { $0.id == document.documentID }) {
-            if document.get("activityId") is String {
+            if document.get("groupId") is String {
                 // Fetch the updated alarm data from the Alarm collection
                 if let isOn = document.get("isOn") as? Bool {
                     fetchAlarmData(from: document.documentID, index: index, isOn: isOn)
@@ -620,7 +620,7 @@ extension AlarmsViewModel {
                 } else {
                     // Add the new alarm
                     self.alarms.append(alarm)
-                    self.activityNames.insert(alarm.activityName ?? "Just For You")
+                    self.groupNames.insert(alarm.groupName ?? "Just For You")
                     if let id = alarm.id {
                         AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
                     }

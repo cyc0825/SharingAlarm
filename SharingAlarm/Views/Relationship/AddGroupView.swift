@@ -1,5 +1,5 @@
 //
-//  AddActivityView.swift
+//  AddGroupView.swift
 //  SharingAlarm
 //
 //  Created by 曹越程 on 2024/7/28.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct AddActivityView: View {
+struct AddGroupView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var friendViewModel = FriendsViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
-    @ObservedObject var viewModel: ActivitiesViewModel
+    @ObservedObject var viewModel: GroupsViewModel
     @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? ""
     @State var userViewModel = UserViewModel()
     @State public var name = ""
@@ -20,11 +20,11 @@ struct AddActivityView: View {
     @State public var participants: [AppUser] = []
     @State public var showingFriendPicker = false
     
-    var editActivity: Bool = false
-    var activityId: String?
+    var editGroup: Bool = false
+    var groupId: String?
     
-    var activityIndex: Int {
-        viewModel.activities.firstIndex(where: { $0.id == activityId }) ?? 0
+    var groupIndex: Int {
+        viewModel.groups.firstIndex(where: { $0.id == groupId }) ?? 0
     }
     
     @State public var addedParticipants: [AppUser] = []
@@ -36,17 +36,17 @@ struct AddActivityView: View {
             Spacer()
             NavigationView {
                 List {
-                    Section(header: Text("Activity Name")) {
+                    Section(header: Text("Group Name")) {
                         TextField("Name", text: $name)
                     }
                     
-                    Section(header: Text("Activity Dates")) {
+                    Section(header: Text("Group Dates")) {
                         DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                         DatePicker("End Date", selection: $endDate, displayedComponents: .date)
                     }
                     
                     Section(header: Text("Participants")) {
-                        if !editActivity {
+                        if !editGroup {
                             HStack {
                                 Image(systemName: "star.fill")
                                 Text(userName)
@@ -64,7 +64,7 @@ struct AddActivityView: View {
                                     .tint(.red)
                                 }
                         }
-                        if editActivity {
+                        if editGroup {
                             ForEach(addedParticipants.indices, id: \.self) { index in
                                 Text(addedParticipants[index].name)
                                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -87,7 +87,7 @@ struct AddActivityView: View {
                         }
                     }
                 }
-                .navigationBarTitle(editActivity ? "Edit Activity" : "Add Activity", displayMode: .inline)
+                .navigationBarTitle(editGroup ? "Edit Group" : "Add Group", displayMode: .inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancel") {
@@ -96,13 +96,13 @@ struct AddActivityView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Save") {
-                            editActivity ? EditActivity() : saveActivity()
+                            editGroup ? EditGroup() : saveGroup()
                         }
                     }
                 }
                 .sheet(isPresented: $showingFriendPicker) {
                     // Friend picker view goes here
-                    if editActivity {
+                    if editGroup {
                         AddFriendPicker(selectedFriends: $participants, addedParticipants: $addedParticipants)
                     } else {
                         FriendPicker(selectedFriends: $participants)
@@ -113,28 +113,28 @@ struct AddActivityView: View {
             .presentationDragIndicator(.visible)
         }
     }
-    func saveActivity() {
+    func saveGroup() {
         var temp = participants
         temp.append(userViewModel.appUser)
-        viewModel.addActivity(name: name, startDate: startDate, endDate: endDate, participants: temp) { result in
+        viewModel.addGroup(name: name, startDate: startDate, endDate: endDate, participants: temp) { result in
             switch result {
-            case .success(let activity):
-                viewModel.activities.append(activity)
+            case .success(let group):
+                viewModel.groups.append(group)
                 presentationMode.wrappedValue.dismiss()
             case .failure(let error):
-                debugPrint("Add Activity error: \(error)")
+                debugPrint("Add Group error: \(error)")
             }
         }
     }
     
-    func EditActivity() {
-        viewModel.editActivity(activityId: activityId!, name: name, startDate: startDate, endDate: endDate, newParticipants: addedParticipants) { result in
+    func EditGroup() {
+        viewModel.editGroup(groupId: groupId!, name: name, startDate: startDate, endDate: endDate, newParticipants: addedParticipants) { result in
             switch result {
             case .success(let addedParticipants):
-                viewModel.activities[activityIndex].participants.append(contentsOf: addedParticipants)
+                viewModel.groups[groupIndex].participants.append(contentsOf: addedParticipants)
                 presentationMode.wrappedValue.dismiss()
             case .failure(let error):
-                debugPrint("Add Activity error: \(error)")
+                debugPrint("Add Group error: \(error)")
             }
         }
     }
