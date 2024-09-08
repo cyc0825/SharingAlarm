@@ -71,6 +71,7 @@
 		D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */; };
 		D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */ = {isa = PBXBuildFile; fileRef = D3DE34702C80F6C50000C48A /* AppIconDefault.png */; };
 		D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */; };
+		D3E611322C8BC58D00EF3CFF /* NotificationBannerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E611312C8BC58000EF3CFF /* NotificationBannerCard.swift */; };
 		D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E7E8372BC0962500E36A4D /* StyleView.swift */; };
 		D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870552C7DC03200CDA558 /* icon1@2x.png */; };
 		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
@@ -181,6 +182,7 @@
 		D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		D3DE34702C80F6C50000C48A /* AppIconDefault.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIconDefault.png; sourceTree = "<group>"; };
 		D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
+		D3E611312C8BC58000EF3CFF /* NotificationBannerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBannerCard.swift; sourceTree = "<group>"; };
 		D3E7E8372BC0962500E36A4D /* StyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleView.swift; sourceTree = "<group>"; };
 		D3E870552C7DC03200CDA558 /* icon1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@2x.png"; sourceTree = "<group>"; };
 		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 		D30FB1962BC3171100C88BBC /* ViewCards */ = {
 			isa = PBXGroup;
 			children = (
+				D3E611312C8BC58000EF3CFF /* NotificationBannerCard.swift */,
 				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
 				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
 				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
@@ -662,6 +665,7 @@
 				D3632D292BCF2420004F02FD /* ActivityDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
 				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,
+				D3E611322C8BC58D00EF3CFF /* NotificationBannerCard.swift in Sources */,
 				D38EEB832BA3719F0099D382 /* SharingAlarmApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

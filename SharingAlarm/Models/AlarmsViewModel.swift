@@ -16,6 +16,7 @@ struct Alarm: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var time: Date
     var sound: String
+    var alarmBody: String
     var repeatInterval: String
     var activityID: String?
     var activityName: String?
@@ -146,7 +147,7 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    func addAlarm(time: Date, sound: String, repeatInterval: String, activityId: String?, activityName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
+    func addAlarm(alarmBody: String, time: Date, sound: String, repeatInterval: String, activityId: String?, activityName: String?, completion: @escaping (Result<Alarm, Error>) -> Void) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         guard let userName = UserDefaults.standard.value(forKey: "name") as? String else { return }
         guard let fcmToken = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
@@ -183,7 +184,8 @@ class AlarmsViewModel: ObservableObject {
                     }
                     
                     let newAlarm = try await db.collection("Alarm")
-                        .addDocument(data: ["time": time,
+                        .addDocument(data: ["alarmBody": alarmBody,
+                                            "time": time,
                                             "sound": sound,
                                             "repeatInterval": repeatInterval,
                                             "activityId": activityId,
@@ -192,9 +194,9 @@ class AlarmsViewModel: ObservableObject {
                                             "creatorID": userID,
                                             "creatorName": userName
                                            ])
-                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: participants)
                     
-                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
+                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarmBody, alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
                     addAlarmToParticipant(alarmId: newAlarm.documentID, activityId: activityId) { result in
                         switch result {
                         case .success(_):
@@ -225,15 +227,16 @@ class AlarmsViewModel: ObservableObject {
                 do {
                     let newAlarm = try await db.collection("UserData").document(userID)
                         .collection("alarms")
-                        .addDocument(data: ["time": time,
+                        .addDocument(data: ["alarmBody": alarmBody,
+                                            "time": time,
                                             "sound": sound,
                                             "repeatInterval": repeatInterval,
                                             "isOn": true,
                                             "participants": [userID: [userName, "Accept"]]
                                            ])
-                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: [userID: [userName, "Accept"]])
+                    let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName, participants: [userID: [userName, "Accept"]])
                     
-                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
+                    scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarmBody, alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
                     
                     DispatchQueue.main.async {
                         completion(.success(alarm))
@@ -572,7 +575,7 @@ extension AlarmsViewModel {
                 self.alarms.append(alarm)
                 self.activityNames.insert(alarm.activityName ?? "Just For You")
                 if let id = alarm.id {
-                    AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
+                    AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
                 }
             }
         }
@@ -619,7 +622,7 @@ extension AlarmsViewModel {
                     self.alarms.append(alarm)
                     self.activityNames.insert(alarm.activityName ?? "Just For You")
                     if let id = alarm.id {
-                        AppDelegate.shared.scheduleLocalNotification(id: id, title: "Alarm Notification", body: "You have a pending alarm", alarmTime: alarm.time, sound: alarm.sound)
+                        AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
                     }
                 }
             }
@@ -667,18 +670,19 @@ extension AlarmsViewModel {
 
 struct AlarmRequest: Codable {
     let alarmTime: String
+    let alarmBody: String
     let alarmId: String
     let ringTone: String
     let deviceToken: String
 }
 
 extension AlarmsViewModel {
-    func scheduleAlarm(alarmTime: String, alarmId: String, ringTone: String, deviceToken: String) {
+    func scheduleAlarm(alarmTime: String, alarmBody: String, alarmId: String, ringTone: String, deviceToken: String) {
         // https://alarm-scheduler.fly.dev/scheduleAlarm
         guard let url = URL(string: "http://192.168.7.39:3000/scheduleAlarm") else { return }
         print("Schedule alarm now within https://alarm-scheduler.fly.dev/scheduleAlarm")
         
-        let alarmRequest = AlarmRequest(alarmTime: alarmTime, alarmId: alarmId, ringTone: ringTone, deviceToken: deviceToken)
+        let alarmRequest = AlarmRequest(alarmTime: alarmTime, alarmBody: alarmBody, alarmId: alarmId, ringTone: ringTone, deviceToken: deviceToken)
         
         // Convert to JSON data
         guard let jsonData = try? JSONEncoder().encode(alarmRequest) else { return }

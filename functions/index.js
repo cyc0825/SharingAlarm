@@ -37,7 +37,7 @@ exports.sendImmediateAlarmNotification = functions.firestore
                 data: {
                     id: `${context.params.alarmId}`,
                     title: 'Alarm Notification',
-                    body: `You have an alarm for activity: ${alarm.activityName}`,
+                    body: `${alarm.alarmBody}`,
                     activityId: `${alarm.activityId}`,
                     activityName: `${alarm.activityName}`,
                     alarmTime: new Date(alarm.time._seconds * 1000).toISOString(),
@@ -83,7 +83,7 @@ exports.sendAlarmVibrate = functions.https.onRequest(async (req, res) => {
         // Prepare the notification with the provided FCM token
         const message = {
             notification: {
-                title: 'Alarm Notification from FB',
+                title: 'SharingAlarm',
                 body: `You have an alarm for activity`,
             },
             apns: {

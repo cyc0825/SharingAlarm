@@ -14,28 +14,44 @@ struct AddAlarmView: View {
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Classic.m4a"
+    @State private var alarmBody: String = "wake up"
     @State private var selectedGroup: Activity? = nil
+    
+    var name = UserDefaults.standard.string(forKey: "name") ?? "SharingAlarm"
+    
     var body: some View {
         NavigationView {
             Form {
-                DatePicker("Time", selection: $selectedTime, displayedComponents: [.date, .hourAndMinute])
-                
-                Picker("Repeat", selection: $repeatInterval) {
-                    ForEach(viewModel.intervals, id: \.self) { option in
-                        Text(option).tag(option)
+                Section("Alarm Display Info") {
+                    NotificationBannerCard(alarmBody: $alarmBody, alarmTime: $selectedTime)
+                        .padding(.horizontal, -20)
+                        .padding(.vertical, -10)
+                    HStack {
+                        Text("wants you to")
+                        TextField("wake up", text: $alarmBody)
                     }
                 }
                 
-                Picker("Sound", selection: $selectedSound) {
-                    ForEach(viewModel.sounds + viewModel.paidSounds + viewModel.personalizedSounds, id: \.self) { sound in
-                        Text(sound).tag("\(sound).m4a")
-                    }
-                }
-                Picker("Group", selection: $selectedGroup) {
-                    Text("Just For You").tag(nil as Activity?)
+                Section("Alarm Setting") {
+                    DatePicker("Time", selection: $selectedTime, displayedComponents: [.date, .hourAndMinute])
                     
-                    ForEach(activityViewModel.activities, id: \.id) { activity in
-                        Text(activity.name).tag(activity as Activity?)
+                    Picker("Repeat", selection: $repeatInterval) {
+                        ForEach(viewModel.intervals, id: \.self) { option in
+                            Text(option).tag(option)
+                        }
+                    }
+                    
+                    Picker("Sound", selection: $selectedSound) {
+                        ForEach(viewModel.sounds + viewModel.paidSounds + viewModel.personalizedSounds, id: \.self) { sound in
+                            Text(sound).tag("\(sound).m4a")
+                        }
+                    }
+                    Picker("Group", selection: $selectedGroup) {
+                        Text("Just For You").tag(nil as Activity?)
+                        
+                        ForEach(activityViewModel.activities, id: \.id) { activity in
+                            Text(activity.name).tag(activity as Activity?)
+                        }
                     }
                 }
             }
@@ -48,7 +64,14 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = "The selected time has already passed. Please choose a future time."
                 } else if viewModel.alarms.count < 10 {
                     //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityID: selectedGroup?.id, activityName: selectedGroup?.name))
-                    viewModel.addAlarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, activityId: selectedGroup?.id, activityName: selectedGroup?.name) { result in
+                    viewModel.addAlarm(
+                        alarmBody: "\(name) wants you to \(alarmBody)",
+                        time: selectedTime,
+                        sound: selectedSound,
+                        repeatInterval: repeatInterval,
+                        activityId: selectedGroup?.id,
+                        activityName: selectedGroup?.name
+                    ) { result in
                         switch result {
                         case .success(_):
                             // modify the front-end, local activities should not be too large, thus using firstIndex
@@ -73,5 +96,12 @@ struct AddAlarmView: View {
                 Alert(title: Text("Cannot Add"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
             }
         }
+    }
+}
+
+struct AddAlarmView_Previews: PreviewProvider {
+    @State static var isPresent = true
+    static var previews: some View {
+        AddAlarmView(viewModel: AlarmsViewModel(), activityViewModel: ActivitiesViewModel(), isPresented: $isPresent)
     }
 }

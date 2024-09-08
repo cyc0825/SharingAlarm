@@ -273,7 +273,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("Received data message: \(userInfo)")
         if let id = userInfo["id"] as? String,
            let title = userInfo["title"] as? String,
-           let body = userInfo["body"] as? String,
+           let body = userInfo["alarmBody"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
            let _ = userInfo["repeat"] as? String,
@@ -322,7 +322,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         if let id = userInfo["id"] as? String,
            let _ = userInfo["title"] as? String,
-           let _ = userInfo["body"] as? String,
+           let alarmBody = userInfo["body"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
            let repeatInterval = userInfo["repeat"] as? String,
@@ -333,7 +333,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             
             if let alarmTime = dateFormatter.date(from: alarmTimeString) {
-                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName))
+                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, activityID: activityId, activityName: activityName))
                 let hostingController = UIHostingController(rootView: rootView)
                 hostingController.modalPresentationStyle = .pageSheet
                 

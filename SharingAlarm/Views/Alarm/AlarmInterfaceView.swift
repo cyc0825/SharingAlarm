@@ -74,7 +74,7 @@ struct CombineView: View {
     var index: Int
     var colorSet: [Color] = [Color.accent, Color.secondAccent, Color.thirdAccent]
     var geometry: GeometryProxy
-    
+    var name = UserDefaults.standard.string(forKey: "name") ?? "SharingAlarm"
     func arcTapped() {
         viewModel.selectedAlarm = alarm
     }
@@ -89,7 +89,13 @@ struct CombineView: View {
                 case "Daily":
                     // Add one day to the current target date
                     newTargetDate = calendar.date(byAdding: .day, value: 1, to: currentTargetDate)
-                    viewModel.addAlarm(time: newTargetDate!, sound: alarm.sound, repeatInterval: alarm.repeatInterval, activityId: alarm.activityID, activityName: alarm.activityName) { result in
+                    viewModel.addAlarm(alarmBody: "\(name) wants you to \(alarm.alarmBody)",
+                                       time: newTargetDate!,
+                                       sound: alarm.sound,
+                                       repeatInterval: alarm.repeatInterval,
+                                       activityId: alarm.activityID,
+                                       activityName: alarm.activityName
+                    ) { result in
                         switch result {
                         case .success(_):
                             // modify the front-end, local activities should not be too large, thus using firstIndex
@@ -105,7 +111,13 @@ struct CombineView: View {
                 case "Weekly":
                     // Add one week to the current target date
                     newTargetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentTargetDate)
-                    viewModel.addAlarm(time: newTargetDate!, sound: alarm.sound, repeatInterval: alarm.repeatInterval, activityId: alarm.activityID, activityName: alarm.activityName) { result in
+                    viewModel.addAlarm(alarmBody: "\(name) wants you to \(alarm.alarmBody)",
+                                       time: newTargetDate!,
+                                       sound: alarm.sound,
+                                       repeatInterval: alarm.repeatInterval,
+                                       activityId: alarm.activityID,
+                                       activityName: alarm.activityName
+                    ) { result in
                         switch result {
                         case .success(_):
                             // modify the front-end, local activities should not be too large, thus using firstIndex

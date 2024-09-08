@@ -19,28 +19,44 @@ struct AlarmView: View {
             if let alarm = alarmViewModel.selectedAlarm {
                 VStack {
                     Spacer()
-                    HStack {
-                        Text(alarm.activityName ?? "Just For You")
-                            .font(.largeTitle.bold())
-                            .padding([.leading, .top], 40)
-                            .fontDesign(.serif)
-                        Spacer()
-                    }
+//                    HStack {
+//                        Text(alarm.activityName ?? "Just For You")
+//                            .font(.largeTitle.bold())
+//                            .padding([.leading, .top], 40)
+//                            .fontDesign(.serif)
+//                        Spacer()
+//                    }
+                    
+                    Text("Time to \(alarm.alarmBody.split(separator: "wants you to")[1])")
+                        .font(.title)
+                        .fontDesign(.serif)
+                        .padding(.horizontal)
+                        .padding(.top, 60)
+                        .lineLimit(1) // Ensures the text stays on one line
+                        .minimumScaleFactor(0.5)
                     Text(alarm.time, style: .time)
                         .font(.system(size: 60))
                         .fontDesign(.serif)
-                        .padding()
+                        .padding(.horizontal)
+                    
+                    Text(alarm.time, style: .date)
+                        .font(.title2)
+                        .fontDesign(.serif)
+                        .padding(.horizontal)
+                        .frame(alignment: .trailing)
                     
                     // Additional alarm information can go here
                     List {
-                        ForEach(Array(alarm.participants), id: \.key) { participantID, participantStatus in
-                            HStack {
-                                Text(participantStatus[0])
-                                Spacer()
-                                Text(participantStatus[1])
+                        Section("Status") {
+                            ForEach(Array(alarm.participants), id: \.key) { participantID, participantStatus in
+                                HStack {
+                                    Text(participantStatus[0])
+                                    Spacer()
+                                    Text(participantStatus[1])
+                                }
                             }
+                            .listRowBackground(Color.clear)
                         }
-                        .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
                     if alarm.time < Date() {
@@ -104,28 +120,36 @@ struct AlarmView: View {
                     ForEach(alarmViewModel.ongoingAlarms, id: \.self) { alarm in
                         VStack {
                             Spacer()
-                            HStack {
-                                Text(alarm.activityName ?? "Just For You")
-                                    .font(.largeTitle.bold())
-                                    .padding([.leading, .top], 40)
-                                    .fontDesign(.serif)
-                                Spacer()
-                            }
+                            Text("Time to \(alarm.alarmBody.split(separator: "wants you to")[1])")
+                                .font(.title)
+                                .fontDesign(.serif)
+                                .padding(.horizontal)
+                                .padding(.top, 60)
+                                .lineLimit(1) // Ensures the text stays on one line
+                                .minimumScaleFactor(0.5)
                             Text(alarm.time, style: .time)
                                 .font(.system(size: 60))
                                 .fontDesign(.serif)
-                                .padding()
+                                .padding(.horizontal)
+                            
+                            Text(alarm.time, style: .date)
+                                .font(.title2)
+                                .fontDesign(.serif)
+                                .padding(.horizontal)
+                                .frame(alignment: .trailing)
                             
                             // Additional alarm information can go here
                             List {
-                                ForEach(Array(alarm.participants), id: \.key) { participantID, participantStatus in
-                                    HStack {
-                                        Text(participantStatus[0])
-                                        Spacer()
-                                        Text(participantStatus[1])
+                                Section("Status") {
+                                    ForEach(Array(alarm.participants), id: \.key) { participantID, participantStatus in
+                                        HStack {
+                                            Text(participantStatus[0])
+                                            Spacer()
+                                            Text(participantStatus[1])
+                                        }
                                     }
+                                    .listRowBackground(Color.clear)
                                 }
-                                .listRowBackground(Color.clear)
                             }
                             .listStyle(.plain)
                             if !alarmViewModel.ifUserStopped(participants: alarm.participants) {
@@ -190,8 +214,8 @@ struct AlarmView: View {
 //struct AlarmView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        let sampleAlarms = [
-//            Alarm(time: Date(), sound: "Hi", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
-//            Alarm(time: Date(), sound: "Hello", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
+//            Alarm(time: Date(), sound: "Hi", alarmBody: "cyc wants you to wake up", repeatInterval: "", activityID: "", activityName: "Lunch Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]]),
+//            Alarm(time: Date(), sound: "Hello", alarmBody: "cyc wants you to wake up", repeatInterval: "", activityID: "", activityName: "Dinner Time", participants: ["fdjhgdshoidjoijewoasdlk": ["Xiaoming", "Accept"]])
 //        ]
 //        let viewModel = AlarmsViewModel()
 //        viewModel.ongoingAlarms = sampleAlarms

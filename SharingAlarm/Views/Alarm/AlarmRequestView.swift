@@ -36,7 +36,7 @@ struct AlarmRequestView: View {
                         alarmViewModel.addAlarmToParticipant(alarmId: id, activityId: alarm.activityID ?? "") { result in
                             switch result {
                             case .success(_):
-                                alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmId: id, ringTone: alarm.sound, deviceToken: fcmToken ?? "")
+                                alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarm.alarmBody, alarmId: id, ringTone: alarm.sound, deviceToken: fcmToken ?? "")
                                 print("Success")
                             case .failure(_):
                                 print("fail")
@@ -79,5 +79,5 @@ struct AlarmRequestView: View {
 }
 
 #Preview {
-    AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(time: Date(), sound: "", repeatInterval: ""))
+    AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(time: Date(), sound: "", alarmBody: "", repeatInterval: ""))
 }
