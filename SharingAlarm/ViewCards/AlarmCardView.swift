@@ -34,7 +34,7 @@ struct AlarmCardView: View {
                 if let alarmId = alarm.id, let isOn = alarm.isOn {
                     viewModel.toggleAlarm(alarmId: alarmId, value: isOn)
                     if isOn {
-                        AppDelegate.shared.scheduleLocalNotification(id: alarmId, title: "Alarm Notification", body: "Rescheduled Alarm", alarmTime: alarm.time, sound: alarm.sound)
+                        AppDelegate.shared.scheduleLocalNotification(id: alarmId, title: "Alarm Notification", body: "Rescheduled Alarm", alarmTime: alarm.time, sound: alarm.sound, ringtoneURL: alarm.ringtoneURL)
                     } else {
                         AppDelegate.shared.cancelScheduledLocalNotification(id: alarmId)
                     }

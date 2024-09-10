@@ -16,6 +16,7 @@ struct Alarm: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var time: Date
     var sound: String
+    var ringtoneURL: String?
     var alarmBody: String
     var repeatInterval: String
     var groupID: String?
@@ -98,6 +99,7 @@ class AlarmsViewModel: ObservableObject {
         alarmsListener = nil
     }
     
+    // MARK: Legacy, use listener instead
     func fetchAlarmsData() {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         Task {
@@ -182,18 +184,23 @@ class AlarmsViewModel: ObservableObject {
                             participants[participant.id!] = participant.id == userID ? [participant.name, "Accept"] : [participant.name, "Pending"]
                         }
                     }
-                    
+                    var data = ["alarmBody": alarmBody,
+                               "time": time,
+                               "sound": sound,
+                               "repeatInterval": repeatInterval,
+                               "groupId": groupId,
+                               "groupName": groupName ?? "",
+                               "participants": participants,
+                               "creatorID": userID,
+                               "creatorName": userName
+                              ]
+                    if sound == "YourRecording.m4a" {
+                        guard let ringtoneURL = UserDefaults.standard.url(forKey: "ringtoneURL") else { return }
+                        data["ringtoneURL"] = ringtoneURL.absoluteString
+                    }
+                    print("data now is \(data)")
                     let newAlarm = try await db.collection("Alarm")
-                        .addDocument(data: ["alarmBody": alarmBody,
-                                            "time": time,
-                                            "sound": sound,
-                                            "repeatInterval": repeatInterval,
-                                            "groupId": groupId,
-                                            "groupName": groupName ?? "",
-                                            "participants": participants,
-                                            "creatorID": userID,
-                                            "creatorName": userName
-                                           ])
+                        .addDocument(data: data)
                     let alarm = Alarm(id: newAlarm.documentID, time: time, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName, participants: participants)
                     
                     scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarmBody, alarmId: newAlarm.documentID, ringTone: sound, deviceToken: fcmToken)
@@ -311,7 +318,7 @@ class AlarmsViewModel: ObservableObject {
         }
     }
     
-    // LEGACY
+    // MARK: LEGACY
     func addAlarmToParticipants(participants: [String: [String]], alarmId: String, alarm: Alarm, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task {
             debugPrint("[addAlarmToParticipants] starts")
@@ -575,7 +582,7 @@ extension AlarmsViewModel {
                 self.alarms.append(alarm)
                 self.groupNames.insert(alarm.groupName ?? "Just For You")
                 if let id = alarm.id {
-                    AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
+                    AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound, ringtoneURL: alarm.ringtoneURL)
                 }
             }
         }
@@ -622,7 +629,7 @@ extension AlarmsViewModel {
                     self.alarms.append(alarm)
                     self.groupNames.insert(alarm.groupName ?? "Just For You")
                     if let id = alarm.id {
-                        AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound)
+                        AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: alarm.time, sound: alarm.sound, ringtoneURL: alarm.ringtoneURL)
                     }
                 }
             }
@@ -679,7 +686,8 @@ struct AlarmRequest: Codable {
 extension AlarmsViewModel {
     func scheduleAlarm(alarmTime: String, alarmBody: String, alarmId: String, ringTone: String, deviceToken: String) {
         // https://alarm-scheduler.fly.dev/scheduleAlarm
-        guard let url = URL(string: "http://192.168.7.39:3000/scheduleAlarm") else { return }
+        // http://192.168.7.39:3000/scheduleAlarm
+        guard let url = URL(string: "https://alarm-scheduler.fly.dev/scheduleAlarm") else { return }
         print("Schedule alarm now within https://alarm-scheduler.fly.dev/scheduleAlarm")
         
         let alarmRequest = AlarmRequest(alarmTime: alarmTime, alarmBody: alarmBody, alarmId: alarmId, ringTone: ringTone, deviceToken: deviceToken)

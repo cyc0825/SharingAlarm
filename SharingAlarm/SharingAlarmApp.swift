@@ -278,6 +278,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            let body = userInfo["alarmBody"] as? String,
            let alarmTimeString = userInfo["alarmTime"] as? String,
            let sound = userInfo["sound"] as? String,
+           let ringtoneURL = userInfo["ringtoneURL"] as? String?,
            let _ = userInfo["repeat"] as? String,
            let _ = userInfo["groupId"] as? String,
            let _ = userInfo["groupName"] as? String {
@@ -289,7 +290,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             if let alarmTime = dateFormatter.date(from: alarmTimeString) {
                 // Debug information for parsed date
-                scheduleLocalNotification(id: id, title: title, body: body, alarmTime: alarmTime, sound: sound)
+                scheduleLocalNotification(id: id, title: title, body: body, alarmTime: alarmTime, sound: sound, ringtoneURL: ringtoneURL)
             } else {
                 // Debug information for date parsing failure
                 print("Failed to parse alarmTimeString: \(alarmTimeString)")
@@ -348,20 +349,46 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     
-    public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String) {
+    public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String, ringtoneURL: String?) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        if sound == "YourRecording.m4a", let soundURL = UserDefaults.standard.string(forKey: "alarmSoundURL") {
-            cacheSoundFromURL(soundURL) { cachedURL in
+        if let ringtoneURL = ringtoneURL {
+            cacheSoundFromURL(ringtoneURL) { cachedURL in
                 guard let cachedURL = cachedURL else { return }
-                let soundName = UNNotificationSoundName(rawValue: cachedURL.lastPathComponent)
-                print("using your recording \(soundName)")
-                content.sound = UNNotificationSound(named: soundName)
+                do {
+                    let filename = "\(UUID().uuidString).m4a"
+                    let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
+                    if !FileManager.default.fileExists(atPath: targetURL.path) {
+                        try FileManager.default.copyItem(at: cachedURL, to: targetURL)
+                    }
+                    print("using recording \(filename)")
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
+                }
+                catch {
+                    print("Error copying sound file: \(error)")
+                }
             }
         } else {
-            print("Using sound \(sound)")
+            if sound == "YourRecording.m4a" {
+                do {
+                    print("Using recording locally")
+                    let docsurl = try FileManager.default.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                    let myurl = docsurl.appendingPathComponent("Recording.m4a")
+                    let filename = myurl.lastPathComponent
+                    let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
+                    
+                    // copy audio file to /Library/Sounds
+                    if !FileManager.default.fileExists(atPath: targetURL.path) {
+                        try FileManager.default.copyItem(at: myurl, to: targetURL)
+                    }
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
+                } catch {
+                    print("Error copying sound file: \(error)")
+                }
+            }
             content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
+            print("Using sound \(sound)")
         }
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarmTime), repeats: false)
@@ -383,6 +410,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func cacheSoundFromURL(_ urlString: String, completion: @escaping (URL?) -> Void) {
+        print("caching sound from \(urlString)")
         guard let url = URL(string: urlString) else {
             completion(nil)
             return
@@ -393,29 +421,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 completion(nil)
                 return
             }
-            
-            // Move the file to a permanent location
-            let fileManager = FileManager.default
-            let destinationURL = self.getDocumentsDirectory().appendingPathComponent("YourRecording.m4a")
-            
-            // Check if the file already exists, and remove it if necessary
-            if fileManager.fileExists(atPath: destinationURL.path) {
-                do {
-                    try fileManager.removeItem(at: destinationURL)
-                } catch {
-                    print("Failed to remove existing sound file: \(error.localizedDescription)")
-                    completion(nil)
-                    return
-                }
-            }
-            
-            do {
-                try fileManager.moveItem(at: localURL, to: destinationURL)
-                completion(destinationURL)
-            } catch {
-                print("Failed to move sound file: \(error.localizedDescription)")
-                completion(nil)
-            }
+            completion(localURL)
         }
         task.resume()
     }
@@ -459,5 +465,16 @@ extension AppDelegate {
         }
 
         task.resume()
+    }
+}
+
+extension FileManager {
+    public func soundsLibraryURL(for filename: String) throws -> URL {
+        let libraryURL = try url(for: .libraryDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        let soundFolderURL = libraryURL.appendingPathComponent("Sounds", isDirectory: true)
+        if !fileExists(atPath: soundFolderURL.path) {
+            try createDirectory(at: soundFolderURL, withIntermediateDirectories: true)
+        }
+        return soundFolderURL.appendingPathComponent(filename, isDirectory: false)
     }
 }

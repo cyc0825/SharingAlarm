@@ -195,7 +195,7 @@ class AudioRecorderViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate 
             recordedAudioURL = audioFilename
             // Load any saved audiogram data if needed
             loadAudiogramData()
-            audiogramData = soundData // Load previously saved data if available
+            audiogramData = Array(repeating: 0.0, count: 25) + Array(soundData.prefix(25)) // Load previously saved data if available
             completion(true)
         } else {
             completion(false)
@@ -240,6 +240,7 @@ extension AudioRecorderViewModel {
                     return
                 }
                 print("Upload successful, download URL: \(url?.absoluteString ?? "No URL")")
+                UserDefaults.standard.set(url, forKey: "ringtoneURL")
                 // Update any stored URLs as needed here
             }
         }

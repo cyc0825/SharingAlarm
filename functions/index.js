@@ -32,14 +32,14 @@ exports.sendImmediateAlarmNotification = functions.firestore
             const message = {
                 notification: {
                     title: 'Alarm Notification',
-                    body: `You have an alarm for activity: ${alarm.activityName}`,
+                    body: `You have an alarm for group: ${alarm.groupName}`,
                 },
                 data: {
                     id: `${context.params.alarmId}`,
                     title: 'Alarm Notification',
                     body: `${alarm.alarmBody}`,
-                    activityId: `${alarm.activityId}`,
-                    activityName: `${alarm.activityName}`,
+                    groupId: `${alarm.groupId}`,
+                    groupName: `${alarm.groupName}`,
                     alarmTime: new Date(alarm.time._seconds * 1000).toISOString(),
                     sound: `${alarm.sound}`,
                     repeat: `${alarm.repeatInterval}`,
@@ -84,7 +84,7 @@ exports.sendAlarmVibrate = functions.https.onRequest(async (req, res) => {
         const message = {
             notification: {
                 title: 'SharingAlarm',
-                body: `You have an alarm for activity`,
+                body: `This message cause vibration`,
             },
             apns: {
                 payload: {

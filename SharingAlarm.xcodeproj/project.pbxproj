@@ -33,6 +33,7 @@
 		D36A0F9F2C8E60A100633E02 /* UIPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */; };
 		D36A0FA12C8E672D00633E02 /* RingtoneLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA02C8E672600633E02 /* RingtoneLib.swift */; };
 		D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA22C8E6E1400633E02 /* Tips.swift */; };
+		D36A0FA52C8FC6A500633E02 /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA42C8FC69C00633E02 /* FileManager+.swift */; };
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
@@ -147,6 +148,7 @@
 		D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIPlayground.swift; sourceTree = "<group>"; };
 		D36A0FA02C8E672600633E02 /* RingtoneLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtoneLib.swift; sourceTree = "<group>"; };
 		D36A0FA22C8E6E1400633E02 /* Tips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tips.swift; sourceTree = "<group>"; };
+		D36A0FA42C8FC69C00633E02 /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
 			isa = PBXGroup;
 			children = (
+				D36A0FA42C8FC69C00633E02 /* FileManager+.swift */,
 				D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */,
 				D3C0EF7F2BDD50E600DA1795 /* Info.plist */,
 				D3B53B322BC6203500B41769 /* Resources */,
@@ -635,6 +638,7 @@
 				D3CB391E2C6459DB00AF7052 /* CountDownTimerView.swift in Sources */,
 				D3372A982C63EAA200D33713 /* AlarmSoundView.swift in Sources */,
 				D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */,
+				D36A0FA52C8FC6A500633E02 /* FileManager+.swift in Sources */,
 				D3E7E8382BC0962500E36A4D /* StyleView.swift in Sources */,
 				D35372F22BBB7DAC00B56F32 /* UserViewModel.swift in Sources */,
 				D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */,

@@ -176,6 +176,7 @@ struct AlarmView: View {
                                     // Stop vibration
                                     AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
                                     alarmViewModel.stopVibration()
+                                    dismiss()
                                 }) {
                                     Text("Snooze")
                                 }

@@ -95,13 +95,13 @@ struct ProfileView: View {
                     .padding(.top, 10)
                 
                 // Username
-                Text(userName)
+                Text(userViewModel.appUser.name)
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top, 10)
                 
                 // UID
-                Text("@\(Uid)")
+                Text("@\(userViewModel.appUser.uid)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }

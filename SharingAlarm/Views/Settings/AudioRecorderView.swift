@@ -121,7 +121,7 @@ struct AudiogramView: View {
             HStack(alignment: .center, spacing: 1) {
                 ForEach(data.indices, id: \.self) { index in
                     Capsule()
-                        .fill(index < indicatorIndex && recorder.isPlaying ? Color.gray : Color.accentColor)
+                        .fill(index < indicatorIndex && !recorder.isRecording ? Color.gray : Color.accentColor)
                         .frame(width: width, height: CGFloat(data[index]) * 100)
                 }
             }

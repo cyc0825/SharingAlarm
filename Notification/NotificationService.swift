@@ -17,7 +17,7 @@ class NotificationService: UNNotificationServiceExtension {
     var bestAttemptContent: UNMutableNotificationContent?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        print("Did receive")
+        
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         ringToneName = request.content.userInfo["ringTone"] as? String
@@ -25,10 +25,7 @@ class NotificationService: UNNotificationServiceExtension {
         if request.content.categoryIdentifier == "alarmVibrate" {
             startAudioWork()
             startRingtone()
-            if let bestAttemptContent = bestAttemptContent {
-                // Modify the notification content here...
-                contentHandler(bestAttemptContent)
-            }
+            contentHandler(UNNotificationContent())
         } else {
             if let bestAttemptContent = bestAttemptContent {
                 contentHandler(bestAttemptContent)
