@@ -15,6 +15,7 @@ import FirebaseFirestore
 struct Alarm: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var time: Date
+    var alarmTime: Double
     var sound: String
     var ringtoneURL: String?
     var alarmBody: String
@@ -31,6 +32,20 @@ struct Alarm: Hashable, Codable, Identifiable {
     var remainingTime: TimeInterval {
         max(0, time.timeIntervalSince(Date()))
     }
+    init(id: String? = nil, time: Date, sound: String, alarmBody: String, repeatInterval: String, groupID: String? = nil, groupName: String? = nil, participants: [String: [String]] = [:], creatorID: String? = nil, creatorName: String? = nil, ringtoneURL: String? = nil) {
+            self.id = id
+            self.time = time
+            self.alarmTime = max(0, time.timeIntervalSince(Date())) // Time interval between now and the alarm time
+            self.sound = sound
+            self.alarmBody = alarmBody
+            self.repeatInterval = repeatInterval
+            self.groupID = groupID
+            self.groupName = groupName
+            self.participants = participants
+            self.creatorID = creatorID
+            self.creatorName = creatorName
+            self.ringtoneURL = ringtoneURL
+        }
 }
 
 @MainActor
@@ -186,6 +201,7 @@ class AlarmsViewModel: ObservableObject {
                     }
                     var data = ["alarmBody": alarmBody,
                                "time": time,
+                               "alarmTime": max(0, time.timeIntervalSince(Date())),
                                "sound": sound,
                                "repeatInterval": repeatInterval,
                                "groupId": groupId,
@@ -236,6 +252,7 @@ class AlarmsViewModel: ObservableObject {
                         .collection("alarms")
                         .addDocument(data: ["alarmBody": alarmBody,
                                             "time": time,
+                                            "alarmTime": max(0, time.timeIntervalSince(Date())),
                                             "sound": sound,
                                             "repeatInterval": repeatInterval,
                                             "isOn": true,

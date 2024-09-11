@@ -34,3 +34,17 @@ struct GroupsTip: Tip {
         Image(systemName: "calendar.badge.plus")
     }
 }
+
+struct EconomyTip: Tip {
+    var title: Text {
+        Text("Earn and Spend Coins").foregroundStyle(.accent)
+    }
+
+    var message: Text? {
+        Text("You will earn coins by responding to alarms within 30 seconds. Coins can be used to buy more ringtones, or to buy other features.")
+    }
+    
+    var image: Image? {
+        Image(systemName: "seal.fill")
+    }
+}

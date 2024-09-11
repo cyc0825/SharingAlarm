@@ -59,9 +59,6 @@ struct ProfileView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var arViewModel: AudioRecorderViewModel
     @State private var showingProfileEdit = false
-    
-    @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? "Give yourself a name so that your friend can remember you"
-    @State var Uid: String = UserDefaults.standard.value(forKey: "uid") as? String ?? "Haven't setup yet"
     @State var presentingConfirmationDialog = false
     
     private func deleteAccount() {
@@ -86,13 +83,12 @@ struct ProfileView: View {
     var body: some View {
         List {
             VStack(alignment: .center) {
-                Image(uiImage: AvatarGenerator.generateAvatar(for: userName, size: CGSize(width: 100, height: 100)) ?? UIImage())
+                Image(uiImage: AvatarGenerator.generateAvatar(for: userViewModel.appUser.name, size: CGSize(width: 100, height: 100)) ?? UIImage())
                     .resizable()
                     .frame(width: 100, height: 100)
                     .clipShape(Circle())
                     .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     .shadow(radius: 5)
-                    .padding(.top, 10)
                 
                 // Username
                 Text(userViewModel.appUser.name)
@@ -128,8 +124,14 @@ struct ProfileView: View {
             Section {
                 HStack {
                     Image(systemName: "waveform")
-                    NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, userViewModel: userViewModel, arViewModel: arViewModel)) {
-                        Text("Alarm Sounds")
+                    NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, arViewModel: arViewModel)) {
+                        Text("Ringtone Library")
+                    }
+                }
+                HStack {
+                    Image(systemName: "person.crop.circle.dashed.circle")
+                    NavigationLink(destination: MembershipView()) {
+                        Text("Membership")
                     }
                 }
             }
@@ -142,9 +144,8 @@ struct ProfileView: View {
             Section {
                 Button(role: .cancel, action: signOut) {
                     HStack {
-                        Spacer()
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
                         Text("Sign out")
-                        Spacer()
                     }
                 }
             }
@@ -173,8 +174,6 @@ struct ProfileView: View {
                         UserDefaults.standard.setValue(uid, forKey: "uid")
                         userViewModel.appUser.uid = uid
                         userViewModel.appUser.name = username
-                        userName = username
-                        Uid = uid
                         userViewModel.saveUserData()
                     }
                 )
@@ -182,12 +181,17 @@ struct ProfileView: View {
         .background(
             Color(UIColor.systemGroupedBackground)
         )
-    }
-}
-
-struct VIPLevelView: View {
-    var body: some View {
-        Text("VIP Level Details")
+        .toolbar {
+            ToolbarItem {
+                HStack {
+                    Image(systemName: "seal.fill")
+                        .foregroundStyle(.accent)
+                    Text("\(userViewModel.appUser.money)")
+                        .foregroundStyle(.accent)
+                }
+                .popoverTip(EconomyTip())
+            }
+        }
     }
 }
 

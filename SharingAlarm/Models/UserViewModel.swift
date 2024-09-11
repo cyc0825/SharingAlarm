@@ -17,9 +17,10 @@ struct AppUser: Codable, Identifiable {
     @DocumentID var id: String?
     var name: String
     var uid: String
+    var money: Int = 0
     
     static var empty: AppUser {
-        AppUser(name: "", uid: "")
+        AppUser(name: "", uid: "", money: 100)
     }
 }
 
@@ -39,8 +40,6 @@ class UserViewModel: ObservableObject {
     @Published var appUser = AppUser.empty
     
     @Published var user: User?
-    
-    static let shared = UserViewModel()
     
     private var db = Firestore.firestore()
     private var cancellables = Set<AnyCancellable>()

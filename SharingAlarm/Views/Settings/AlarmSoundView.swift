@@ -10,7 +10,6 @@ import AVFoundation
 
 struct AlarmSoundView: View {
     @ObservedObject var viewModel: AlarmsViewModel
-    @StateObject var userViewModel: UserViewModel
     
     @StateObject var arViewModel: AudioRecorderViewModel
     @State var showRecordingView = false
@@ -68,11 +67,11 @@ struct AlarmSoundView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
         }
-        .navigationTitle("Alarm Sound")
+        .navigationTitle("Ringtone Library")
         .navigationBarTitleDisplayMode(.automatic)
     }
 }
 
 #Preview {
-    AlarmSoundView(viewModel: AlarmsViewModel(), userViewModel: UserViewModel(), arViewModel: AudioRecorderViewModel(), showRecordingView: false)
+    AlarmSoundView(viewModel: AlarmsViewModel(), arViewModel: AudioRecorderViewModel(), showRecordingView: false)
 }

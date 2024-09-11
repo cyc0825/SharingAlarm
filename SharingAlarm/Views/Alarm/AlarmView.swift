@@ -10,12 +10,17 @@ import AVFoundation
 
 struct AlarmView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var alarmViewModel: AlarmsViewModel
+    @StateObject var economy = EconomyViewModel()
     @State private var isLocked = true
-
+    @State private var showCoinPopup = false
+    @State private var earnedCoins: Int = 0
+    var userID = UserDefaults.standard.string(forKey: "userID") ?? nil
     var body: some View {
         ZStack {
             Color.secondAccent.ignoresSafeArea(edges: .all)
+            CoinEarnedPopupCard(isVisible: $showCoinPopup, coinsEarned: earnedCoins)
             if let alarm = alarmViewModel.selectedAlarm {
                 VStack {
                     Spacer()
@@ -68,6 +73,16 @@ struct AlarmView: View {
                                         // Stop vibration
                                         AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
                                         alarmViewModel.stopVibration()
+                                        let responseTime = Int(alarm.time.timeIntervalSince(Date())) * -1
+                                        if alarm.alarmTime > 7200 && responseTime < 30 {
+                                            print("responseTime: \(responseTime)")
+                                            earnedCoins = 30 - responseTime
+                                            Task {
+                                                try await economy.updateCoinsForResponse(alarm: alarm, earnedCoins: earnedCoins, userID: userID)
+                                                userViewModel.appUser.money += earnedCoins
+                                                showCoinPopup = true
+                                            }
+                                        }
                                         if alarm.participants.count == 1 {
                                             // Only one participant, no need to wait for others
                                             alarmViewModel.removeAlarm(documentID: alarm.id)

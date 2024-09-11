@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import SharingAlarm
+import SharingAlarm
 
 final class SharingAlarmTests: XCTestCase {
 

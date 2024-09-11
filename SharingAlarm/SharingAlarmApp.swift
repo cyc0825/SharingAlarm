@@ -19,7 +19,8 @@ import AuthenticationServices
 
 @main
 struct SharingAlarmApp: App {
-
+    @Environment(\.colorScheme) private var scheme
+    @AppStorage("selectedAppearance") private var selectedAppearance: AppearanceOption = .system
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var friendViewModel = FriendsViewModel()
@@ -66,6 +67,7 @@ struct SharingAlarmApp: App {
                             friendViewModel.fetchFriendsRequest()
                             groupViewModel.fetchGroup()
                         }
+                        .preferredColorScheme(selectedAppearance.colorScheme)
                 }
             } else {
                 NavigationView {
@@ -84,11 +86,13 @@ struct SharingAlarmApp: App {
                                 friendViewModel.fetchFriendsRequest()
                                 groupViewModel.fetchGroup()
                             }
+                            .preferredColorScheme(selectedAppearance.colorScheme)
                         Spacer()
                     }
                     .onAppear {
                         appDelegate.alarmsViewModel = alarmsViewModel
                     }
+                    .preferredColorScheme(selectedAppearance.colorScheme)
                 }
             }
         }

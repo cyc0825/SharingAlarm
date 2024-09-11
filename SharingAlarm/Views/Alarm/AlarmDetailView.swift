@@ -31,7 +31,7 @@ struct AlarmDetailView: View {
                 Text("Alarm Sound")
                 Spacer()
                 Text((alarm.sound == "YourRecording.m4a" ?
-                      "\(alarm.creatorName ?? "Unknown")'s Recording" :
+                      "\(alarm.creatorName ?? "") Recording" :
                         alarm.sound.components(separatedBy: ".").first) ?? alarm.sound)
             }
             .padding()
