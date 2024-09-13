@@ -18,6 +18,7 @@ struct AppUser: Codable, Identifiable {
     var name: String
     var uid: String
     var money: Int = 0
+    var unlockedRingtones: [String] = ["1001"]
     
     static var empty: AppUser {
         AppUser(name: "", uid: "", money: 100)

@@ -89,6 +89,7 @@ struct ProfileView: View {
                     .clipShape(Circle())
                     .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     .shadow(radius: 5)
+                    .padding(.top, 20)
                 
                 // Username
                 Text(userViewModel.appUser.name)

@@ -42,7 +42,10 @@ struct AddAlarmView: View {
                     }
                     
                     Picker("Sound", selection: $selectedSound) {
-                        ForEach(viewModel.sounds + viewModel.paidSounds + viewModel.personalizedSounds, id: \.self) { sound in
+                        ForEach(viewModel.ringtones, id: \.self) { ringtone in
+                            Text(ringtone.name).tag("\(ringtone.name).m4a")
+                        }
+                        ForEach(viewModel.personalizedSounds, id: \.self) { sound in
                             Text(sound).tag("\(sound).m4a")
                         }
                     }
@@ -89,11 +92,12 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = "You have reached the maximum number of alarms trial user can have."
                 }
             })
-            .onDisappear {
-                viewModel.errorMessage = nil
-            }
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-                Alert(title: Text("Cannot Add"), message: Text(viewModel.errorMessage ?? "Unknown Error"), dismissButton: .default(Text("Confirm")))
+                Alert(title: Text("Cannot Add"),
+                      message: Text(viewModel.errorMessage ?? "Unknown Error"),
+                      dismissButton:.default(Text("Confirm"), action: {
+                    viewModel.errorMessage = nil
+                }))
             }
         }
     }

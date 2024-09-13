@@ -37,6 +37,7 @@
 		D36A0FA72C91093000633E02 /* EconomyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA62C91092C00633E02 /* EconomyViewModel.swift */; };
 		D36A0FAC2C921B2100633E02 /* CoinEarnedPopupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */; };
 		D36A0FAE2C92402100633E02 /* MembershipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAD2C92401C00633E02 /* MembershipView.swift */; };
+		D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAF2C93BE9200633E02 /* Animations.swift */; };
 		D3717E462BC9796600440099 /* AlarmInterfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3717E452BC9796600440099 /* AlarmInterfaceView.swift */; };
 		D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594122C6979AC006DB7AA /* AlarmCardView.swift */; };
 		D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */; };
@@ -155,6 +156,7 @@
 		D36A0FA62C91092C00633E02 /* EconomyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EconomyViewModel.swift; sourceTree = "<group>"; };
 		D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinEarnedPopupCard.swift; sourceTree = "<group>"; };
 		D36A0FAD2C92401C00633E02 /* MembershipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipView.swift; sourceTree = "<group>"; };
+		D36A0FAF2C93BE9200633E02 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		D3717E452BC9796600440099 /* AlarmInterfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmInterfaceView.swift; sourceTree = "<group>"; };
 		D37594122C6979AC006DB7AA /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSetupView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		D337DFAA2C56F13100D33713 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D36A0FAF2C93BE9200633E02 /* Animations.swift */,
 				D36A0FA22C8E6E1400633E02 /* Tips.swift */,
 				D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */,
 				D337DFB12C56F1D500D33713 /* Relationship */,
@@ -690,6 +693,7 @@
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
 				D3632D292BCF2420004F02FD /* GroupDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
+				D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */,
 				D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */,
 				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,
 				D3E611322C8BC58D00EF3CFF /* NotificationBannerCard.swift in Sources */,

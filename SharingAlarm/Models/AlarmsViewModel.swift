@@ -65,8 +65,8 @@ class AlarmsViewModel: ObservableObject {
     
     @Published var showAlarmView: Bool = false
 
-    @Published var sounds: [String] = ["Classic", "Chiptune", "Harmony", "Propaganda"]
-    @Published var paidSounds: [String] = ["StarDust", "Oversimplified"]
+    @Published var ringtones: [Ringtone] = []
+    @Published var premiumRingtones: [Ringtone] = []
     @Published var personalizedSounds: [String] = []
     let intervals = ["None", "Daily", "Weekly"]
     
@@ -750,4 +750,43 @@ class AlarmDetailsViewModel: ObservableObject {
     @Published var sound: String = "Default"
     
     // Add functionality to modify alarm details as needed
+}
+
+struct Ringtone: Hashable, Codable, Identifiable {
+    @DocumentID var id: String?
+    var name: String
+    var filename: String
+    var price: Int
+}
+
+extension AlarmsViewModel {
+    func fetchRingtoneList() {
+        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
+        Task {
+            debugPrint("[fetchRingtone] starts")
+            do {
+                let userSnapshot = try await db.collection("UserData").document(userID).getDocument()
+                if let unlockedRingtones = userSnapshot.data()?["unlockedRingtones"] as? [String] {
+                    let querySnapshot = try await db.collection("Ringtones").getDocuments()
+                    if !querySnapshot.isEmpty {
+                        for document in querySnapshot.documents {
+                            let ringtone = try document.data(as: Ringtone.self)
+                            if unlockedRingtones.contains(document.documentID) {
+                                self.ringtones.append(ringtone)
+                            } else {
+                                self.premiumRingtones.append(ringtone)
+                            }
+                        }
+                    }
+                    debugPrint("[fetchRingtone] ends")
+                } else {
+                    self.ringtones = []
+                    self.premiumRingtones = []
+                }
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }

@@ -106,6 +106,7 @@ struct AudioRecorderView: View {
             recorder.loadLocalRecording() { _ in
             }
         }
+        
     }
 }
 

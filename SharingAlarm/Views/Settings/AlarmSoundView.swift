@@ -9,6 +9,7 @@ import SwiftUI
 import AVFoundation
 
 struct AlarmSoundView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var viewModel: AlarmsViewModel
     
     @StateObject var arViewModel: AudioRecorderViewModel
@@ -22,7 +23,7 @@ struct AlarmSoundView: View {
             print("Sound file not found")
             return
         }
-
+        
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.play()
@@ -34,36 +35,25 @@ struct AlarmSoundView: View {
     var body: some View {
         VStack {
             Form {
-                Section("Unlocked Ringtone") {
-                    List(viewModel.sounds.prefix(2), id: \.self) { sound in
-                        Button(action: {
-                            playSound(named: sound)
-                        }) {
-                            Text(sound)
-                        }
-                    }
-                    NavigationLink(destination: RingtoneLib(ringToneType: "Free")) {
-                        Text("See More")
+                Section("Premium Ringtone") {
+                    NavigationLink(destination: RingtoneLib(viewModel: viewModel)) {
+                        Text("Ringtone Shop")
                     }
                 }
                 
-                Section("Premium Ringtone") {
-                    List(viewModel.paidSounds.prefix(2), id: \.self) { sound in
-                        Button(action: {
-                            playSound(named: sound)
-                        }) {
-                            Text(sound)
-                        }
-                    }
-                    NavigationLink(destination: RingtoneLib(ringToneType: "Premium")) {
-                        Text("See More")
-                    }
-                }
                 Section("Personalized Ringtone") {
                     AudioRecorderView(alarmsViewModel: viewModel)
                 }
-                // MARK: VIP can uncomment this out
-//                .disabled(true)
+                
+                Section("Unlocked Ringtone") {
+                    List(viewModel.ringtones, id: \.self) { ringtone in
+                        Button(action: {
+                            playSound(named: ringtone.name)
+                        }) {
+                            Text(ringtone.name)
+                        }
+                    }
+                }
             }
             .edgesIgnoringSafeArea(.bottom)
         }

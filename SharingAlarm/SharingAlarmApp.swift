@@ -66,6 +66,7 @@ struct SharingAlarmApp: App {
                             friendViewModel.fetchOwnRequest()
                             friendViewModel.fetchFriendsRequest()
                             groupViewModel.fetchGroup()
+                            alarmsViewModel.fetchRingtoneList()
                         }
                         .preferredColorScheme(selectedAppearance.colorScheme)
                 }
@@ -85,6 +86,7 @@ struct SharingAlarmApp: App {
                                 friendViewModel.fetchOwnRequest()
                                 friendViewModel.fetchFriendsRequest()
                                 groupViewModel.fetchGroup()
+                                alarmsViewModel.fetchRingtoneList()
                             }
                             .preferredColorScheme(selectedAppearance.colorScheme)
                         Spacer()
