@@ -222,9 +222,9 @@ class AudioRecorderViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate 
 }
 
 extension AudioRecorderViewModel {
-    func uploadRecording() {
-        guard let recordedAudioURL = recordedAudioURL else { return }
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    func uploadRecording() async throws -> Bool {
+        guard let recordedAudioURL = recordedAudioURL else { return false }
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return false }
         
         // Upload to Firebase Storage
         let storageRef = Storage.storage().reference()
@@ -244,6 +244,7 @@ extension AudioRecorderViewModel {
                 // Update any stored URLs as needed here
             }
         }
+        return true
     }
     
     func discardNewRecording() {

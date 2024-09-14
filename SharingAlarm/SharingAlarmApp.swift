@@ -105,7 +105,7 @@ func scheduleNotification(for alarm: Alarm, viewModel: AlarmsViewModel) {
     let content = UNMutableNotificationContent()
     content.title = "Alarm"
     content.body = "Your alarm is going off!"
-    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "AlarmTest.mp3"))
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "Classic.m4a"))
     
     let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarm.time)
     let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: true)
@@ -363,13 +363,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             cacheSoundFromURL(ringtoneURL) { cachedURL in
                 guard let cachedURL = cachedURL else { return }
                 do {
-                    let filename = "\(UUID().uuidString).m4a"
+                    let filename = cachedURL.deletingPathExtension().lastPathComponent + ".m4a"
                     let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
-                    if !FileManager.default.fileExists(atPath: targetURL.path) {
-                        try FileManager.default.copyItem(at: cachedURL, to: targetURL)
+                    if FileManager.default.fileExists(atPath: targetURL.path) {
+                        try FileManager.default.removeItem(at: targetURL)
                     }
-                    print("using recording \(filename)")
+                    try FileManager.default.copyItem(at: cachedURL, to: targetURL)
+                    try FileManager.default.setAttributes([.protectionKey: FileProtectionType.none], ofItemAtPath: targetURL.path)
+                    let attributes = try FileManager.default.attributesOfItem(atPath: targetURL.path)
+                    print("Copied sound file attributes: \(attributes)")
                     content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
+                    print("Using downloaded recording: \(filename)")
                 }
                 catch {
                     print("Error copying sound file: \(error)")
@@ -385,16 +389,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                     let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
                     
                     // copy audio file to /Library/Sounds
-                    if !FileManager.default.fileExists(atPath: targetURL.path) {
-                        try FileManager.default.copyItem(at: myurl, to: targetURL)
+                    if FileManager.default.fileExists(atPath: targetURL.path) {
+                        try FileManager.default.removeItem(at: targetURL)
                     }
+                    try FileManager.default.copyItem(at: myurl, to: targetURL)
                     content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
                 } catch {
                     print("Error copying sound file: \(error)")
                 }
+            } else {
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
+                print("Using sound \(sound)")
             }
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: sound))
-            print("Using sound \(sound)")
         }
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: alarmTime), repeats: false)
@@ -408,8 +414,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 print("Local notification scheduled.")
             }
         }
-        
     }
+    
+    func extractFilename(from urlString: String) -> String {
+            // Decode the URL string to handle the encoded characters
+            guard let decodedUrl = urlString.removingPercentEncoding else { return "" }
+            
+            // Find the range of the token after the "token=" part
+            if let range = decodedUrl.range(of: "token=") {
+                // Extract the substring starting from the token
+                let token = decodedUrl[range.upperBound...]
+                return String(token)
+            }
+            
+            return "Token not found"
+        }
     
     public func cancelScheduledLocalNotification(id: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])

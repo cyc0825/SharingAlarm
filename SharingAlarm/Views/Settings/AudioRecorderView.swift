@@ -11,6 +11,7 @@ struct AudioRecorderView: View {
     @StateObject private var recorder = AudioRecorderViewModel()
     @StateObject var alarmsViewModel: AlarmsViewModel
     @State private var isRecording = false // State to handle button appearance
+    @State private var uploaded = false
     
     var body: some View {
         VStack {
@@ -49,11 +50,18 @@ struct AudioRecorderView: View {
                                 .contentTransition(.symbolEffect(.replace))
                         }
                         Button(action: {
-                            recorder.uploadRecording()
+                            Task {
+                                let success = try await recorder.uploadRecording()
+                                if success { uploaded = true }
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                                uploaded = false
+                            })
                         }) {
-                            Image(systemName: "square.and.arrow.up")
+                            Image(systemName: uploaded ? "checkmark" : "square.and.arrow.up")
                                 .resizable()
                                 .frame(width: 14, height: 20)
+                                .contentTransition(.symbolEffect(.replace))
                         }
                     }
                 }
