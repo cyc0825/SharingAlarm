@@ -74,8 +74,9 @@ struct AlarmView: View {
                                         AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
                                         alarmViewModel.stopVibration()
                                         let responseTime = Int(alarm.time.timeIntervalSince(Date())) * -1
-                                        if alarm.alarmTime > 7200 && responseTime < 30 {
-                                            print("responseTime: \(responseTime)")
+                                        print("alarm.alarmTime: \(alarm.alarmTime)")
+                                        print("responseTime: \(responseTime)")
+                                        if alarm.alarmTime > 10 && responseTime < 30 {
                                             earnedCoins = 30 - responseTime
                                             Task {
                                                 try await economy.updateCoinsForResponse(alarm: alarm, earnedCoins: earnedCoins, userID: userID)

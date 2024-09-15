@@ -13,7 +13,7 @@ struct FriendsTip: Tip {
     }
 
     var message: Text? {
-        Text("Tap the add button and add your friends.")
+        Text("Tap the add button and add your friends using your friends' userIDs.")
     }
     
     var image: Image? {
@@ -27,7 +27,7 @@ struct GroupsTip: Tip {
     }
 
     var message: Text? {
-        Text("Tap the button and create your groups.")
+        Text("Tap the button and create your groups, but before you create a group, you need to first add one friend.")
     }
     
     var image: Image? {

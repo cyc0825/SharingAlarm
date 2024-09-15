@@ -108,13 +108,15 @@ struct ProfileView: View {
 
             // Edit Profile Section
             Section {
-                HStack {
-                    Image(systemName: "person.crop.circle.fill")
-                        .foregroundStyle(Color.accentColor)
-                    Button("Edit Profile") {
-                        showingProfileEdit = true
+                Button {
+                    showingProfileEdit = true
+                } label: {
+                    HStack {
+                        Image(systemName: "person.crop.circle.fill")
+                        Text("Edit Profile")
                     }
                 }
+                .tint(.accent)
             }
 
             Section {
@@ -149,6 +151,7 @@ struct ProfileView: View {
                         Text("Sign out")
                     }
                 }
+                .tint(.accent)
             }
             Section {
                 Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
