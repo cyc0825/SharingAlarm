@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ActivityKit
 
 struct AddAlarmView: View {
     @ObservedObject var viewModel: AlarmsViewModel
@@ -82,6 +83,7 @@ struct AddAlarmView: View {
                                let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
                                 groupsViewModel.groups[index].alarmCount += 1
                             }
+                            startAlarmLiveActivity(alarmTime: selectedTime, alarmBody: alarmBody)
                         case .failure(let error):
                             debugPrint("Add Group error: \(error)")
                         }
@@ -99,6 +101,21 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = nil
                 }))
             }
+        }
+    }
+    
+    func startAlarmLiveActivity(alarmTime: Date, alarmBody: String) {
+        let initialContentState = AlarmAttributes.ContentState(remainingTime: alarmTime.timeIntervalSinceNow, alarmBody: alarmBody)
+        let attributes = AlarmAttributes(alarmTime: alarmTime, alarmBody: alarmBody)
+
+        do {
+            let _ = try Activity<AlarmAttributes>.request(
+                attributes: attributes,
+                contentState: initialContentState,
+                pushType: nil)
+            print("Started Live Activity")
+        } catch {
+            print("Failed to start Live Activity: \(error.localizedDescription)")
         }
     }
 }

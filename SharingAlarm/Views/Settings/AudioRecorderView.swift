@@ -52,7 +52,10 @@ struct AudioRecorderView: View {
                         Button(action: {
                             Task {
                                 let success = try await recorder.uploadRecording()
-                                if success { uploaded = true }
+                                if success {
+                                    uploaded = true
+                                    alarmsViewModel.personalizedSounds.append("YourRecording")
+                                }
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                                 uploaded = false

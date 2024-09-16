@@ -323,9 +323,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("Present request View \(userInfo)")
         
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = scene.windows.first?.rootViewController,
-              rootViewController.presentedViewController == nil else {
-            print("Another view is already presented, cannot present AlarmRequestView.")
+              let rootViewController = scene.windows.first?.rootViewController else {
+            print("Unable to find root view controller.")
+            return
+        }
+
+        // Check if there's already a presented view controller
+        if let presentedVC = rootViewController.presentedViewController {
+            // Dismiss the currently presented view controller
+            presentedVC.dismiss(animated: true) {
+                // Call the function again after dismissing to present the AlarmRequestView
+                self.presentAlarmRequestView(userInfo: userInfo)
+            }
             return
         }
         
@@ -365,17 +374,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 do {
                     let filename = cachedURL.deletingPathExtension().lastPathComponent + ".m4a"
                     let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
+                    
+                    // Remove existing file if present
                     if FileManager.default.fileExists(atPath: targetURL.path) {
                         try FileManager.default.removeItem(at: targetURL)
                     }
+                    
+                    // Copy the file to /Library/Sounds
                     try FileManager.default.copyItem(at: cachedURL, to: targetURL)
+                    
+                    // Set file protection and permissions to be readable by the system
                     try FileManager.default.setAttributes([.protectionKey: FileProtectionType.none], ofItemAtPath: targetURL.path)
-                    let attributes = try FileManager.default.attributesOfItem(atPath: targetURL.path)
-                    print("Copied sound file attributes: \(attributes)")
+                    try FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: targetURL.path) // rw-r--r--
+                    
+                    // Set sound for notification
                     content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
                     print("Using downloaded recording: \(filename)")
-                }
-                catch {
+                } catch {
                     print("Error copying sound file: \(error)")
                 }
             }

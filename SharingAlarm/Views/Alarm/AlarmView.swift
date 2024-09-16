@@ -76,20 +76,20 @@ struct AlarmView: View {
                                         let responseTime = Int(alarm.time.timeIntervalSince(Date())) * -1
                                         print("alarm.alarmTime: \(alarm.alarmTime)")
                                         print("responseTime: \(responseTime)")
-                                        if alarm.alarmTime > 10 && responseTime < 30 {
-                                            earnedCoins = 30 - responseTime
-                                            Task {
+                                        Task {
+                                            if alarm.alarmTime > 7200 && responseTime < 30 {
+                                                earnedCoins = 30 - responseTime
                                                 try await economy.updateCoinsForResponse(alarm: alarm, earnedCoins: earnedCoins, userID: userID)
                                                 userViewModel.appUser.money += earnedCoins
                                                 showCoinPopup = true
                                             }
-                                        }
-                                        if alarm.participants.count == 1 {
-                                            // Only one participant, no need to wait for others
-                                            alarmViewModel.removeAlarm(documentID: alarm.id)
-                                            dismiss()
-                                        } else {
-                                            alarmViewModel.setUserStop(alarmId: alarm.id, participants: alarm.participants)
+                                            if alarm.participants.count == 1 {
+                                                // Only one participant, no need to wait for others
+                                                alarmViewModel.removeAlarm(documentID: alarm.id)
+                                                dismiss()
+                                            } else {
+                                                alarmViewModel.setUserStop(alarmId: alarm.id, participants: alarm.participants)
+                                            }
                                         }
                                     }, maxWidth: geometry.size.width)
                                 }
