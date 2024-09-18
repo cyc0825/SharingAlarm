@@ -307,18 +307,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
     
-    func presentAlarmView() {
-        // Create a window and set the root view controller to your custom SwiftUI view
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = scene.windows.first?.rootViewController {
-            let rootView = AlarmView(alarmViewModel: AlarmsViewModel())
-            let sheetController = SheetHostingController(rootView: rootView)
-
-            rootViewController.present(sheetController, animated: true, completion: nil)
-        } else {
-            print("No suitable window scene found.")
-        }
-    }
+//    func presentAlarmView() {
+//        // Create a window and set the root view controller to your custom SwiftUI view
+//        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+//           let rootViewController = scene.windows.first?.rootViewController {
+//            let rootView = AlarmView(alarmViewModel: AlarmsViewModel())
+//            let sheetController = SheetHostingController(rootView: rootView)
+//
+//            rootViewController.present(sheetController, animated: true, completion: nil)
+//        } else {
+//            print("No suitable window scene found.")
+//        }
+//    }
     
     func presentAlarmRequestView(userInfo: [AnyHashable : Any]) {
         print("Present request View \(userInfo)")

@@ -22,7 +22,7 @@ struct Alarm: Hashable, Codable, Identifiable {
     var repeatInterval: String
     var groupID: String?
     var groupName: String?
-    var participants: [String: [String]] = [:]// Accept, Reject, Stop, Snooze ID: [Name, Status]
+    var participants: [String: [String]] = [:]// Accept, Reject, Stopped, Snoozed ID: [Name, Status]
     var creatorID: String?
     var creatorName: String?
     var isOn: Bool? = true
@@ -502,11 +502,11 @@ extension AlarmsViewModel {
         return participants[userID]![1] == "Stopped"
     }
     
-    func setUserStop(alarmId: String?, participants: [String: [String]]) {
+    func setUserStatus(alarmId: String?, status: String, participants: [String: [String]]) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         if let alarmId = alarmId {
             var newParticipants = participants
-            newParticipants[userID]![1] = "Stopped"
+            newParticipants[userID]![1] = status
             Task {
                 let document = db.collection("Alarm").document(alarmId)
                 document.updateData(["participants": newParticipants])

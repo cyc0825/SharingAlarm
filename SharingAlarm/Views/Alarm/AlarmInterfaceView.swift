@@ -136,6 +136,7 @@ struct CombineView: View {
                 //Present Alarm View
                 // viewModel.startLongVibration()
                 viewModel.showAlarmView = true
+                viewModel.selectedAlarm = alarm
                 viewModel.ongoingAlarms.append(alarm)
 //                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.caf")
                 // viewModel.removeAlarm(documentID: alarmID)
