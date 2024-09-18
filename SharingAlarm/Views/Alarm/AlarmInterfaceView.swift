@@ -137,7 +137,7 @@ struct CombineView: View {
                 // viewModel.startLongVibration()
                 viewModel.showAlarmView = true
                 viewModel.ongoingAlarms.append(alarm)
-//                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.m4a")
+//                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.caf")
                 // viewModel.removeAlarm(documentID: alarmID)
                 if let newTargetDate = newTargetDate {
                     // Update the alarm with the new target date

@@ -14,7 +14,7 @@ struct AddAlarmView: View {
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
-    @State private var selectedSound = "Classic.m4a"
+    @State private var selectedSound = "Classic.caf"
     @State private var alarmBody: String = "wake up"
     @State private var selectedGroup: Groups? = nil
     
@@ -23,7 +23,7 @@ struct AddAlarmView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("Alarm Display Info") {
+                Section("Alarm Display Preview") {
                     NotificationBannerCard(alarmBody: $alarmBody, alarmTime: $selectedTime)
                         .padding(.horizontal, -20)
                         .padding(.vertical, -10)
@@ -42,12 +42,12 @@ struct AddAlarmView: View {
                         }
                     }
                     
-                    Picker("Sound", selection: $selectedSound) {
+                    Picker("Ringtone", selection: $selectedSound) {
                         ForEach(viewModel.ringtones, id: \.self) { ringtone in
-                            Text(ringtone.name).tag("\(ringtone.name).m4a")
+                            Text(ringtone.name).tag("\(ringtone.name).caf")
                         }
                         ForEach(viewModel.personalizedSounds, id: \.self) { sound in
-                            Text(sound).tag("\(sound).m4a")
+                            Text(sound).tag("\(sound).caf")
                         }
                     }
                     Picker("Group", selection: $selectedGroup) {
@@ -83,7 +83,7 @@ struct AddAlarmView: View {
                                let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
                                 groupsViewModel.groups[index].alarmCount += 1
                             }
-                            startAlarmLiveActivity(alarmTime: selectedTime, alarmBody: alarmBody)
+//                            startAlarmLiveActivity(alarmTime: selectedTime, alarmBody: alarmBody)
                         case .failure(let error):
                             debugPrint("Add Group error: \(error)")
                         }
@@ -101,21 +101,6 @@ struct AddAlarmView: View {
                     viewModel.errorMessage = nil
                 }))
             }
-        }
-    }
-    
-    func startAlarmLiveActivity(alarmTime: Date, alarmBody: String) {
-        let initialContentState = AlarmAttributes.ContentState(remainingTime: alarmTime.timeIntervalSinceNow, alarmBody: alarmBody)
-        let attributes = AlarmAttributes(alarmTime: alarmTime, alarmBody: alarmBody)
-
-        do {
-            let _ = try Activity<AlarmAttributes>.request(
-                attributes: attributes,
-                contentState: initialContentState,
-                pushType: nil)
-            print("Started Live Activity")
-        } catch {
-            print("Failed to start Live Activity: \(error.localizedDescription)")
         }
     }
 }

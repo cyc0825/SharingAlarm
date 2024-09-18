@@ -41,7 +41,7 @@ class AudioRecorderViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate 
             return
         }
 
-        let audioFilename = getDocumentsDirectory().appendingPathComponent("Recording.m4a")
+        let audioFilename = getDocumentsDirectory().appendingPathComponent("Recording.caf")
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
@@ -190,7 +190,7 @@ class AudioRecorderViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate 
     }
 
     func loadLocalRecording(completion: @escaping (Bool) -> Void) {
-        let audioFilename = getDocumentsDirectory().appendingPathComponent("Recording.m4a")
+        let audioFilename = getDocumentsDirectory().appendingPathComponent("Recording.caf")
         if FileManager.default.fileExists(atPath: audioFilename.path) {
             recordedAudioURL = audioFilename
             // Load any saved audiogram data if needed
@@ -228,7 +228,7 @@ extension AudioRecorderViewModel {
         
         // Upload to Firebase Storage
         let storageRef = Storage.storage().reference()
-        let audioRef = storageRef.child("recordings/\(userID)/Recording.m4a")
+        let audioRef = storageRef.child("recordings/\(userID)/Recording.caf")
         audioRef.putFile(from: recordedAudioURL, metadata: nil) { metadata, error in
             if let error = error {
                 print("Failed to upload recording: \(error.localizedDescription)")

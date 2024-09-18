@@ -19,7 +19,7 @@ struct AlarmSoundView: View {
     
     // Function to play the sound
     private func playSound(named soundName: String) {
-        guard let url = Bundle.main.url(forResource: soundName, withExtension: "m4a") else {
+        guard let url = Bundle.main.url(forResource: soundName, withExtension: "caf") else {
             print("Sound file not found")
             return
         }

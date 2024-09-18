@@ -14,6 +14,5 @@ struct AlarmAttributes: ActivityAttributes {
         var alarmBody: String
     }
 
-    var alarmTime: Date
     var alarmBody: String
 }

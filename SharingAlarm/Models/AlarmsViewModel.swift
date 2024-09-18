@@ -210,7 +210,7 @@ class AlarmsViewModel: ObservableObject {
                                "creatorID": userID,
                                "creatorName": userName
                               ]
-                    if sound == "YourRecording.m4a" {
+                    if sound == "YourRecording.caf" {
                         guard let ringtoneURL = UserDefaults.standard.url(forKey: "ringtoneURL") else { return }
                         data["ringtoneURL"] = ringtoneURL.absoluteString
                     }

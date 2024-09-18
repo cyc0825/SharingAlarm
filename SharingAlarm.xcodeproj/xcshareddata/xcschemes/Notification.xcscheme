@@ -67,9 +67,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
+         runnableDebuggingMode = "0"
          BundleIdentifier = "com.cyc0825.SharingAlarm"
-         RemotePath = "/Users/david_cao/Library/Developer/CoreSimulator/Devices/85C73AFE-5DFD-47BA-B1F3-22C308125C2E/data/Containers/Bundle/Application/747353CA-7196-4ACC-9A4E-B7AEE6E7F77F/SharingAlarm.app">
+         RemotePath = "/var/containers/Bundle/Application/AA397615-4ECD-4470-8937-DD459B9FAC43/SharingAlarm.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

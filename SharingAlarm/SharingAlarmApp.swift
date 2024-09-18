@@ -14,6 +14,7 @@ import FirebaseMessaging
 
 import UIKit
 import TipKit
+import ActivityKit
 import AVFoundation
 import AuthenticationServices
 
@@ -105,7 +106,7 @@ func scheduleNotification(for alarm: Alarm, viewModel: AlarmsViewModel) {
     let content = UNMutableNotificationContent()
     content.title = "Alarm"
     content.body = "Your alarm is going off!"
-    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "Classic.m4a"))
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "Classic.caf"))
     
     let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: alarm.time)
     let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: true)
@@ -236,7 +237,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("UNNotificationResponse did Receive")
         let userInfo = response.notification.request.content.userInfo
-        
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         if response.notification.request.content.categoryIdentifier == "alarm" {
             switch response.actionIdentifier {
             case "ACCEPT_ACTION":
@@ -363,7 +364,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
 
-    
     public func scheduleLocalNotification(id: String, title: String, body: String, alarmTime: Date, sound: String, ringtoneURL: String?) {
         let content = UNMutableNotificationContent()
         content.title = title
@@ -372,7 +372,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             cacheSoundFromURL(ringtoneURL) { cachedURL in
                 guard let cachedURL = cachedURL else { return }
                 do {
-                    let filename = cachedURL.deletingPathExtension().lastPathComponent + ".m4a"
+                    let filename = "downloadedRecording.caf"
                     let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
                     
                     // Remove existing file if present
@@ -386,20 +386,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                     // Set file protection and permissions to be readable by the system
                     try FileManager.default.setAttributes([.protectionKey: FileProtectionType.none], ofItemAtPath: targetURL.path)
                     try FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: targetURL.path) // rw-r--r--
-                    
-                    // Set sound for notification
-                    content.sound = UNNotificationSound(named: UNNotificationSoundName(filename))
-                    print("Using downloaded recording: \(filename)")
                 } catch {
                     print("Error copying sound file: \(error)")
                 }
             }
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("downloadedRecording.caf"))
         } else {
-            if sound == "YourRecording.m4a" {
+            if sound == "YourRecording.caf" {
                 do {
                     print("Using recording locally")
                     let docsurl = try FileManager.default.url(for:.documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                    let myurl = docsurl.appendingPathComponent("Recording.m4a")
+                    let myurl = docsurl.appendingPathComponent("Recording.caf")
                     let filename = myurl.lastPathComponent
                     let targetURL = try FileManager.default.soundsLibraryURL(for: filename)
                     
@@ -505,6 +502,54 @@ extension AppDelegate {
         }
 
         task.resume()
+    }
+}
+
+// ActivityKit
+extension AppDelegate {
+    func startAlarmLiveActivity(remainingTime: TimeInterval, alarmBody: String) {
+        let initialContentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarmBody)
+        let attributes = AlarmAttributes(alarmBody: alarmBody)
+
+        do {
+            let activity = try Activity<AlarmAttributes>.request(
+                attributes: attributes,
+                contentState: initialContentState,
+                pushType: nil)
+            updateAlarmLiveActivity(alarm: activity, remainingTime: remainingTime)
+            print("Started Live Activity")
+        } catch {
+            print("Failed to start Live Activity: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateAlarmLiveActivity(alarm: Activity<AlarmAttributes>, remainingTime: TimeInterval) {
+        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            let remainingTime = remainingTime - 1
+            let contentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarm.attributes.alarmBody)
+            
+            Task {
+                await alarm.update(using: contentState)
+            }
+            
+            if remainingTime == 0 {
+                timer.invalidate()
+                self.endAlarmLiveActivity(activity: alarm)
+            }
+        }
+    }
+
+    func endAlarmLiveActivity(activity: Activity<AlarmAttributes>) {
+        Task {
+            await activity.end(dismissalPolicy: .immediate)
+        }
+    }
+}
+
+// App Life Cycle
+extension AppDelegate {
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 }
 

@@ -28,9 +28,9 @@ struct AlarmDetailView: View {
             }
             .padding()
             HStack {
-                Text("Alarm Sound")
+                Text("Alarm Ringtone")
                 Spacer()
-                Text((alarm.sound == "YourRecording.m4a" ?
+                Text((alarm.sound == "YourRecording.caf" ?
                       "\(alarm.creatorName ?? "") Recording" :
                         alarm.sound.components(separatedBy: ".").first) ?? alarm.sound)
             }

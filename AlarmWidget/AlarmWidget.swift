@@ -23,16 +23,33 @@ struct AlarmLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.center) {
-                    AlarmLiveActivityView(context: context)
+                    VStack {
+                        Text("Alarm: \(context.attributes.alarmBody)")
+                            .font(.headline)
+                            .foregroundStyle(Color.accent)
+
+                        Text("Time Remaining: \(formatTime(context.state.remainingTime))")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundStyle(Color.accent)
+                    }
+                    .padding(.bottom)
+                    .activitySystemActionForegroundColor(.primary)
                 }
             } compactLeading: {
                 Text("⏰")
             } compactTrailing: {
-                Text("Time")
+                Text("\(formatTime(context.state.remainingTime))")
             } minimal: {
                 Text("⏰")
             }
             .keylineTint(.yellow)
         }
+    }
+    
+    private func formatTime(_ remainingTime: TimeInterval) -> String {
+        let minutes = Int(remainingTime) / 60 % 60
+        let seconds = Int(remainingTime) % 60
+        return String(format: "%02i:%02i", minutes, seconds)
     }
 }

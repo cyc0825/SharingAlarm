@@ -14,7 +14,7 @@ struct EditAlarmView: View {
     @State private var repeatInterval = "None"
     @State private var selectedSound = "Harmony"
     let repeatOptions = ["None", "Daily", "Weekly"]
-    let sounds = ["Harmony.m4a", "Classic.m4a", "StarDust.m4a"]
+    let sounds = ["Harmony.caf", "Classic.caf", "StarDust.caf"]
     let alarm: Alarm
     
     var alarmIndex: Int {
@@ -56,9 +56,9 @@ struct EditAlarmView: View {
                         }
                         
                         HStack {
-                            Text("Sound")
+                            Text("Ringtone")
                             Spacer()
-                            Text((alarm.sound == "YourRecording.m4a" ?
+                            Text((alarm.sound == "YourRecording.caf" ?
                                   "\(alarm.creatorName ?? "Unknown")'s Recording" :
                                     alarm.sound.components(separatedBy: ".").first) ?? alarm.sound)
                         }

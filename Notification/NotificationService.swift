@@ -15,6 +15,7 @@ class NotificationService: UNNotificationServiceExtension {
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
+    private var vibrationTimer: DispatchSourceTimer?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         
@@ -24,8 +25,10 @@ class NotificationService: UNNotificationServiceExtension {
         // Check the category identifier to decide whether to modify the notification
         if request.content.categoryIdentifier == "alarmVibrate" {
             startAudioWork()
-            startRingtone()
-            contentHandler(UNNotificationContent())
+            // startRingtone()
+            if let bestAttemptContent = bestAttemptContent {
+                contentHandler(bestAttemptContent)
+            }
         } else {
             if let bestAttemptContent = bestAttemptContent {
                 contentHandler(bestAttemptContent)
@@ -42,6 +45,7 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     override func serviceExtensionTimeWillExpire() {
+        print("extensionTimeWillExpire")
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
         stopAudioWork()
@@ -53,8 +57,11 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func startAudioWork() {
+        print("startAudioWork")
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         AudioServicesAddSystemSoundCompletion(kSystemSoundID_Vibrate, nil, nil, { sound, clientData in
+            print("start Vibrate")
+            sleep(1)
             AudioServicesPlaySystemSound(sound)  // Replay the vibration
         }, nil)
     }
@@ -62,7 +69,7 @@ class NotificationService: UNNotificationServiceExtension {
     
     private func startRingtone() {
         // Safely unwrap the path and create the sound ID
-        guard let audioPath = Bundle.main.path(forResource: ringToneName, ofType: "m4a"),
+        guard let audioPath = Bundle.main.path(forResource: "Classic", ofType: "caf"),
               let fileUrl = URL(string: audioPath) else {
             print("Failed to find the ringtone file.")
             return
@@ -77,6 +84,9 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func stopAudioWork() {
+        print("Stop Audio Work")
+        vibrationTimer?.cancel()
+        vibrationTimer = nil
         AudioServicesRemoveSystemSoundCompletion(soundID)
         AudioServicesDisposeSystemSoundID(soundID)
     }

@@ -34,7 +34,7 @@ struct NotificationBannerCard: View {
                             Spacer()
                             Text(alarmTime.formatted(date: .omitted, time: .shortened))
                                 .font(.footnote)
-                                .foregroundColor(.gray)
+                                .foregroundColor(.secondary)
                         }
                         
                         Text("\(name) wants you to \(alarmBody)")
@@ -45,8 +45,8 @@ struct NotificationBannerCard: View {
                     
                 }
                 .padding()
-                .background(Color(.systemGray6).opacity(0.9))
-                .cornerRadius(10)
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
                 .shadow(radius: 2)
             }
             .padding(.horizontal, 5)

@@ -78,11 +78,11 @@ class GroupsViewModel: ObservableObject {
                                     }
                                     if !self.groups.contains(where: { $0.id == id }) {
                                         let Groups = Groups(id: id,
-                                                                from: GroupData["from"] as? Date ?? Date(),
-                                                                to: GroupData["to"] as? Date ?? Date(),
-                                                                name: GroupData["name"] as? String ?? "",
-                                                                participants: resolvedParticipants,
-                                                                alarmCount: GroupData["alarmCount"] as? Int ?? 0)
+                                                            from: (GroupData["from"] as? Timestamp)?.dateValue() ?? Date(),
+                                                            to: (GroupData["to"] as? Timestamp)?.dateValue() ?? Date(),
+                                                            name: GroupData["name"] as? String ?? "",
+                                                            participants: resolvedParticipants,
+                                                            alarmCount: GroupData["alarmCount"] as? Int ?? 0)
                                         self.groups.append(Groups)
                                     }
                                 }
