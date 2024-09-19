@@ -214,7 +214,7 @@ struct ArcView: View {
     var index: Int
     var viewModel: AlarmsViewModel
     
-    @GestureState private var tapped = false // Tracks the tap state
+    @State private var tapped = false // Tracks the tap state
     @State private var drawAnimationProgress: CGFloat = 0.0 // For drawing animation
     @State var isShowEdit = false
     @State var isShowDetail = false
@@ -222,17 +222,18 @@ struct ArcView: View {
     var body: some View {
         GeometryReader { geometry in
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            let longPressGesture = LongPressGesture(minimumDuration: 0.6)
-                .onChanged {_ in
-                    self.action()
-                }
-                .updating($tapped) { currentState, gestureState, transaction in
-                    gestureState = currentState
-                }
-                .onEnded { _ in
-                    isShowEdit = true
-                    UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
-                }
+//            let longPressGesture = LongPressGesture(minimumDuration: 0.6, maximumDistance: .infinity)
+//                .onChanged {_ in
+//                    self.action()
+//                }
+//                .updating($tapped) { currentState, gestureState, transaction in
+//                    gestureState = currentState
+//                }
+//                .onEnded { _ in
+//                    viewModel.selectedAlarm = viewModel.alarms[index]
+//                    isShowEdit = true
+//                    UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+//                }
             
             // Animated drawing of the arc
             Path { path in
@@ -245,7 +246,13 @@ struct ArcView: View {
                 viewModel.selectedAlarm = viewModel.alarms[index]
                 isShowDetail = true
             }
-            .simultaneousGesture(longPressGesture)
+            .onLongPressGesture(minimumDuration: 0.6) {
+                viewModel.selectedAlarm = viewModel.alarms[index]
+                isShowEdit = true
+                UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            } onPressingChanged: { istapped in
+                tapped = istapped
+            }
             .animation(.spring(duration: 0.6), value: tapped)
             .onAppear {
                 // Trigger the drawing animation when the view appears

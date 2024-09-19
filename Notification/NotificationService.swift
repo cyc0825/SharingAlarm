@@ -61,7 +61,6 @@ class NotificationService: UNNotificationServiceExtension {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         AudioServicesAddSystemSoundCompletion(kSystemSoundID_Vibrate, nil, nil, { sound, clientData in
             print("start Vibrate")
-            sleep(1)
             AudioServicesPlaySystemSound(sound)  // Replay the vibration
         }, nil)
     }

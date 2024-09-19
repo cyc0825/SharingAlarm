@@ -15,9 +15,7 @@
 		D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */; };
 		D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB22C56F20100D33713 /* AddFriendView.swift */; };
 		D337DFB52C56F22400D33713 /* AddGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D337DFB42C56F22400D33713 /* AddGroupView.swift */; };
-		D33B87392C77117C002C11D4 /* Chiptune.caf in Resources */ = {isa = PBXBuildFile; fileRef = D33B87352C77117C002C11D4 /* Chiptune.caf */; };
 		D33B873A2C77117C002C11D4 /* Oversimplified.caf in Resources */ = {isa = PBXBuildFile; fileRef = D33B87372C77117C002C11D4 /* Oversimplified.caf */; };
-		D33B873B2C77117C002C11D4 /* StarDust.caf in Resources */ = {isa = PBXBuildFile; fileRef = D33B87382C77117C002C11D4 /* StarDust.caf */; };
 		D33B873C2C77117C002C11D4 /* Classic.caf in Resources */ = {isa = PBXBuildFile; fileRef = D33B87362C77117C002C11D4 /* Classic.caf */; };
 		D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34A27502C642944009BB039 /* AlarmDetailView.swift */; };
 		D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */; };
@@ -65,6 +63,15 @@
 		D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ABC83E2BDF12D3003D2265 /* SignupView.swift */; };
 		D3AFBFE02C796898008DA9DD /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AFBFDF2C796898008DA9DD /* NotificationService.swift */; };
 		D3AFBFE42C796898008DA9DD /* Notification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D3AFBFDD2C796898008DA9DD /* Notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D3B469B12C9BA17800D36E1D /* icon3.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AA2C9BA17800D36E1D /* icon3.png */; };
+		D3B469B22C9BA17800D36E1D /* icon6.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AD2C9BA17800D36E1D /* icon6.png */; };
+		D3B469B32C9BA17800D36E1D /* icon5.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AC2C9BA17800D36E1D /* icon5.png */; };
+		D3B469B42C9BA17800D36E1D /* icon4.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AB2C9BA17800D36E1D /* icon4.png */; };
+		D3B469B52C9BA17800D36E1D /* icon9.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B02C9BA17800D36E1D /* icon9.png */; };
+		D3B469B62C9BA17800D36E1D /* icon7.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AE2C9BA17800D36E1D /* icon7.png */; };
+		D3B469B72C9BA17800D36E1D /* icon8.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AF2C9BA17800D36E1D /* icon8.png */; };
+		D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */; };
+		D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */; };
 		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
 		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
 		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
@@ -146,10 +153,8 @@
 		D337DFAF2C56F1BA00D33713 /* EditAlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlarmView.swift; sourceTree = "<group>"; };
 		D337DFB22C56F20100D33713 /* AddFriendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendView.swift; sourceTree = "<group>"; };
 		D337DFB42C56F22400D33713 /* AddGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGroupView.swift; sourceTree = "<group>"; };
-		D33B87352C77117C002C11D4 /* Chiptune.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chiptune.caf; sourceTree = "<group>"; };
 		D33B87362C77117C002C11D4 /* Classic.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Classic.caf; sourceTree = "<group>"; };
 		D33B87372C77117C002C11D4 /* Oversimplified.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Oversimplified.caf; sourceTree = "<group>"; };
-		D33B87382C77117C002C11D4 /* StarDust.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = StarDust.caf; sourceTree = "<group>"; };
 		D34A27502C642944009BB039 /* AlarmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmDetailView.swift; sourceTree = "<group>"; };
 		D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
@@ -201,6 +206,15 @@
 		D3AFBFDD2C796898008DA9DD /* Notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Notification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3AFBFDF2C796898008DA9DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		D3AFBFE12C796898008DA9DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3B469AA2C9BA17800D36E1D /* icon3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon3.png; sourceTree = "<group>"; };
+		D3B469AB2C9BA17800D36E1D /* icon4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon4.png; sourceTree = "<group>"; };
+		D3B469AC2C9BA17800D36E1D /* icon5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon5.png; sourceTree = "<group>"; };
+		D3B469AD2C9BA17800D36E1D /* icon6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon6.png; sourceTree = "<group>"; };
+		D3B469AE2C9BA17800D36E1D /* icon7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon7.png; sourceTree = "<group>"; };
+		D3B469AF2C9BA17800D36E1D /* icon8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon8.png; sourceTree = "<group>"; };
+		D3B469B02C9BA17800D36E1D /* icon9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon9.png; sourceTree = "<group>"; };
+		D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RiseOfPhoenix.caf; sourceTree = "<group>"; };
+		D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SymphonyOfTheSoul.caf; sourceTree = "<group>"; };
 		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
 		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -485,11 +499,11 @@
 			isa = PBXGroup;
 			children = (
 				D3E8705A2C7DC03200CDA558 /* AppIcons */,
+				D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */,
+				D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */,
 				D3AB27FE2C7BE42600E8B3E0 /* beep-04.caf */,
-				D33B87352C77117C002C11D4 /* Chiptune.caf */,
 				D33B87362C77117C002C11D4 /* Classic.caf */,
 				D33B87372C77117C002C11D4 /* Oversimplified.caf */,
-				D33B87382C77117C002C11D4 /* StarDust.caf */,
 				D31753622C75461F00EF3D55 /* Propaganda.caf */,
 				D3B53B332BC6204B00B41769 /* Harmony.caf */,
 			);
@@ -517,6 +531,13 @@
 		D3E8705A2C7DC03200CDA558 /* AppIcons */ = {
 			isa = PBXGroup;
 			children = (
+				D3B469AA2C9BA17800D36E1D /* icon3.png */,
+				D3B469AB2C9BA17800D36E1D /* icon4.png */,
+				D3B469AC2C9BA17800D36E1D /* icon5.png */,
+				D3B469AD2C9BA17800D36E1D /* icon6.png */,
+				D3B469AE2C9BA17800D36E1D /* icon7.png */,
+				D3B469AF2C9BA17800D36E1D /* icon8.png */,
+				D3B469B02C9BA17800D36E1D /* icon9.png */,
 				D3DE34702C80F6C50000C48A /* AppIconDefault.png */,
 				D3CAA1302C7DC5B900B93A00 /* icon1 */,
 				D3CAA1352C7E4F5500B93A00 /* icon2 */,
@@ -699,16 +720,23 @@
 				D3CAA1342C7E491600B93A00 /* Preview Assets.xcassets in Resources */,
 				D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */,
 				D31753632C75461F00EF3D55 /* Propaganda.caf in Resources */,
-				D33B87392C77117C002C11D4 /* Chiptune.caf in Resources */,
 				D3AB28002C7BE42600E8B3E0 /* beep-04.caf in Resources */,
 				D33B873A2C77117C002C11D4 /* Oversimplified.caf in Resources */,
-				D33B873B2C77117C002C11D4 /* StarDust.caf in Resources */,
 				D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */,
+				D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */,
+				D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */,
 				D33B873C2C77117C002C11D4 /* Classic.caf in Resources */,
 				D3B53B342BC6204B00B41769 /* Harmony.caf in Resources */,
 				D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */,
 				D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */,
 				D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */,
+				D3B469B12C9BA17800D36E1D /* icon3.png in Resources */,
+				D3B469B22C9BA17800D36E1D /* icon6.png in Resources */,
+				D3B469B32C9BA17800D36E1D /* icon5.png in Resources */,
+				D3B469B42C9BA17800D36E1D /* icon4.png in Resources */,
+				D3B469B52C9BA17800D36E1D /* icon9.png in Resources */,
+				D3B469B62C9BA17800D36E1D /* icon7.png in Resources */,
+				D3B469B72C9BA17800D36E1D /* icon8.png in Resources */,
 				D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */,
 				D38EEB872BA371A00099D382 /* Assets.xcassets in Resources */,
 			);
@@ -1065,7 +1093,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1102,7 +1130,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.0;
+				MARKETING_VERSION = 0.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

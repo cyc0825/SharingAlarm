@@ -87,6 +87,13 @@ class AppIconManager: ObservableObject {
         AppIcon(displayName: "Classic", iconName: nil, imageName: "AppIconDefault"),
         AppIcon(displayName: "CalenderAlarm", iconName: "icon1", imageName: "icon1"),
         AppIcon(displayName: "PunkAlarm", iconName: "icon2", imageName: "icon2"),
+        AppIcon(displayName: "NightAlarm", iconName: "icon3", imageName: "icon3"),
+        AppIcon(displayName: "DayAlarm", iconName: "icon4", imageName: "icon4"),
+        AppIcon(displayName: "StickAlarm", iconName: "icon5", imageName: "icon5"),
+        AppIcon(displayName: "SKetchAlarm", iconName: "icon6", imageName: "icon6"),
+        AppIcon(displayName: "SkyAlarm", iconName: "icon7", imageName: "icon7"),
+        AppIcon(displayName: "FlowerAlarm", iconName: "icon8", imageName: "icon8"),
+        AppIcon(displayName: "ForestAlarm", iconName: "icon9", imageName: "icon9"),
         // Add more icons as needed
     ]
     

@@ -18,6 +18,12 @@ struct RingtoneLib: View {
     var userID = UserDefaults.standard.string(forKey: "userID") ?? ""
     var body: some View {
         VStack {
+            if viewModel.premiumRingtones.isEmpty {
+                VStack {
+                    Text("You bought all ringtones, please check here later.")
+                    Spacer()
+                }
+            }
             List {
                 ForEach(viewModel.premiumRingtones, id: \.self) { ringtone in
                     HStack {
@@ -112,6 +118,9 @@ struct RingtoneLib: View {
                 if showPartyPopper {
                     PartyPopperView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                        .onAppear {
+                            UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                        }
                 }
             }
         }

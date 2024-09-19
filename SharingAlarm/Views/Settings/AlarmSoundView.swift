@@ -37,7 +37,10 @@ struct AlarmSoundView: View {
             Form {
                 Section("Premium Ringtone") {
                     NavigationLink(destination: RingtoneLib(viewModel: viewModel)) {
-                        Text("Ringtone Shop")
+                        HStack {
+                            Image(systemName: "storefront")
+                            Text("Ringtone Shop")
+                        }
                     }
                 }
                 
