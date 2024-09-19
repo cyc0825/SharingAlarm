@@ -72,6 +72,7 @@
 		D3B469B72C9BA17800D36E1D /* icon8.png in Resources */ = {isa = PBXBuildFile; fileRef = D3B469AF2C9BA17800D36E1D /* icon8.png */; };
 		D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */; };
 		D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */; };
+		D3B469BD2C9CA28600D36E1D /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */; };
 		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
 		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
 		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
@@ -215,6 +216,7 @@
 		D3B469B02C9BA17800D36E1D /* icon9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon9.png; sourceTree = "<group>"; };
 		D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RiseOfPhoenix.caf; sourceTree = "<group>"; };
 		D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SymphonyOfTheSoul.caf; sourceTree = "<group>"; };
+		D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
 		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 		D3372A962C63EA8A00D33713 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */,
 				D36A0FAD2C92401C00633E02 /* MembershipView.swift */,
 				D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */,
 				D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */,
@@ -825,6 +828,7 @@
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
 				D3632D292BCF2420004F02FD /* GroupDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
+				D3B469BD2C9CA28600D36E1D /* FeedbackView.swift in Sources */,
 				D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */,
 				D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */,
 				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,

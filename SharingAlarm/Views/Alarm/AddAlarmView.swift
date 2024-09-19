@@ -33,7 +33,7 @@ struct AddAlarmView: View {
                     }
                 }
                 
-                Section("Alarm Setting") {
+                Section {
                     DatePicker("Time", selection: $selectedTime, displayedComponents: [.date, .hourAndMinute])
                     
                     Picker("Repeat", selection: $repeatInterval) {
@@ -57,6 +57,10 @@ struct AddAlarmView: View {
                             Text(group.name).tag(group as Groups?)
                         }
                     }
+                } header: {
+                    Text("Alarm Setting")
+                } footer: {
+                    Text("In order to allow alarms to ring in DO NOT DISTURB mode, please enable it through \"Settings -> Do Not Disturb\" and set SharingAlarm as an exception.")
                 }
             }
             .navigationBarTitle("Add Alarm", displayMode: .inline)

@@ -15,7 +15,7 @@ struct SettingsView: View {
                     NavigationLink(destination: ProfileView()) {
                         HStack {
                             HStack {
-                                Image(systemName: "person.crop.circle.fill")
+                                Image(systemName: "person")
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -45,6 +45,50 @@ struct SettingsView: View {
                             .frame(width: 20)
                             Text("Change Appearance")
                         }
+                    }
+                    
+                    NavigationLink(destination: FeedbackView()) {
+                        HStack {
+                            HStack {
+                                Image(systemName: "message")
+                                Spacer()
+                            }
+                            .frame(width: 20)
+                            Text("Provide Feedback")
+                        }
+                    }
+                }
+                Section {
+                    Button {
+                        if let url = URL(string:UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    } label: {
+                        HStack {
+                            HStack {
+                                Image(systemName: "gear")
+                                Spacer()
+                            }
+                            .frame(width: 20)
+                            Text("System Configuration")
+                        }
+                        .foregroundStyle(Color.systemText)
+                    }
+                    
+                    Button {
+                        if let url = URL(string:UIApplication.openNotificationSettingsURLString) {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    } label: {
+                        HStack {
+                            HStack {
+                                Image(systemName: "bell")
+                                Spacer()
+                            }
+                            .frame(width: 20)
+                            Text("Notification Settings")
+                        }
+                        .foregroundStyle(Color.systemText)
                     }
                 }
             }
@@ -158,9 +202,11 @@ struct ProfileView: View {
                     HStack {
                         Spacer()
                         Text("Delete Account")
+                            .foregroundStyle(Color.systemText)
                         Spacer()
                     }
                 }
+                .listRowBackground(Color.red)
             }
         }
         .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
@@ -200,5 +246,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    SettingsView()
 }

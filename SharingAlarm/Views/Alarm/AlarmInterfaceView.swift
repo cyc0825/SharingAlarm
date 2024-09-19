@@ -152,9 +152,10 @@ struct CombineView: View {
     
     var body: some View {
         let alarmCircleSize = CGFloat(clockRadius*2 + 35 + CGFloat(index) * 60)
-        let endAngleDegree = 360.0 * timerViewModel.timeRemaining / 3600
+        let endAngleDegree: Double = timerViewModel.timeRemaining > 7200 ?
+        360.0 * (timerViewModel.timeRemaining.truncatingRemainder(dividingBy: 3600)) / 3600 + 360.0 :
+        360.0 * timerViewModel.timeRemaining / 3600
 
-        // TODO: I need to have a clear indicator of which alarm is tapped
         ArcView(radius: alarmCircleSize / 2,
                 startAngle: Angle(degrees: -90),
                 endAngle: Angle(degrees: endAngleDegree - 90),
@@ -172,7 +173,6 @@ struct CombineView: View {
             }
 
         PointerView(width: 6, height: 120 - CGFloat(index) * 30, color: colorSet[index], endAngle: Angle(degrees: endAngleDegree))
-        
     }
 }
 

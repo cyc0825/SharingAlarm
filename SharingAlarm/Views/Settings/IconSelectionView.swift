@@ -13,28 +13,73 @@ struct IconSelectionView: View {
     
     // Define grid layout
     let columns = [
-        GridItem(.adaptive(minimum: 80))
+        GridItem(.adaptive(minimum: 70))
     ]
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-//                Text("Select App Icon")
-//                    .font(.headline)
-//                    .padding([.leading, .top], 20)
-                
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(iconManager.availableIcons) { icon in
-                        IconItemView(icon: icon, isSelected: iconManager.currentIconName == icon.iconName)
-                            .onTapGesture {
-                                iconManager.changeAppIcon(to: icon)
-                            }
+        Form {
+            Section {
+                VStack(alignment: .leading) {
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(iconManager.availableIcons) { icon in
+                            IconItemView(icon: icon, isSelected: iconManager.currentIconName == icon.iconName)
+                                .onTapGesture {
+                                    iconManager.changeAppIcon(to: icon)
+                                }
+                        }
+                    }
+                    
+                }
+            } header: {
+                Text("App Icons")
+                    .font(.title.bold())
+            }
+            .headerProminence(.increased)
+            Section {
+                VStack(alignment: .leading) {
+                    Text("Responde to Alarms at night")
+                    HStack {
+                        Text("34/100")
+                        ProgressView(value: 0.34)
+                            .progressViewStyle(.linear)
+                        Image(uiImage: UIImage(named: "icon3") ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(12)
                     }
                 }
-                .padding()
-                
-                Spacer()
+                VStack(alignment: .leading)  {
+                    Text("Responde to Alarms at day")
+                    HStack {
+                        Text("0/100")
+                        ProgressView(value: 0)
+                            .progressViewStyle(.linear)
+                        Image(uiImage: UIImage(named: "icon4") ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(12)
+                    }
+                }
+                VStack(alignment: .leading)  {
+                    Text("Schedule your first alarm")
+                    HStack {
+                        Text("0/1")
+                        ProgressView(value: 0)
+                            .progressViewStyle(.linear)
+                        Image(uiImage: UIImage(named: "icon5") ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(12)
+                    }
+                }
+            } header: {
+                Text("Tasks")
+                    .font(.title.bold())
             }
+            .headerProminence(.increased)
         }
         .navigationTitle("App Icons")
         .navigationBarTitleDisplayMode(.inline)
@@ -85,15 +130,15 @@ class AppIconManager: ObservableObject {
     
     let availableIcons: [AppIcon] = [
         AppIcon(displayName: "Classic", iconName: nil, imageName: "AppIconDefault"),
-        AppIcon(displayName: "CalenderAlarm", iconName: "icon1", imageName: "icon1"),
-        AppIcon(displayName: "PunkAlarm", iconName: "icon2", imageName: "icon2"),
-        AppIcon(displayName: "NightAlarm", iconName: "icon3", imageName: "icon3"),
-        AppIcon(displayName: "DayAlarm", iconName: "icon4", imageName: "icon4"),
-        AppIcon(displayName: "StickAlarm", iconName: "icon5", imageName: "icon5"),
-        AppIcon(displayName: "SKetchAlarm", iconName: "icon6", imageName: "icon6"),
-        AppIcon(displayName: "SkyAlarm", iconName: "icon7", imageName: "icon7"),
-        AppIcon(displayName: "FlowerAlarm", iconName: "icon8", imageName: "icon8"),
-        AppIcon(displayName: "ForestAlarm", iconName: "icon9", imageName: "icon9"),
+        AppIcon(displayName: "Calender", iconName: "icon1", imageName: "icon1"),
+        AppIcon(displayName: "Punk", iconName: "icon2", imageName: "icon2"),
+        AppIcon(displayName: "Night", iconName: "icon3", imageName: "icon3"),
+        AppIcon(displayName: "Day", iconName: "icon4", imageName: "icon4"),
+        AppIcon(displayName: "Stick", iconName: "icon5", imageName: "icon5"),
+        AppIcon(displayName: "SKetch", iconName: "icon6", imageName: "icon6"),
+        AppIcon(displayName: "Sky", iconName: "icon7", imageName: "icon7"),
+        AppIcon(displayName: "Flower", iconName: "icon8", imageName: "icon8"),
+        AppIcon(displayName: "Forest", iconName: "icon9", imageName: "icon9"),
         // Add more icons as needed
     ]
     
