@@ -47,7 +47,7 @@ class UserViewModel: ObservableObject {
     
     init() {
         registerAuthStateHandler()
-        if let userId = Auth.auth().currentUser?.uid {
+        if let userId = user?.uid {
             updateFCMTokenIfNeeded(userId: userId)
         }
         
@@ -105,6 +105,7 @@ class UserViewModel: ObservableObject {
                     self.appUser = appUser
                     UserDefaults.standard.setValue(self.appUser.name, forKey: "name")
                     UserDefaults.standard.setValue(self.appUser.uid, forKey: "uid")
+                    UserDefaults.standard.setValue(self.appUser.id, forKey: "userID")
                     completion(true)
                 } else {
                     debugPrint("[fetchUserData] no document found for \(userID)")
@@ -119,14 +120,13 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    func saveUserData() {
+    func saveUserData(username: String, uid: String) {
         guard let userID = user?.uid else { return }
-        do {
-            try db.collection("UserData").document(userID).setData(from: appUser)
-        }
-        catch {
-            print(error.localizedDescription)
-        }
+        print("[saveUserData] starts for \(userID)")
+        db.collection("UserData").document(userID).updateData([
+            "name": username,
+            "uid": uid
+        ])
     }
     
     func updateUserData(updates: [String: String]) {

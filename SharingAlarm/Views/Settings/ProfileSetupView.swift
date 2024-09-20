@@ -21,6 +21,7 @@ struct ProfileSetupView: View {
     @State private var alertMessage = ""
     @State private var usernameWarning: String?
     @State private var uidWarning: String?
+    @Environment(\.dismiss) var dismiss
     
     init(initialUsername: String, initialUid: String, onSubmit: @escaping (String, String) -> Void) {
         self.initialUsername = initialUsername
@@ -31,66 +32,53 @@ struct ProfileSetupView: View {
     }
     
     var body: some View {
-        VStack {
-            NavigationView {
-                VStack {
-                    // Welcome Text at the top
-                    Text("Enter your name and your unique identifier to let your friends find you!")
-                        .font(.title3)
-                        .fontWeight(.medium)
-                        .multilineTextAlignment(.leading)
-                        .padding()
+        NavigationView {
+            Form {
+                // Welcome Text at the top
+                Section {
                     // Username TextField
                     TextField("Name", text: $username)
-                        .textFieldStyle(LargeTextFieldStyle())
-                        .padding(.horizontal)
                     if let usernameWarning = usernameWarning {
                         Text(usernameWarning)
                             .foregroundColor(.red)
                     }
                     // Unique Identifier TextField
                     TextField("Unique Identifier", text: $uid)
-                        .textFieldStyle(LargeTextFieldStyle())
-                        .padding(.horizontal)
                     if let uidWarning = uidWarning {
                         Text(uidWarning)
                             .foregroundColor(.red)
                     }
-                    
-//                    Button(action: validateAndSubmit, label: {
-//                        Text("Go")
-//                            .font(.title2)
-//                            .fontWeight(.semibold)
-//                            .foregroundColor(.white)
-//                            .frame(maxWidth: .infinity, minHeight: 50)
-//                    })
-//                    .background(Color.accentColor)
-//                    .cornerRadius(25)
-//                    .padding(.horizontal)
-//                    .padding(.bottom, 50)
-                    
+                } header: {
+                    Text("Enter your name and your unique identifier to let your friends find you!")
+                        .font(.title3.bold())
                 }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: validateAndSubmit, label: {
-                            Text("Save")
-                        })
-                    }
-                }
-                .navigationTitle("Edit Profile")
-                .navigationBarTitleDisplayMode(.inline)
-                //.background(Color(UIColor.systemGray6))
-                //.edgesIgnoringSafeArea(.all)
-                .onDisappear{
-                    userViewModel.fetchUserData { success in
-                        if !success {
-                            print("Error Fetching User Data after update")
+                .headerProminence(.increased)
+                
+                Section {
+                    Button(action: validateAndSubmit, label: {
+                        HStack {
+                            Spacer()
+                            Text("Go")
+                            Spacer()
                         }
-                    }
+                        .foregroundStyle(Color.system)
+                    })
+                    .listRowBackground(Color.accent)
                 }
             }
-            .presentationDetents([.fraction(0.4)])
+//            .toolbar {
+//                ToolbarItem(placement: .topBarTrailing) {
+//                    Button(action: validateAndSubmit, label: {
+//                        Text("Save")
+//                    })
+//                }
+//            }
+            .navigationTitle("Edit Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            //.background(Color(UIColor.systemGray6))
+            //.edgesIgnoringSafeArea(.all)
         }
+        .presentationDetents([.fraction(0.4)])
     }
     
     private func validateAndSubmit() {
@@ -111,18 +99,23 @@ struct ProfileSetupView: View {
             print("Unique Identifier cannot be empty")
             uidWarning = "Unique Identifier cannot be empty"
             isValid = false
-        } else if uid != initialUid {
-            // Additional check if UID is changed and needs to be unique
-            userViewModel.checkIfUIDExists(uid: uid) { exist in
-                if !exist {
-                    if isValid {
-                        onSubmit(username, uid)
+        } else {
+            if uid != initialUid {
+                // Additional check if UID is changed and needs to be unique
+                userViewModel.checkIfUIDExists(uid: uid) { exist in
+                    if exist {
+                        // Proceed with submission if both checks pass
+                        uidWarning = "Someone else has taken this UID, think about another one"
+                        isValid = false
                     }
-                } else {
-                    // Proceed with submission if both checks pass
-                    uidWarning = "Someone else has taken this UID, think about another one"
-                    isValid = false
                 }
+            }
+        }
+        if isValid {
+            if initialUid == uid && username == initialUsername {
+                dismiss()
+            } else {
+                onSubmit(username, uid)
             }
         }
     }

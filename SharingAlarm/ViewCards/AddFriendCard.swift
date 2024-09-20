@@ -18,22 +18,25 @@ struct AddFriendCard: View {
             VStack(alignment: .leading) {
                 Text(friend.name)
                     .font(.headline)
-                Text(friend.uid)
+                Text("@\(friend.uid)")
                     .font(.subheadline)
             }
             Spacer()
             if friend.uid == uid {
                 Text("you")
             } else if !viewModel.friends.contains(where: { $0.friendRef.uid == friend.uid }) {
-                Button(action: {
-                    // Trigger the friend request action
-                    print("FR sent to \(friend.id!)")
-                    viewModel.saveFriendRequest(user2ID: friend.id!)
-                    requestSent = true
-                }) {
-                    isRequestDisabled() ? Text("Requested") : Text("Request")
+                HStack {
+                    Button(action: {
+                        // Trigger the friend request action
+                        print("FR sent to \(friend.id!)")
+                        viewModel.saveFriendRequest(user2ID: friend.id!)
+                        requestSent = true
+                    }) {
+                        isRequestDisabled() ? Text("Requested") : Text("Request")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(isRequestDisabled())
                 }
-                .disabled(isRequestDisabled())
             }
         }
     }
@@ -42,5 +45,9 @@ struct AddFriendCard: View {
     private func isRequestDisabled() -> Bool {
         friend.uid == uid || requestSent || viewModel.ownRequests.contains(where: { $0.friendRef.uid == friend.uid })
     }
+}
+
+#Preview {
+    AddFriendCard(friend: .init(id: "1", name: "Test", uid: "1"), viewModel: .init())
 }
 

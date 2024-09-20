@@ -9,16 +9,6 @@ import SwiftUI
 import TipKit
 import CoreData
 
-struct PopoverTip: Tip {
-    var title: Text {
-        Text("Add an Effect")
-            .foregroundStyle(.indigo)
-    }
-    var message: Text? {
-        Text("Touch and hold \(Image(systemName: "wand.and.stars")) to add an effect to your favorite image.")
-    }
-}
-
 struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var friendViewModel: FriendsViewModel
@@ -28,8 +18,6 @@ struct ContentView: View {
     @EnvironmentObject var arViewModel: AudioRecorderViewModel
     @State private var showingEditProfile = false
     // var userAppleId = UserDefaults.standard.value(forKey: "appleIDUser") as! String
-
-    var tip = PopoverTip()
     
     var body: some View {
         NavigationView {
@@ -78,10 +66,16 @@ struct ContentView: View {
                         initialUid: "",
                         onSubmit: { username, uid in
                             authViewModel.createUserDocument(userID: authViewModel.user?.uid ?? uid, name: username, uid: uid)
-                            authViewModel.isNewUser = false
-                            UserDefaults.standard.setValue(username, forKey: "name")
-                            UserDefaults.standard.setValue(uid, forKey: "uid")
-                            showingEditProfile = false
+                            userViewModel.fetchUserData { success in
+                                if success {
+                                    authViewModel.isNewUser = false
+                                    showingEditProfile = false
+                                    alarmsViewModel.fetchRingtoneList()
+                                    if let userId = authViewModel.user?.uid {
+                                        userViewModel.updateFCMTokenIfNeeded(userId: userId)
+                                    }
+                                }
+                            }
                         }
                     )
                 }

@@ -12,7 +12,7 @@ struct FloatingFriendRequestsView: View {
             // Your friend requests content here
         }
         .frame(height: UIScreen.main.bounds.height / 5)
-        .background(BlurView(style: .systemMaterial))
+        .background(.ultraThinMaterial)
         .cornerRadius(15)
         .shadow(radius: 10)
         .padding()
@@ -35,7 +35,7 @@ struct LargeTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding(15)
-            .background(Color.secondary)
+            .background(Color.accent)
             .cornerRadius(10)
             .shadow(radius: 5)
     }

@@ -85,10 +85,10 @@ class FriendsViewModel: ObservableObject {
                         if let friendRef = document.get("friendRef") as? DocumentReference {
                             Task {
                                 do {
-                                    print(friendRef)
                                     let appUser = try await friendRef.getDocument(as: AppUser.self)
-                                    print(appUser)
-                                    self.friendRequests.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                    if !self.friendRequests.contains(where: { $0.friendRef.uid == appUser.uid }) {
+                                        self.friendRequests.append(FriendReference(id: id, friendRef: appUser, timestamp: timestamp))
+                                    }
                                 }
                                 catch {
                                     print(error.localizedDescription)
@@ -220,8 +220,8 @@ class FriendsViewModel: ObservableObject {
         }
     }
     
-    func removeFriendRequest(fromRequest request: FriendReference) {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
+    func removeFriendRequest(fromRequest request: FriendReference) async throws -> Bool {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return false }
         
         let userRef = db.collection("UserData").document(userID)
         let friendRef = db.collection("UserData").document(request.friendRef.id!)
@@ -240,6 +240,7 @@ class FriendsViewModel: ObservableObject {
                 print("Removed friend request from 'friendRequests'")
             } catch {
                 debugPrint("Error removing friend request from 'friendRequests': \(error.localizedDescription)")
+                return false
             }
             
             // Query and delete from the 'ownRequests' collection
@@ -255,10 +256,12 @@ class FriendsViewModel: ObservableObject {
                 print("Removed friend request from 'ownRequests'")
             } catch {
                 debugPrint("Error removing friend request from 'ownRequests': \(error.localizedDescription)")
+                return false
             }
-            
             debugPrint("[removeFriendRequest] ends")
+            return true
         }
+        return true
     }
     
     func removeFriend(for friendIndex: Int) {

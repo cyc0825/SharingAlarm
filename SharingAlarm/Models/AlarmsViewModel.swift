@@ -763,7 +763,7 @@ extension AlarmsViewModel {
     func fetchRingtoneList() {
         guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
         Task {
-            debugPrint("[fetchRingtone] starts")
+            debugPrint("[fetchRingtone] starts for userID: \(userID)")
             do {
                 let userSnapshot = try await db.collection("UserData").document(userID).getDocument()
                 if let unlockedRingtones = userSnapshot.data()?["unlockedRingtones"] as? [String] {

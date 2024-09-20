@@ -29,19 +29,18 @@ struct AddFriendView: View {
                     List(viewModel.friendSearchResults, id: \.id) { friend in
                         AddFriendCard(friend: friend, viewModel: viewModel)
                     }
-                    
-                    TabView {
-                        ForEach(viewModel.friendRequests.indices, id: \.self) { index in
-                            FriendRequestCard(viewModel: viewModel, index: index)
+                    if !viewModel.friendRequests.isEmpty {
+                        TabView {
+                            ForEach(viewModel.friendRequests.indices, id: \.self) { index in
+                                FriendRequestCard(viewModel: viewModel, index: index)
+                            }
                         }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        .frame(height: UIScreen.main.bounds.height / 10)
                     }
-                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                    .frame(height: UIScreen.main.bounds.height / 10)
                 }
                 .onDisappear {
-                    viewModel.fetchFriendsRequest()
                     viewModel.fetchFriends()
-                    viewModel.fetchOwnRequest()
                 }
                 .navigationBarTitle("Add Friends", displayMode: .inline)
                 .toolbar {

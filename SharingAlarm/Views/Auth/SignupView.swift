@@ -46,6 +46,7 @@ struct SignupView: View {
               HStack {
                   Image(systemName: "at")
                   TextField("Email", text: $viewModel.email)
+                      .accentColor(.thirdAccent)
                       .textInputAutocapitalization(.never)
                       .disableAutocorrection(true)
                       .focused($focus, equals: .email)
@@ -61,7 +62,7 @@ struct SignupView: View {
               HStack {
                   Image(systemName: "lock")
                   SecureField("Password", text: $viewModel.password)
-                      .accentColor(.gray)
+                      .accentColor(.thirdAccent)
                       .focused($focus, equals: .password)
                       .submitLabel(.next)
                       .onSubmit {
@@ -75,7 +76,7 @@ struct SignupView: View {
               HStack {
                   Image(systemName: "lock")
                   SecureField("Confirm password", text: $viewModel.confirmPassword)
-                      .accentColor(.gray)
+                      .accentColor(.thirdAccent)
                       .focused($focus, equals: .confirmPassword)
                       .submitLabel(.go)
                       .onSubmit {
@@ -132,7 +133,6 @@ struct SignupView: View {
 struct SignupView_Previews: PreviewProvider {
   static var previews: some View {
     Group {
-      SignupView()
       SignupView()
         .preferredColorScheme(.dark)
     }

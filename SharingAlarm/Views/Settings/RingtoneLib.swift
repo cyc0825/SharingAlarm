@@ -21,6 +21,7 @@ struct RingtoneLib: View {
             if viewModel.premiumRingtones.isEmpty {
                 VStack {
                     Text("You bought all ringtones, please check here later.")
+                        .padding()
                     Spacer()
                 }
             }

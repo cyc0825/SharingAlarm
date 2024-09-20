@@ -309,12 +309,16 @@ extension AuthViewModel {
     func createUserDocument(userID: String, name: String?, uid: String?) {
         let db = Firestore.firestore()
         let userDocument = db.collection("UserData").document(userID)
+        let fcmToken = (UserDefaults.standard.string(forKey: "fcmToken") ?? "") as String
         
         // Set initial data for the new user
         let userData = [
+            "fcmToken": fcmToken,
             "name": name ?? "Unknown",
-            "uid": uid ?? "Unknown"
-        ]
+            "uid": uid ?? "Unknown",
+            "money": 100,
+            "unlockedRingtones": ["1001"],
+        ] as [String : Any]
         Task {
             do {
                 try await userDocument.setData(userData)

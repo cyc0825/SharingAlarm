@@ -49,7 +49,7 @@ struct LoginView: View {
                     HStack {
                         Image(systemName: "at")
                         TextField("Email", text: $authViewModel.email)
-                            .accentColor(.gray)
+                            .accentColor(.thirdAccent)
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                             .focused($focus, equals: .email)
@@ -65,7 +65,7 @@ struct LoginView: View {
                     HStack {
                         Image(systemName: "lock")
                         SecureField("Password", text: $authViewModel.password)
-                            .accentColor(.gray)
+                            .accentColor(.thirdAccent)
                             .disableAutocorrection(true)
                             .focused($focus, equals: .password)
                             .submitLabel(.go)

@@ -28,11 +28,18 @@ struct FriendRequestCard: View {
             VStack {
                 Button(action: {
                     withAnimation {
-                        animatePop = true
+                        // Remove the item immediately to stop rendering the card
+                        let friendRequest = viewModel.friendRequests[index]
+                        viewModel.friendRequests.remove(at: index)
+
+                        // Continue with your async work after the view updates
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                            animatePop = false
-                            viewModel.saveFriendShip(fromRequest: viewModel.friendRequests[index])
-                            viewModel.removeFriendRequest(fromRequest: viewModel.friendRequests[index])
+                            Task {
+                                let success = try await viewModel.removeFriendRequest(fromRequest: friendRequest)
+                                if success {
+                                    viewModel.saveFriendShip(fromRequest: friendRequest)
+                                }
+                            }
                         }
                     }
                 }) {
@@ -42,10 +49,18 @@ struct FriendRequestCard: View {
                 Divider()
                 Button(action: {
                     withAnimation {
-                        animatePop = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Ensure this matches animation duration
-                            animatePop = false
-                            viewModel.removeFriendRequest(fromRequest: viewModel.friendRequests[index])
+                        // Remove the item immediately to stop rendering the card
+                        let friendRequest = viewModel.friendRequests[index]
+                        viewModel.friendRequests.remove(at: index)
+
+                        // Continue with your async work after the view updates
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            Task {
+                                let success = try await viewModel.removeFriendRequest(fromRequest: friendRequest)
+                                if success {
+                                    // Handle further logic if needed
+                                }
+                            }
                         }
                     }
                 }) {
@@ -55,6 +70,7 @@ struct FriendRequestCard: View {
             }
             .frame(width: 100)
         }
+
         .scaleEffect(animatePop ? 1.1 : 1.0) // Slightly enlarge the card when animatePop is true
         .animation(.easeInOut(duration: 0.2), value: animatePop)
         .padding()

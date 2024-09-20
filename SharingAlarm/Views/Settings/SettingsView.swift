@@ -115,13 +115,11 @@ struct ProfileView: View {
     
     private func signOut() {
         authViewModel.signOut()
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
+        print(Array(UserDefaults.standard.dictionaryRepresentation().keys).count)
         UserDefaults.standard.setValue(false, forKey: "logged")
-        UserDefaults.standard.removeObject(forKey: "appleIDUser")
-        UserDefaults.standard.removeObject(forKey: "name")
-        UserDefaults.standard.removeObject(forKey: "uid")
-        UserDefaults.standard.removeObject(forKey: "lastAlarmFetchDate")
-        UserDefaults.standard.removeObject(forKey: "lastFriendRequestFetchDate")
-        UserDefaults.standard.removeObject(forKey: "userID")
     }
     
     var body: some View {
@@ -200,11 +198,10 @@ struct ProfileView: View {
             Section {
                 Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
                     HStack {
-                        Spacer()
+                        Image(systemName: "trash.square")
                         Text("Delete Account")
-                            .foregroundStyle(Color.systemText)
-                        Spacer()
                     }
+                    .foregroundStyle(Color.systemText)
                 }
                 .listRowBackground(Color.red)
             }
@@ -219,12 +216,12 @@ struct ProfileView: View {
                     initialUsername: userViewModel.appUser.name,
                     initialUid: userViewModel.appUser.uid,
                     onSubmit: { username, uid in
-                        showingProfileEdit = false
-                        UserDefaults.standard.setValue(username, forKey: "name")
-                        UserDefaults.standard.setValue(uid, forKey: "uid")
-                        userViewModel.appUser.uid = uid
-                        userViewModel.appUser.name = username
-                        userViewModel.saveUserData()
+                        userViewModel.saveUserData(username: username, uid: uid)
+                        userViewModel.fetchUserData { success in
+                            if success {
+                                showingProfileEdit = false
+                            }
+                        }
                     }
                 )
             }

@@ -41,6 +41,7 @@ struct AlarmSoundView: View {
                             Image(systemName: "storefront")
                             Text("Ringtone Shop")
                         }
+                        .foregroundStyle(.accent)
                     }
                 }
                 
