@@ -9,6 +9,7 @@ import SwiftUI
 import ActivityKit
 
 struct AddAlarmView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var viewModel: AlarmsViewModel
     @ObservedObject var groupsViewModel: GroupsViewModel
     @Binding var isPresented: Bool // To dismiss the view
@@ -60,7 +61,7 @@ struct AddAlarmView: View {
                 } header: {
                     Text("Alarm Setting")
                 } footer: {
-                    Text("In order to allow alarms to ring in DO NOT DISTURB mode, please enable it through \"Settings -> Do Not Disturb\" and set SharingAlarm as an exception.")
+                    Text("IMPORTANT: Make sure you turn off the silent mode. In order to allow alarms to ring in DO NOT DISTURB mode, please enable it through \"Settings -> Do Not Disturb\" and set SharingAlarm as an exception.")
                 }
             }
             .navigationBarTitle("Add Alarm", displayMode: .inline)
@@ -70,7 +71,7 @@ struct AddAlarmView: View {
                 if selectedTime < Date() {
                     // The selected time has already passed
                     viewModel.errorMessage = "The selected time has already passed. Please choose a future time."
-                } else if viewModel.alarms.count < 10 {
+                } else if userViewModel.appUser.subscription != nil || viewModel.alarms.count < 3 {
                     //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, groupID: selectedGroup?.id, groupName: selectedGroup?.name))
                     viewModel.addAlarm(
                         alarmBody: "\(name) wants you to \(alarmBody)",
@@ -87,6 +88,7 @@ struct AddAlarmView: View {
                                let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
                                 groupsViewModel.groups[index].alarmCount += 1
                             }
+                            userViewModel.updateUserStatic(field: "alarmScheduled", value: 1)
 //                            startAlarmLiveActivity(alarmTime: selectedTime, alarmBody: alarmBody)
                         case .failure(let error):
                             debugPrint("Add Group error: \(error)")
@@ -95,11 +97,11 @@ struct AddAlarmView: View {
                     isPresented = false
                 } else {
                     print("Alarm Maximum Reached")
-                    viewModel.errorMessage = "You have reached the maximum number of alarms trial user can have."
+                    viewModel.errorMessage = "You have reached the maximum number of alarms basic user can have."
                 }
             })
             .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-                Alert(title: Text("Cannot Add"),
+                Alert(title: Text("Cannot Add Alarm"),
                       message: Text(viewModel.errorMessage ?? "Unknown Error"),
                       dismissButton:.default(Text("Confirm"), action: {
                     viewModel.errorMessage = nil

@@ -103,15 +103,7 @@ struct ProfileView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @EnvironmentObject var arViewModel: AudioRecorderViewModel
     @State private var showingProfileEdit = false
-    @State var presentingConfirmationDialog = false
-    
-    private func deleteAccount() {
-        Task {
-            if await authViewModel.deleteAccount() == true {
-                print("Successfully deleting account")
-            }
-        }
-    }
+    @State private var showingPremiumStore = false
     
     private func signOut() {
         authViewModel.signOut()
@@ -143,6 +135,19 @@ struct ProfileView: View {
                 Text("@\(userViewModel.appUser.uid)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
+                if userViewModel.appUser.subscription != nil {
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "star.circle.fill")
+                            Text("Premium")
+                                .font(.subheadline)
+                        }
+                        .foregroundColor(.systemText)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             }
             .listRowBackground(Color(UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, alignment: .center)
@@ -159,8 +164,13 @@ struct ProfileView: View {
                     }
                 }
                 .tint(.accent)
+                NavigationLink(destination: DeleteProfileView()) {
+                    HStack {
+                        Image(systemName: "trash")
+                        Text("Delete Profile")
+                    }
+                }
             }
-
             Section {
                 EmptyView()
             }.frame(height: 20)
@@ -173,10 +183,13 @@ struct ProfileView: View {
                         Text("Ringtone Library")
                     }
                 }
-                HStack {
-                    Image(systemName: "person.crop.circle.dashed.circle")
-                    NavigationLink(destination: MembershipView()) {
+                Button {
+                    showingPremiumStore = true
+                } label: {
+                    HStack {
+                        Image(systemName: "person.crop.circle.dashed.circle")
                         Text("Membership")
+                        Spacer()
                     }
                 }
             }
@@ -195,36 +208,24 @@ struct ProfileView: View {
                 }
                 .tint(.accent)
             }
-            Section {
-                Button(role: .destructive, action: { presentingConfirmationDialog.toggle() }) {
-                    HStack {
-                        Image(systemName: "trash.square")
-                        Text("Delete Account")
-                    }
-                    .foregroundStyle(Color.systemText)
-                }
-                .listRowBackground(Color.red)
-            }
         }
-        .confirmationDialog("Deleting your account is permanent. Do you want to delete your account?",
-                            isPresented: $presentingConfirmationDialog, titleVisibility: .visible) {
-            Button("Delete Account", role: .destructive, action: deleteAccount)
-            Button("Cancel", role: .cancel, action: { })
-        }
-            .sheet(isPresented: $showingProfileEdit) {
-                ProfileSetupView(
-                    initialUsername: userViewModel.appUser.name,
-                    initialUid: userViewModel.appUser.uid,
-                    onSubmit: { username, uid in
-                        userViewModel.saveUserData(username: username, uid: uid)
-                        userViewModel.fetchUserData { success in
-                            if success {
-                                showingProfileEdit = false
-                            }
+        .sheet(isPresented: $showingProfileEdit) {
+            ProfileSetupView(
+                initialUsername: userViewModel.appUser.name,
+                initialUid: userViewModel.appUser.uid,
+                onSubmit: { username, uid in
+                    userViewModel.saveUserData(username: username, uid: uid)
+                    userViewModel.fetchUserData { success in
+                        if success {
+                            showingProfileEdit = false
                         }
                     }
-                )
-            }
+                }
+            )
+        }
+        .sheet(isPresented: $showingPremiumStore) {
+            PremiumStoreView()
+        }
         .background(
             Color(UIColor.systemGroupedBackground)
         )

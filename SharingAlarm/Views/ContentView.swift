@@ -50,6 +50,7 @@ struct ContentView: View {
                         }
                     }
                     alarmsViewModel.startListeningAlarms()
+                    EconomyViewModel.shared.listenForTransactions()
 //                    friendViewModel.fetchFriends()
 //                    friendViewModel.fetchOwnRequest()
 //                    friendViewModel.fetchFriendsRequest()

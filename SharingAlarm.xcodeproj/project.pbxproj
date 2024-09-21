@@ -34,7 +34,7 @@
 		D36A0FA52C8FC6A500633E02 /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA42C8FC69C00633E02 /* FileManager+.swift */; };
 		D36A0FA72C91093000633E02 /* EconomyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FA62C91092C00633E02 /* EconomyViewModel.swift */; };
 		D36A0FAC2C921B2100633E02 /* CoinEarnedPopupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */; };
-		D36A0FAE2C92402100633E02 /* MembershipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAD2C92401C00633E02 /* MembershipView.swift */; };
+		D36A0FAE2C92402100633E02 /* PremiumStoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAD2C92401C00633E02 /* PremiumStoreView.swift */; };
 		D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAF2C93BE9200633E02 /* Animations.swift */; };
 		D36C34222C97DE8700647F97 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36C34212C97DE8700647F97 /* WidgetKit.framework */; };
 		D36C34242C97DE8700647F97 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36C34232C97DE8700647F97 /* SwiftUI.framework */; };
@@ -73,6 +73,10 @@
 		D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */; };
 		D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */; };
 		D3B469BD2C9CA28600D36E1D /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */; };
+		D3B469BF2C9DF21A00D36E1D /* LocalProducts.storekit in Resources */ = {isa = PBXBuildFile; fileRef = D3B469BE2C9DF21A00D36E1D /* LocalProducts.storekit */; };
+		D3B469C12C9DF3E700D36E1D /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = D3B469C02C9DF3E700D36E1D /* StoreKitTestCertificate.cer */; };
+		D3B469C42C9DF78200D36E1D /* SyncedProducts.storekit in Resources */ = {isa = PBXBuildFile; fileRef = D3B469C32C9DF78200D36E1D /* SyncedProducts.storekit */; };
+		D3B469C62C9E26E300D36E1D /* DeleteProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B469C52C9E26DD00D36E1D /* DeleteProfileView.swift */; };
 		D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */; };
 		D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B2E2BC4E66000B41769 /* AlarmView.swift */; };
 		D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */; };
@@ -173,7 +177,7 @@
 		D36A0FA42C8FC69C00633E02 /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		D36A0FA62C91092C00633E02 /* EconomyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EconomyViewModel.swift; sourceTree = "<group>"; };
 		D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinEarnedPopupCard.swift; sourceTree = "<group>"; };
-		D36A0FAD2C92401C00633E02 /* MembershipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipView.swift; sourceTree = "<group>"; };
+		D36A0FAD2C92401C00633E02 /* PremiumStoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumStoreView.swift; sourceTree = "<group>"; };
 		D36A0FAF2C93BE9200633E02 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		D36C341F2C97DE8700647F97 /* AlarmWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AlarmWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D36C34212C97DE8700647F97 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -217,6 +221,10 @@
 		D3B469B82C9BA8FD00D36E1D /* RiseOfPhoenix.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RiseOfPhoenix.caf; sourceTree = "<group>"; };
 		D3B469B92C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SymphonyOfTheSoul.caf; sourceTree = "<group>"; };
 		D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		D3B469BE2C9DF21A00D36E1D /* LocalProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = LocalProducts.storekit; path = SharingAlarm/LocalProducts.storekit; sourceTree = SOURCE_ROOT; };
+		D3B469C02C9DF3E700D36E1D /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = StoreKitTestCertificate.cer; path = SharingAlarm/StoreKitTestCertificate.cer; sourceTree = SOURCE_ROOT; };
+		D3B469C32C9DF78200D36E1D /* SyncedProducts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SyncedProducts.storekit; sourceTree = "<group>"; };
+		D3B469C52C9E26DD00D36E1D /* DeleteProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProfileView.swift; sourceTree = "<group>"; };
 		D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCard.swift; sourceTree = "<group>"; };
 		D3B53B2E2BC4E66000B41769 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		D3B53B302BC4E6AA00B41769 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -323,10 +331,10 @@
 			isa = PBXGroup;
 			children = (
 				D3B469BC2C9CA28200D36E1D /* FeedbackView.swift */,
-				D36A0FAD2C92401C00633E02 /* MembershipView.swift */,
 				D3DE34742C87C2B90000C48A /* AudioRecorderView.swift */,
 				D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */,
 				D35372E72BBA7AE400B56F32 /* SettingsView.swift */,
+				D3B469C52C9E26DD00D36E1D /* DeleteProfileView.swift */,
 				D3372A972C63EAA200D33713 /* AlarmSoundView.swift */,
 				D36A0FA02C8E672600633E02 /* RingtoneLib.swift */,
 				D37594142C6BE06F006DB7AA /* ProfileSetupView.swift */,
@@ -341,6 +349,7 @@
 				D36A0FAF2C93BE9200633E02 /* Animations.swift */,
 				D36A0FA22C8E6E1400633E02 /* Tips.swift */,
 				D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */,
+				D3B469C22C9DF3F000D36E1D /* Store */,
 				D337DFB12C56F1D500D33713 /* Relationship */,
 				D337DFAC2C56F14E00D33713 /* Auth */,
 				D337DFAB2C56F14200D33713 /* Alarm */,
@@ -496,6 +505,17 @@
 				D3AFBFE12C796898008DA9DD /* Info.plist */,
 			);
 			path = Notification;
+			sourceTree = "<group>";
+		};
+		D3B469C22C9DF3F000D36E1D /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				D3B469BE2C9DF21A00D36E1D /* LocalProducts.storekit */,
+				D3B469C02C9DF3E700D36E1D /* StoreKitTestCertificate.cer */,
+				D3B469C32C9DF78200D36E1D /* SyncedProducts.storekit */,
+				D36A0FAD2C92401C00633E02 /* PremiumStoreView.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 		D3B53B322BC6203500B41769 /* Resources */ = {
@@ -726,10 +746,13 @@
 				D3AB28002C7BE42600E8B3E0 /* beep-04.caf in Resources */,
 				D33B873A2C77117C002C11D4 /* Oversimplified.caf in Resources */,
 				D3DE34712C80F6C50000C48A /* AppIconDefault.png in Resources */,
+				D3B469BF2C9DF21A00D36E1D /* LocalProducts.storekit in Resources */,
 				D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */,
+				D3B469C42C9DF78200D36E1D /* SyncedProducts.storekit in Resources */,
 				D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */,
 				D33B873C2C77117C002C11D4 /* Classic.caf in Resources */,
 				D3B53B342BC6204B00B41769 /* Harmony.caf in Resources */,
+				D3B469C12C9DF3E700D36E1D /* StoreKitTestCertificate.cer in Resources */,
 				D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */,
 				D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */,
 				D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */,
@@ -798,6 +821,7 @@
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
+				D3B469C62C9E26E300D36E1D /* DeleteProfileView.swift in Sources */,
 				D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */,
 				D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */,
 				D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */,
@@ -812,7 +836,7 @@
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
 				D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */,
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
-				D36A0FAE2C92402100633E02 /* MembershipView.swift in Sources */,
+				D36A0FAE2C92402100633E02 /* PremiumStoreView.swift in Sources */,
 				D36A0FA72C91093000633E02 /* EconomyViewModel.swift in Sources */,
 				D36A0F9F2C8E60A100633E02 /* UIPlayground.swift in Sources */,
 				D3AB28022C7D41DD00E8B3E0 /* IconSelectionView.swift in Sources */,

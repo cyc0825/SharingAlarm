@@ -8,7 +8,16 @@
 import SwiftUI
 import UIKit
 
+// Define available icons with display names and asset names
+struct AppIcon: Identifiable {
+    let id = UUID()
+    let displayName: String
+    let iconName: String? // nil for default icon
+    let imageName: String
+}
+
 struct IconSelectionView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var iconManager = AppIconManager.shared
     
     // Define grid layout
@@ -16,12 +25,21 @@ struct IconSelectionView: View {
         GridItem(.adaptive(minimum: 70))
     ]
     
+    var availableIcons: [AppIcon] {
+        AppIconManager.shared.allIcons.filter { icon in
+            if icon.iconName == nil {
+                return true
+            }
+            return userViewModel.appUser.unlockedIcons.contains(icon.iconName!)
+        }
+    }
+    
     var body: some View {
         Form {
             Section {
                 VStack(alignment: .leading) {
                     LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(iconManager.availableIcons) { icon in
+                        ForEach(availableIcons) { icon in
                             IconItemView(icon: icon, isSelected: iconManager.currentIconName == icon.iconName)
                                 .onTapGesture {
                                     iconManager.changeAppIcon(to: icon)
@@ -63,16 +81,31 @@ struct IconSelectionView: View {
                     }
                 }
                 VStack(alignment: .leading)  {
-                    Text("Schedule your first alarm")
+                    Text("Schedule your first alarm (\(userViewModel.appUser.alarmScheduled)/1)")
                     HStack {
-                        Text("0/1")
-                        ProgressView(value: 0)
-                            .progressViewStyle(.linear)
-                        Image(uiImage: UIImage(named: "icon5") ?? UIImage())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 40, height: 40)
-                            .cornerRadius(12)
+                        if userViewModel.appUser.alarmScheduled < 1 {
+                            ProgressView(value: 0)
+                                .progressViewStyle(.linear)
+                        } else {
+                            Text("COMPELETED")
+                        }
+                        Button {
+                            Task {
+                                let success = try await EconomyViewModel.shared.unlockIcon(iconID: "icon5")
+                                if success {
+                                    userViewModel.appUser.unlockedIcons.append("icon5")
+                                } else {
+                                    print("Internet Error for unlocking icon5")
+                                }
+                            }
+                        } label : {
+                            Image(uiImage: UIImage(named: "icon5") ?? UIImage())
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 40, height: 40)
+                                .cornerRadius(12)
+                        }
+                        .disabled(userViewModel.appUser.alarmScheduled < 1)
                     }
                 }
             } header: {
@@ -88,7 +121,7 @@ struct IconSelectionView: View {
 }
 
 struct IconItemView: View {
-    let icon: AppIconManager.AppIcon
+    let icon: AppIcon
     let isSelected: Bool
     
     var body: some View {
@@ -120,15 +153,7 @@ class AppIconManager: ObservableObject {
     
     @Published var currentIconName: String?
     
-    // Define available icons with display names and asset names
-    struct AppIcon: Identifiable {
-        let id = UUID()
-        let displayName: String
-        let iconName: String? // nil for default icon
-        let imageName: String
-    }
-    
-    let availableIcons: [AppIcon] = [
+    public var allIcons: [AppIcon] = [
         AppIcon(displayName: "Classic", iconName: nil, imageName: "AppIconDefault"),
         AppIcon(displayName: "Calender", iconName: "icon1", imageName: "icon1"),
         AppIcon(displayName: "Punk", iconName: "icon2", imageName: "icon2"),
@@ -175,8 +200,8 @@ class AppIconManager: ObservableObject {
     }
 }
 
-struct IconSelectionView_Previews: PreviewProvider {
-    static var previews: some View {
-        IconSelectionView()
-    }
-}
+//struct IconSelectionView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        IconSelectionView()
+//    }
+//}

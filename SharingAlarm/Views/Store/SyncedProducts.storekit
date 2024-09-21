@@ -1,0 +1,176 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "02BC2EFE",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6612009555",
+    "_developerTeamID" : "528US555T2",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 748560246.56824696,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21542755",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6702447368",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "For those who want a regular work and rest",
+              "displayName" : "Premium for One Month",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "subscription.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium (Monthly)",
+          "subscriptionGroupID" : "21542755",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6702658355",
+          "introductoryOffer" : {
+            "internalID" : "5FDFC03A",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "For those who is having a long group trip",
+              "displayName" : "Premium for One Week",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "subscription.premium.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Premium (Weekly)",
+          "subscriptionGroupID" : "21542755",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "19.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "6702583700",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "For those who lead a whole groups",
+              "displayName" : "Premium for Half Year",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "subscription.premium.yearly",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Premium (Yearly)",
+          "subscriptionGroupID" : "21542755",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

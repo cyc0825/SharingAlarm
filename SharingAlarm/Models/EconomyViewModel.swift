@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import StoreKit
 import FirebaseFirestore
 
 class EconomyViewModel: ObservableObject {
@@ -53,5 +54,81 @@ class EconomyViewModel: ObservableObject {
             return false
         }
     }
+}
 
+// StoreKit
+extension EconomyViewModel {
+
+    // A method to start listening to transaction updates
+    func listenForTransactions() {
+        Task {
+            for await verificationResult in Transaction.updates {
+                switch verificationResult {
+                case .verified(let transaction):
+                    // Handle the verified transaction
+                    await updateSubscriptionToFirebase(transaction: transaction)
+                    
+                    // Mark the transaction as finished after processing
+                    await transaction.finish()
+                case .unverified(_, let error):
+                    // Handle the error if the transaction is not verified
+                    print("Transaction not verified: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    // Method to update subscription information to Firebase
+    func updateSubscriptionToFirebase(transaction: StoreKit.Transaction) async {
+        // Get the subscription status (e.g., productID, expiration date, etc.)
+        let productID = transaction.productID
+        let expirationDate = transaction.expirationDate
+        print("Product ID: \(productID)")
+        print("Expiration Date: \(expirationDate?.description ?? "N/A")")
+        let userID = UserDefaults.standard.string(forKey: "userID") ?? ""
+        let data = ["subscription": productID, "expirationDate": expirationDate ?? Date()] as [String : Any]
+        
+        // Write the data to Firebase
+        let db = Firestore.firestore()
+        db.collection("UserData").document(userID).updateData(data) { error in
+            if let error = error {
+                print("Error updating subscription: \(error)")
+            } else {
+                print("Subscription updated successfully.")
+            }
+        }
+    }
+}
+
+// icon Economy
+extension EconomyViewModel {
+    func unlockIcon(iconID: String) async throws -> Bool {
+        var userID = UserDefaults.standard.string(forKey: "userID") ?? ""
+        let db = Firestore.firestore()
+        let userRef = db.collection("UserData").document(userID)
+        
+        let userSnapshot = try await userRef.getDocument()
+        
+        if let userData = userSnapshot.data(){
+            var unlockedIcons = userData["unlockedIcons"] as? [String] ?? []
+            
+            // Check if ringtone is already unlocked
+            if unlockedIcons.contains(iconID) {
+                print("Icon already unlocked.")
+                return false
+            }
+            
+            // Deduct coins and update unlocked ringtones
+            unlockedIcons.append(iconID)
+            
+            try await userRef.updateData([
+                "unlockedIcons": unlockedIcons
+            ])
+            print("Icon unlocked")
+            return true
+        } else {
+            print("Failed to unlock icon.")
+            return false
+        }
+    }
 }

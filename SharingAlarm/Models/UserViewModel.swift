@@ -18,6 +18,10 @@ struct AppUser: Codable, Identifiable {
     var name: String
     var uid: String
     var money: Int = 0
+    var alarmScheduled: Int = 0
+    var subscription: String?
+    var expirationDate: Date?
+    var unlockedIcons: [String] = []
     var unlockedRingtones: [String] = ["1001"]
     
     static var empty: AppUser {
@@ -143,6 +147,21 @@ class UserViewModel: ObservableObject {
             default:
                 print("Unknown key \(key)")
             }
+        }
+    }
+    
+    func updateUserStatic(field: String, value: Int) {
+        guard let userID = user?.uid else { return }
+        print("[updateUserStatic] starts for \(userID)")
+        db.collection("UserData").document(userID).updateData([
+            field: FieldValue.increment(Int64(value))
+        ])
+        switch field {
+        case "alarmScheduled":
+            appUser.alarmScheduled += value
+            break
+        default:
+            print("Unknown field \(field)")
         }
     }
     

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct AlarmRequestView: View {
+    @EnvironmentObject var userViewModel: UserViewModel
     @Environment(\.dismiss) var dismiss
     @ObservedObject var alarmViewModel: AlarmsViewModel
     var alarm: Alarm
@@ -33,14 +34,18 @@ struct AlarmRequestView: View {
                 Button {
                     print("Add Alarm \(alarm.id ?? "")")
                     if let id = alarm.id {
-                        alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
-                            switch result {
-                            case .success(_):
-                                alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarm.alarmBody, alarmId: id, ringTone: alarm.sound, deviceToken: fcmToken ?? "")
-                                print("Success")
-                            case .failure(_):
-                                print("fail")
+                        if userViewModel.appUser.subscription != nil || alarmViewModel.alarms.count < 3 {
+                            alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
+                                switch result {
+                                case .success(_):
+                                    alarmViewModel.scheduleAlarm(alarmTime: alarm.time.ISO8601Format(), alarmBody: alarm.alarmBody, alarmId: id, ringTone: alarm.sound, deviceToken: fcmToken ?? "")
+                                    print("Success")
+                                case .failure(_):
+                                    print("fail")
+                                }
                             }
+                        } else {
+                            alarmViewModel.errorMessage = "You have reached the maximum number of alarms basic user can have."
                         }
                     }
                     dismiss()
@@ -72,6 +77,13 @@ struct AlarmRequestView: View {
                 .cornerRadius(25)
                 .padding(.horizontal)
                 .padding(.bottom, 50)
+            }
+            .alert(isPresented: .constant(alarmViewModel.errorMessage != nil)) {
+                Alert(title: Text("Cannot Add Alarm"),
+                      message: Text(alarmViewModel.errorMessage ?? "Unknown Error"),
+                      dismissButton:.default(Text("Confirm"), action: {
+                    alarmViewModel.errorMessage = nil
+                }))
             }
             .padding()
         }

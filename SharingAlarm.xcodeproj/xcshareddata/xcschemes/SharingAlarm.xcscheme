@@ -97,6 +97,9 @@
             ReferencedContainer = "container:SharingAlarm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../SharingAlarm/Views/Store/SyncedProducts.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
