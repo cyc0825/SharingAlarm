@@ -18,7 +18,7 @@ struct FriendsView: View {
     @State private var friendToDelete: String?
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 if viewModel.friends.isEmpty {
                     List {

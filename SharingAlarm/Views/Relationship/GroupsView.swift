@@ -13,7 +13,7 @@ struct GroupsView: View {
     @EnvironmentObject var viewModel: GroupsViewModel
     @State private var showingAddGroup = false
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack{
                 if viewModel.groups.isEmpty {
                     List {

@@ -48,7 +48,30 @@ struct SharingAlarmApp: App {
                         }
                     }
             } else if authViewModel.authenticationState == .authenticated {
-                NavigationView {
+                ContentView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(userViewModel)
+                    .environmentObject(friendViewModel)
+                    .environmentObject(groupViewModel)
+                    .environmentObject(alarmsViewModel)
+                    .environmentObject(arViewModel)
+                    .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
+                        authViewModel.signOut()
+                        if let userInfo = event.userInfo, let info = userInfo["info"] {
+                            print(info)
+                        }
+                    }
+                    .onAppear {
+                        friendViewModel.fetchFriends()
+                        friendViewModel.fetchOwnRequest()
+                        friendViewModel.fetchFriendsRequest()
+                        groupViewModel.fetchGroup()
+                        alarmsViewModel.fetchRingtoneList()
+                    }
+                    .preferredColorScheme(selectedAppearance.colorScheme)
+            } else {
+                AuthedView {
+                } content: {
                     ContentView()
                         .environmentObject(authViewModel)
                         .environmentObject(userViewModel)
@@ -56,12 +79,6 @@ struct SharingAlarmApp: App {
                         .environmentObject(groupViewModel)
                         .environmentObject(alarmsViewModel)
                         .environmentObject(arViewModel)
-                        .onReceive(NotificationCenter.default.publisher(for: ASAuthorizationAppleIDProvider.credentialRevokedNotification)) { event in
-                            authViewModel.signOut()
-                            if let userInfo = event.userInfo, let info = userInfo["info"] {
-                                print(info)
-                            }
-                        }
                         .onAppear {
                             friendViewModel.fetchFriends()
                             friendViewModel.fetchOwnRequest()
@@ -70,33 +87,12 @@ struct SharingAlarmApp: App {
                             alarmsViewModel.fetchRingtoneList()
                         }
                         .preferredColorScheme(selectedAppearance.colorScheme)
+                    Spacer()
                 }
-            } else {
-                NavigationView {
-                    AuthedView {
-                    } content: {
-                        ContentView()
-                            .environmentObject(authViewModel)
-                            .environmentObject(userViewModel)
-                            .environmentObject(friendViewModel)
-                            .environmentObject(groupViewModel)
-                            .environmentObject(alarmsViewModel)
-                            .environmentObject(arViewModel)
-                            .onAppear {
-                                friendViewModel.fetchFriends()
-                                friendViewModel.fetchOwnRequest()
-                                friendViewModel.fetchFriendsRequest()
-                                groupViewModel.fetchGroup()
-                                alarmsViewModel.fetchRingtoneList()
-                            }
-                            .preferredColorScheme(selectedAppearance.colorScheme)
-                        Spacer()
-                    }
-                    .onAppear {
-                        appDelegate.alarmsViewModel = alarmsViewModel
-                    }
-                    .preferredColorScheme(selectedAppearance.colorScheme)
+                .onAppear {
+                    appDelegate.alarmsViewModel = alarmsViewModel
                 }
+                .preferredColorScheme(selectedAppearance.colorScheme)
             }
         }
     }
@@ -352,7 +348,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             
             if let alarmTime = dateFormatter.date(from: alarmTimeString) {
-                let rootView = AlarmRequestView(alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
+                let rootView = AlarmRequestView(userViewModel: UserViewModel(), alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
                 let hostingController = UIHostingController(rootView: rootView)
                 hostingController.modalPresentationStyle = .pageSheet
                 

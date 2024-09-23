@@ -114,53 +114,19 @@ class AlarmsViewModel: ObservableObject {
         alarmsListener = nil
     }
     
-    // MARK: Legacy, use listener instead
-    func fetchAlarmsData() {
-        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
-        Task {
-            debugPrint("[fetchAlarmsData] starts")
-            do {
-                let querySnapshot = try await db.collection("UserData").document(userID)
-                    .collection("alarms")
-                    .getDocuments()
-                if !querySnapshot.isEmpty {
-                    for document in querySnapshot.documents {
-                        Task {
-                            do {
-                                if document.get("participants") != nil {
-                                    // Just For You
-                                    print("\(document.documentID) is just for you")
-                                    let alarm = try document.data(as: Alarm.self)
-                                    if !self.alarms.contains(where: { $0.id == alarm.id }) {
-                                        self.alarms.append(alarm)
-                                        groupNames.insert(alarm.groupName ?? "")
-                                    }
-                                } else {
-                                    print("\(document.documentID) is for group")
-                                    let alarmQuerySnapshot = try await db.collection("Alarm").document(document.documentID).getDocument()
-                                    var alarm = try alarmQuerySnapshot.data(as: Alarm.self)
-                                    if let isOn = document.get("isOn") as? Bool {
-                                        alarm.isOn = isOn
-                                    }
-                                    if !self.alarms.contains(where: { $0.id == alarm.id }) {
-                                        self.alarms.append(alarm)
-                                        groupNames.insert(alarm.groupName ?? "")
-                                    }
-                                }
-                            }
-                            catch {
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
-                } else {
-                    self.alarms = []
-                }
-            }
-            catch {
-                debugPrint("[fetchAlarmsData] error")
-                print(error.localizedDescription)
-            }
+    func fetchAlarmsCount() async throws -> Int {
+        guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return 0 }
+        debugPrint("[fetchAlarmsCount] starts")
+        let querySnapshot = db.collection("UserData").document(userID)
+            .collection("alarms")
+        let countQuery = querySnapshot.count
+        do {
+            let snapshot = try await countQuery.getAggregation(source: .server)
+            return Int(truncating: snapshot.count)
+        }
+        catch {
+            print(error.localizedDescription)
+            return 0
         }
     }
     

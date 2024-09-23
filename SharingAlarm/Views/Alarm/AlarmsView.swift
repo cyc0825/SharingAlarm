@@ -25,152 +25,150 @@ struct AlarmsView: View {
     let sounds = ["Harmony", "Ripples", "Signal"]
     
     var body: some View {
-        NavigationView {
-            VStack {
-                HStack {
-                    Text("Alarms")
-                        .font(.largeTitle.bold())
-                    Spacer()
-                    if !viewModel.ongoingAlarms.isEmpty {
-                        Button {
-                            viewModel.showAlarmView = true
-                        } label: {
-                            Image(systemName: "alarm.fill")
-                                .resizable()
-                                .frame(width: 38, height: 40)
-                                .foregroundStyle(.accent)
-                                .padding(.trailing)
-                        }
+        VStack {
+            HStack {
+                Text("Alarms")
+                    .font(.largeTitle.bold())
+                Spacer()
+                if !viewModel.ongoingAlarms.isEmpty {
+                    Button {
+                        viewModel.showAlarmView = true
+                    } label: {
+                        Image(systemName: "alarm.fill")
+                            .resizable()
+                            .frame(width: 38, height: 40)
+                            .foregroundStyle(.accent)
+                            .padding(.trailing)
+                    }
+                }
+                Menu {
+                    Button {
+                        viewModel.sortAlarmsByTime()
+                    } label : {
+                        Text("Sort By Time")
                     }
                     Menu {
                         Button {
-                            viewModel.sortAlarmsByTime()
-                        } label : {
-                            Text("Sort By Time")
-                        }
-                        Menu {
-                            Button {
-                                sortGroup = ""
-                            } label: {
-                                Text("All")
-                            }
-                            ForEach(viewModel.groupNames.sorted{$0 < $1}, id: \.self) { name in
-                                Button {
-                                    sortGroup = name
-                                } label: {
-                                    Text(name)
-                                }
-                            }
+                            sortGroup = ""
                         } label: {
-                            Text("Filter By Group")
+                            Text("All")
+                        }
+                        ForEach(viewModel.groupNames.sorted{$0 < $1}, id: \.self) { name in
+                            Button {
+                                sortGroup = name
+                            } label: {
+                                Text(name)
+                            }
                         }
                     } label: {
-                        Image(systemName: "slider.horizontal.3")
-                            .resizable()
-                            .frame(width: 38, height: 35)
+                        Text("Filter By Group")
                     }
-                    .padding(.trailing)
-                    Button {
-                        showingAddAlarm = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                    }
+                } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .resizable()
+                        .frame(width: 38, height: 35)
+                }
+                .padding(.trailing)
+                Button {
+                    showingAddAlarm = true
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                }
 
-                }
-                .padding(.top, 20)
-                .padding()
-                AlarmInterfaceView(viewModel: viewModel, sortGroup: sortGroup)
-                GeometryReader { geometry in
-                    ZStack {
-                        if viewModel.alarms.isEmpty {
-                            List {
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text("No Alarm")
-                                            .font(.title)
+            }
+            .padding(.top, 20)
+            .padding()
+            AlarmInterfaceView(viewModel: viewModel, sortGroup: sortGroup)
+            GeometryReader { geometry in
+                ZStack {
+                    if viewModel.alarms.isEmpty {
+                        List {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("No Alarm")
+                                        .font(.title)
+                                        .foregroundColor(.systemText)
+                                    HStack {
+                                        Text("Tap")
                                             .foregroundColor(.systemText)
-                                        HStack {
-                                            Text("Tap")
-                                                .foregroundColor(.systemText)
-                                            Image(systemName: "plus.circle.fill")
-                                                .foregroundStyle(.accent)
-                                            Text("to add your alarm")
-                                                .foregroundColor(.systemText)
-                                        }
+                                        Image(systemName: "plus.circle.fill")
+                                            .foregroundStyle(.accent)
+                                        Text("to add your alarm")
+                                            .foregroundColor(.systemText)
                                     }
-                                    Spacer()
                                 }
-                                .listRowBackground(Color.clear)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    showingAddAlarm = true
-                                }
+                                Spacer()
                             }
-                            .scrollDisabled(true)
-                            .listStyle(.plain)
-                            .toolbarTitleDisplayMode(.inline)
-                        }
-                        // List with fixed height
-                        else {
-                            List($viewModel.alarms.filter { $alarm in
-                                if sortGroup == "Just For You" {
-                                    // Filter by groupName or include "Just For You" alarms (where groupName is empty)
-                                    return alarm.groupName == nil
-                                } else if sortGroup.isEmpty{
-                                    // If no sortGroup is selected, include all alarms
-                                    return true
-                                } else {
-                                    return alarm.groupName == sortGroup
-                                }
-                            }, id: \.id) { $alarm in
-                                Button(action: {
-                                    viewModel.selectedAlarm = alarm
-                                    viewModel.showAlarmView = true
-                                }, label: {
-                                    AlarmCardView(alarm: $alarm)
-                                })
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button {
-                                        viewModel.removeAlarm(documentID: alarm.id)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                    .tint(.red)
-                                }
-                                .listRowBackground(Color.clear)
+                            .listRowBackground(Color.clear)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                showingAddAlarm = true
                             }
-                            .listStyle(.plain)
-                            .toolbarTitleDisplayMode(.inline)
                         }
-                        // Gradient overlay
-                        VStack {
-                            Spacer()
-                            LinearGradient(gradient: Gradient(colors: [Color.clear, Color(UIColor.systemGroupedBackground)]), startPoint: .center, endPoint: .bottom)
-                        }
-                        .allowsHitTesting(false)
+                        .scrollDisabled(true)
+                        .listStyle(.plain)
+                        .toolbarTitleDisplayMode(.inline)
                     }
+                    // List with fixed height
+                    else {
+                        List($viewModel.alarms.filter { $alarm in
+                            if sortGroup == "Just For You" {
+                                // Filter by groupName or include "Just For You" alarms (where groupName is empty)
+                                return alarm.groupName == nil
+                            } else if sortGroup.isEmpty{
+                                // If no sortGroup is selected, include all alarms
+                                return true
+                            } else {
+                                return alarm.groupName == sortGroup
+                            }
+                        }, id: \.id) { $alarm in
+                            Button(action: {
+                                viewModel.selectedAlarm = alarm
+                                viewModel.showAlarmView = true
+                            }, label: {
+                                AlarmCardView(alarm: $alarm)
+                            })
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button {
+                                    viewModel.removeAlarm(documentID: alarm.id)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(.red)
+                            }
+                            .listRowBackground(Color.clear)
+                        }
+                        .listStyle(.plain)
+                        .toolbarTitleDisplayMode(.inline)
+                    }
+                    // Gradient overlay
+                    VStack {
+                        Spacer()
+                        LinearGradient(gradient: Gradient(colors: [Color.clear, Color(UIColor.systemGroupedBackground)]), startPoint: .center, endPoint: .bottom)
+                    }
+                    .allowsHitTesting(false)
                 }
             }
-            .background(
-                Color(UIColor.systemGroupedBackground)
-            )
-            .sheet(isPresented: $showingEditAlarm) {
-                if let selectedAlarm = viewModel.selectedAlarm {
-                    EditAlarmView(
-                        isPresented: $showingEditAlarm,
-                        viewModel: viewModel,
-                        alarm: selectedAlarm
-                    )
-                }
+        }
+        .background(
+            Color(UIColor.systemGroupedBackground)
+        )
+        .sheet(isPresented: $showingEditAlarm) {
+            if let selectedAlarm = viewModel.selectedAlarm {
+                EditAlarmView(
+                    isPresented: $showingEditAlarm,
+                    viewModel: viewModel,
+                    alarm: selectedAlarm
+                )
             }
-            .sheet(isPresented: $showingAddAlarm) {
-                AddAlarmView(viewModel: viewModel, groupsViewModel: groupsViewModel, isPresented: $showingAddAlarm)
-            }
-            .sheet(isPresented: $viewModel.showAlarmView) {
-                AlarmView(alarmViewModel: viewModel)
-            }
+        }
+        .sheet(isPresented: $showingAddAlarm) {
+            AddAlarmView(viewModel: viewModel, groupsViewModel: groupsViewModel, isPresented: $showingAddAlarm)
+        }
+        .sheet(isPresented: $viewModel.showAlarmView) {
+            AlarmView(alarmViewModel: viewModel)
         }
     }
 }
