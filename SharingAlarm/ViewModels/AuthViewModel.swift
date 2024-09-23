@@ -317,7 +317,12 @@ extension AuthViewModel {
             "name": name ?? "Unknown",
             "uid": uid ?? "Unknown",
             "money": 100,
+            "unlockedIcons": ["icon1"],
             "unlockedRingtones": ["1001"],
+            "alarmScheduled": 0,
+            "alarmResponsed": 0,
+            "alarmResponsedDay": 0,
+            "alarmResponsedNight": 0
         ] as [String : Any]
         Task {
             do {

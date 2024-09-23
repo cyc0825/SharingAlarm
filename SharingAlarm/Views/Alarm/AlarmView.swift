@@ -100,18 +100,27 @@ struct AlarmStatusView: View {
                                 print("alarm.alarmTime: \(alarm.alarmTime)")
                                 print("responseTime: \(responseTime)")
                                 Task {
-                                    if alarm.alarmTime > 7200 && responseTime < 30 {
-                                        earnedCoins = 30 - responseTime
-                                        try await economy.updateCoinsForResponse(alarm: alarm, earnedCoins: earnedCoins, userID: userID)
-                                        userViewModel.appUser.money += earnedCoins
-                                        showCoinPopup = true
-                                    }
-                                    if alarm.participants.count == 1 {
-                                        // Only one participant, no need to wait for others
-                                        alarmViewModel.removeAlarm(documentID: alarm.id)
-                                        dismiss()
-                                    } else {
-                                        alarmViewModel.setUserStatus(alarmId: alarm.id, status: "Stopped", participants: alarm.participants)
+                                    if responseTime < 30 {
+                                        userViewModel.updateUserStatic(field: "alarmResponsed", value: 1)
+                                        if Calendar.current.component( .hour, from: Date()) > 8 && Calendar.current.component( .hour, from: Date()) < 20 {
+                                            userViewModel.updateUserStatic(field: "alarmResponsedDay", value: 1)
+                                        } else {
+                                            userViewModel.updateUserStatic(field: "alarmResponsedNight", value: 1)
+                                        }
+                                        if alarm.alarmTime > 7200 {
+                                            earnedCoins = 30 - responseTime
+                                            try await economy.updateCoinsForResponse(alarm: alarm, earnedCoins: earnedCoins, userID: userID)
+                                            userViewModel.appUser.money += earnedCoins
+                                            
+                                            showCoinPopup = true
+                                        }
+                                        if alarm.participants.count == 1 {
+                                            // Only one participant, no need to wait for others
+                                            alarmViewModel.removeAlarm(documentID: alarm.id)
+                                            dismiss()
+                                        } else {
+                                            alarmViewModel.setUserStatus(alarmId: alarm.id, status: "Stopped", participants: alarm.participants)
+                                        }
                                     }
                                 }
                             }, maxWidth: geometry.size.width)

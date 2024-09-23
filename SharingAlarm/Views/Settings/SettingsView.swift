@@ -16,6 +16,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "person")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -29,6 +30,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "apps.iphone")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -40,6 +42,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "wand.and.rays")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -51,6 +54,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "message")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -67,6 +71,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "gear")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -83,6 +88,7 @@ struct SettingsView: View {
                         HStack {
                             HStack {
                                 Image(systemName: "bell")
+                                    .foregroundStyle(.accent)
                                 Spacer()
                             }
                             .frame(width: 20)
@@ -161,12 +167,14 @@ struct ProfileView: View {
                     HStack {
                         Image(systemName: "person.crop.circle.fill")
                         Text("Edit Profile")
+                            .foregroundStyle(.systemText)
                     }
                 }
                 .tint(.accent)
                 NavigationLink(destination: DeleteProfileView()) {
                     HStack {
                         Image(systemName: "trash")
+                            .foregroundStyle(.accent)
                         Text("Delete Profile")
                     }
                 }
@@ -179,6 +187,7 @@ struct ProfileView: View {
             Section {
                 HStack {
                     Image(systemName: "waveform")
+                        .foregroundStyle(.accent)
                     NavigationLink(destination: AlarmSoundView(viewModel: alarmsViewModel, arViewModel: arViewModel)) {
                         Text("Ringtone Library")
                     }
@@ -189,6 +198,7 @@ struct ProfileView: View {
                     HStack {
                         Image(systemName: "person.crop.circle.dashed.circle")
                         Text("Membership")
+                            .foregroundStyle(.systemText)
                         Spacer()
                     }
                 }

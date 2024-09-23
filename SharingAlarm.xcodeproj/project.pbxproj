@@ -36,6 +36,8 @@
 		D36A0FAC2C921B2100633E02 /* CoinEarnedPopupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */; };
 		D36A0FAE2C92402100633E02 /* PremiumStoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAD2C92401C00633E02 /* PremiumStoreView.swift */; };
 		D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36A0FAF2C93BE9200633E02 /* Animations.swift */; };
+		D36BD6812CA0906E0014A985 /* IconTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36BD6802CA090650014A985 /* IconTask.swift */; };
+		D36BD6832CA0C2AB0014A985 /* icon10.png in Resources */ = {isa = PBXBuildFile; fileRef = D36BD6822CA0C2AB0014A985 /* icon10.png */; };
 		D36C34222C97DE8700647F97 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36C34212C97DE8700647F97 /* WidgetKit.framework */; };
 		D36C34242C97DE8700647F97 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D36C34232C97DE8700647F97 /* SwiftUI.framework */; };
 		D36C342F2C97DE8800647F97 /* AlarmWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D36C341F2C97DE8700647F97 /* AlarmWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -179,6 +181,8 @@
 		D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinEarnedPopupCard.swift; sourceTree = "<group>"; };
 		D36A0FAD2C92401C00633E02 /* PremiumStoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumStoreView.swift; sourceTree = "<group>"; };
 		D36A0FAF2C93BE9200633E02 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		D36BD6802CA090650014A985 /* IconTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTask.swift; sourceTree = "<group>"; };
+		D36BD6822CA0C2AB0014A985 /* icon10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon10.png; sourceTree = "<group>"; };
 		D36C341F2C97DE8700647F97 /* AlarmWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AlarmWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D36C34212C97DE8700647F97 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		D36C34232C97DE8700647F97 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -400,7 +404,7 @@
 			path = Relationship;
 			sourceTree = "<group>";
 		};
-		D35372F02BBB7D9500B56F32 /* Models */ = {
+		D35372F02BBB7D9500B56F32 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				D36A0FA62C91092C00633E02 /* EconomyViewModel.swift */,
@@ -411,6 +415,14 @@
 				D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */,
 				D3CB391F2C645A4D00AF7052 /* TimerViewModel.swift */,
 				D375941C2C74061C006DB7AA /* AudioRecorderViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		D36BD67F2CA0905A0014A985 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D36BD6802CA090650014A985 /* IconTask.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -457,9 +469,10 @@
 				D3C0EF7F2BDD50E600DA1795 /* Info.plist */,
 				D3B53B322BC6203500B41769 /* Resources */,
 				D30FB1962BC3171100C88BBC /* ViewCards */,
-				D35372F02BBB7D9500B56F32 /* Models */,
+				D35372F02BBB7D9500B56F32 /* ViewModels */,
 				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
 				D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */,
+				D36BD67F2CA0905A0014A985 /* Models */,
 				D337DFAA2C56F13100D33713 /* Views */,
 				D38EEB862BA371A00099D382 /* Assets.xcassets */,
 				D38EEB8B2BA371A00099D382 /* Persistence.swift */,
@@ -561,6 +574,7 @@
 				D3B469AE2C9BA17800D36E1D /* icon7.png */,
 				D3B469AF2C9BA17800D36E1D /* icon8.png */,
 				D3B469B02C9BA17800D36E1D /* icon9.png */,
+				D36BD6822CA0C2AB0014A985 /* icon10.png */,
 				D3DE34702C80F6C50000C48A /* AppIconDefault.png */,
 				D3CAA1302C7DC5B900B93A00 /* icon1 */,
 				D3CAA1352C7E4F5500B93A00 /* icon2 */,
@@ -757,6 +771,7 @@
 				D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */,
 				D3E8705B2C7DC03200CDA558 /* icon1@2x.png in Resources */,
 				D3B469B12C9BA17800D36E1D /* icon3.png in Resources */,
+				D36BD6832CA0C2AB0014A985 /* icon10.png in Resources */,
 				D3B469B22C9BA17800D36E1D /* icon6.png in Resources */,
 				D3B469B32C9BA17800D36E1D /* icon5.png in Resources */,
 				D3B469B42C9BA17800D36E1D /* icon4.png in Resources */,
@@ -818,6 +833,7 @@
 				D375941D2C74061C006DB7AA /* AudioRecorderViewModel.swift in Sources */,
 				D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
+				D36BD6812CA0906E0014A985 /* IconTask.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
 				D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,

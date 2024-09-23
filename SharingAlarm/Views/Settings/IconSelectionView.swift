@@ -19,7 +19,60 @@ struct AppIcon: Identifiable {
 struct IconSelectionView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var iconManager = AppIconManager.shared
+    @State var showPartyPopper: Bool = false
     
+    var iconTasks: [IconTask] {
+        return [
+            IconTask(
+                task: "Schedule your first alarm",
+                iconReward: "icon5",
+                progress: userViewModel.appUser.alarmScheduled,
+                goal: 1
+            ),
+            IconTask(
+                task: "Schedule alarms",
+                iconReward: "icon6",
+                progress: userViewModel.appUser.alarmScheduled,
+                goal: 20
+            ),
+            IconTask(
+                task: "Responde to Alarms at nighttime",
+                iconReward: "icon3",
+                progress: userViewModel.appUser.alarmResponsedNight,
+                goal: 20
+            ),
+            IconTask(
+                task: "Responde to Alarms at nighttime",
+                iconReward: "icon9",
+                progress: userViewModel.appUser.alarmResponsedNight,
+                goal: 100
+            ),
+            IconTask(
+                task: "Responde to Alarms at daytime",
+                iconReward: "icon4",
+                progress: userViewModel.appUser.alarmResponsedDay,
+                goal: 20
+            ),
+            IconTask(
+                task: "Responde to Alarms at daytime",
+                iconReward: "icon8",
+                progress: userViewModel.appUser.alarmResponsedDay,
+                goal: 100
+            ),
+            IconTask(
+                task: "Responde to Alarms",
+                iconReward: "icon7",
+                progress: userViewModel.appUser.alarmResponsed,
+                goal: 50
+            )
+        ]
+    }
+    
+    var imcompleteIconTask: [IconTask] {
+        iconTasks.filter { task in
+            return !userViewModel.appUser.unlockedIcons.contains(task.iconReward)
+        }
+    }
     // Define grid layout
     let columns = [
         GridItem(.adaptive(minimum: 70))
@@ -28,95 +81,99 @@ struct IconSelectionView: View {
     var availableIcons: [AppIcon] {
         AppIconManager.shared.allIcons.filter { icon in
             if icon.iconName == nil {
+                // this is default icon
+                return true
+            } else if icon.iconName == "icon10" && userViewModel.appUser.subscription != nil {
+                // this is premium icon
                 return true
             }
+            
             return userViewModel.appUser.unlockedIcons.contains(icon.iconName!)
         }
     }
     
     var body: some View {
-        Form {
-            Section {
-                VStack(alignment: .leading) {
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(availableIcons) { icon in
-                            IconItemView(icon: icon, isSelected: iconManager.currentIconName == icon.iconName)
-                                .onTapGesture {
-                                    iconManager.changeAppIcon(to: icon)
+        ZStack {
+            Form {
+                Section {
+                    VStack(alignment: .leading) {
+                        LazyVGrid(columns: columns, spacing: 10) {
+                            ForEach(availableIcons) { icon in
+                                IconItemView(icon: icon, isSelected: iconManager.currentIconName == icon.iconName)
+                                    .onTapGesture {
+                                        iconManager.changeAppIcon(to: icon)
+                                    }
+                            }
+                        }
+                        
+                    }
+                } header: {
+                    Text("App Icons")
+                        .font(.title.bold())
+                }
+                .headerProminence(.increased)
+                Section {
+                    List(imcompleteIconTask, id: \.self) { task in
+                        if task.progress < task.goal {
+                            VStack(alignment: .leading)  {
+                                HStack {
+                                    Text("\(task.task)")
+                                    Spacer()
+                                    Text("\(task.progress * 100 / task.goal)%")
                                 }
-                        }
-                    }
-                    
-                }
-            } header: {
-                Text("App Icons")
-                    .font(.title.bold())
-            }
-            .headerProminence(.increased)
-            Section {
-                VStack(alignment: .leading) {
-                    Text("Responde to Alarms at night")
-                    HStack {
-                        Text("34/100")
-                        ProgressView(value: 0.34)
-                            .progressViewStyle(.linear)
-                        Image(uiImage: UIImage(named: "icon3") ?? UIImage())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 40, height: 40)
-                            .cornerRadius(12)
-                    }
-                }
-                VStack(alignment: .leading)  {
-                    Text("Responde to Alarms at day")
-                    HStack {
-                        Text("0/100")
-                        ProgressView(value: 0)
-                            .progressViewStyle(.linear)
-                        Image(uiImage: UIImage(named: "icon4") ?? UIImage())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 40, height: 40)
-                            .cornerRadius(12)
-                    }
-                }
-                VStack(alignment: .leading)  {
-                    Text("Schedule your first alarm (\(userViewModel.appUser.alarmScheduled)/1)")
-                    HStack {
-                        if userViewModel.appUser.alarmScheduled < 1 {
-                            ProgressView(value: 0)
-                                .progressViewStyle(.linear)
-                        } else {
-                            Text("COMPELETED")
-                        }
-                        Button {
-                            Task {
-                                let success = try await EconomyViewModel.shared.unlockIcon(iconID: "icon5")
-                                if success {
-                                    userViewModel.appUser.unlockedIcons.append("icon5")
-                                } else {
-                                    print("Internet Error for unlocking icon5")
+                                HStack {
+                                    ProgressView(value: Double(task.progress) / Double(task.goal))
+                                        .progressViewStyle(.linear)
+                                    Image(uiImage: UIImage(named: task.iconReward) ?? UIImage())
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 40, height: 40)
+                                        .cornerRadius(12)
                                 }
                             }
-                        } label : {
-                            Image(uiImage: UIImage(named: "icon5") ?? UIImage())
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 40, height: 40)
-                                .cornerRadius(12)
+                        } else {
+                            Button {
+                                Task {
+                                    let success = try await EconomyViewModel.shared.unlockIcon(iconID: task.iconReward)
+                                    if success {
+                                        userViewModel.appUser.unlockedIcons.append(task.iconReward)
+                                    } else {
+                                        print("Internet Error for unlocking \(task.iconReward)")
+                                    }
+                                    showPartyPopper = true
+                                }
+                            } label : {
+                                VStack(alignment: .center) {
+                                    Image(uiImage: UIImage(named: task.iconReward) ?? UIImage())
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 40, height: 40)
+                                        .cornerRadius(12)
+                                    Text("Claim Your Reward")
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
                         }
-                        .disabled(userViewModel.appUser.alarmScheduled < 1)
                     }
+                } header: {
+                    Text("Tasks")
+                        .font(.title.bold())
+                } footer: {
+                    Text("Only alarms that are scheduled for 2 hours will be counted as alarm responded, if the data is not updating correctly, please refresh the app.")
                 }
-            } header: {
-                Text("Tasks")
-                    .font(.title.bold())
+                .headerProminence(.increased)
             }
-            .headerProminence(.increased)
+            .navigationTitle("App Icons")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
+            if showPartyPopper {
+                PartyPopperView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .onAppear {
+                        UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    }
+            }
         }
-        .navigationTitle("App Icons")
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
 }
 
@@ -164,6 +221,7 @@ class AppIconManager: ObservableObject {
         AppIcon(displayName: "Sky", iconName: "icon7", imageName: "icon7"),
         AppIcon(displayName: "Flower", iconName: "icon8", imageName: "icon8"),
         AppIcon(displayName: "Forest", iconName: "icon9", imageName: "icon9"),
+        AppIcon(displayName: "Premium", iconName: "icon10", imageName: "icon10"),
         // Add more icons as needed
     ]
     

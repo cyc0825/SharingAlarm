@@ -19,6 +19,9 @@ struct AppUser: Codable, Identifiable {
     var uid: String
     var money: Int = 0
     var alarmScheduled: Int = 0
+    var alarmResponsed: Int = 0
+    var alarmResponsedDay: Int = 0
+    var alarmResponsedNight: Int = 0
     var subscription: String?
     var expirationDate: Date?
     var unlockedIcons: [String] = []
