@@ -9,12 +9,12 @@ import SwiftUI
 import AVFoundation
 
 struct AlarmSoundView: View {
-    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var viewModel: AlarmsViewModel
     
     @StateObject var arViewModel: AudioRecorderViewModel
     @State var showRecordingView = false
     @State private var audioPlayer: AVAudioPlayer?
+    @State var presentPremiumStoreView = false
     // @State private var downloadURL: URL?
     
     // Function to play the sound
@@ -39,14 +39,34 @@ struct AlarmSoundView: View {
                     NavigationLink(destination: RingtoneLib(viewModel: viewModel)) {
                         HStack {
                             Image(systemName: "storefront")
+                                .foregroundStyle(.accent)
                             Text("Ringtone Shop")
                         }
-                        .foregroundStyle(.accent)
                     }
                 }
                 
                 Section("Personalized Ringtone") {
-                    AudioRecorderView(alarmsViewModel: viewModel)
+                    ZStack {
+                        AudioRecorderView(alarmsViewModel: viewModel)
+                        if UserDefaults.standard.bool(forKey: "isPremium")  {
+                            Color.clear
+                                .background(.ultraThinMaterial)
+                                .onTapGesture {
+                                    // Present PremiumStoreView when tapped
+                                    presentPremiumStoreView = true
+                                }
+                                .padding(.horizontal, -20)
+                                .padding(.vertical, -5)
+                            VStack {
+                                Image(systemName: "lock.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.gray)
+                                Text("Unlock Personalized Ringtone")
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
                 }
                 
                 Section("Unlocked Ringtone") {
@@ -61,6 +81,9 @@ struct AlarmSoundView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
         }
+        .sheet(isPresented: $presentPremiumStoreView) {
+            PremiumStoreView()
+        }
         .navigationTitle("Ringtone Library")
         .navigationBarTitleDisplayMode(.automatic)
     }
@@ -68,4 +91,5 @@ struct AlarmSoundView: View {
 
 #Preview {
     AlarmSoundView(viewModel: AlarmsViewModel(), arViewModel: AudioRecorderViewModel(), showRecordingView: false)
+
 }

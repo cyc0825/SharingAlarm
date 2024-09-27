@@ -35,40 +35,35 @@ struct AlarmRequestView: View {
                     print("Add Alarm \(alarm.id ?? "")")
                     if let id = alarm.id {
                         Task {
-                            do {
-                                // Fetch alarm count asynchronously
-                                let alarmCount = try await alarmViewModel.fetchAlarmsCount()
-                                
-                                // Print the subscription status and alarm count
-                                print("Subscription \(userViewModel.appUser.subscription ?? "")")
-                                print("Alarm Count \(alarmCount)")
-                                
-                                // Check the user's subscription status or alarm count
-                                if userViewModel.appUser.subscription != nil || alarmCount < 3 {
-                                    // Proceed to add the alarm to the participant and schedule it
-                                    alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
-                                        switch result {
-                                        case .success(_):
-                                            // Schedule the alarm after successfully adding the participant
-                                            alarmViewModel.scheduleAlarm(
-                                                alarmTime: alarm.time.ISO8601Format(),
-                                                alarmBody: alarm.alarmBody,
-                                                alarmId: id,
-                                                ringTone: alarm.sound,
-                                                deviceToken: fcmToken ?? ""
-                                            )
-                                            print("Success")
-                                        case .failure(_):
-                                            print("fail")
-                                        }
+                            // Fetch alarm count asynchronously
+                            // let alarmCount = try await alarmViewModel.fetchAlarmsCount()
+                            
+                            // Print the subscription status and alarm count
+                            print("Subscription \(UserDefaults.standard.bool(forKey: "isPremium"))")
+                            print("Alarm Count \(alarmViewModel.alarms.count)")
+                            
+                            // Check the user's subscription status or alarm count
+                            if UserDefaults.standard.bool(forKey: "isPremium")  || alarmViewModel.alarms.count < 3 {
+                                // Proceed to add the alarm to the participant and schedule it
+                                alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
+                                    switch result {
+                                    case .success(_):
+                                        // Schedule the alarm after successfully adding the participant
+                                        alarmViewModel.scheduleAlarm(
+                                            alarmTime: alarm.time.ISO8601Format(),
+                                            alarmBody: alarm.alarmBody,
+                                            alarmId: id,
+                                            ringTone: alarm.sound,
+                                            deviceToken: fcmToken ?? ""
+                                        )
+                                        print("Success")
+                                    case .failure(_):
+                                        print("fail")
                                     }
-                                } else {
-                                    // Show an error if the user has reached the maximum number of alarms
-                                    alarmViewModel.errorMessage = "You have reached the maximum number of alarms basic user can have."
                                 }
-                            } catch {
-                                // Handle the error if fetching alarm count fails
-                                print("Failed to fetch alarm count: \(error)")
+                            } else {
+                                // Show an error if the user has reached the maximum number of alarms
+                                alarmViewModel.errorMessage = "You have reached the maximum number of alarms basic user can have."
                             }
                         }
 

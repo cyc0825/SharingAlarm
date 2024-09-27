@@ -97,6 +97,16 @@ struct SettingsView: View {
                         .foregroundStyle(Color.systemText)
                     }
                 }
+                
+                Section {
+                    ShareLink (item: URL(string: "https://testflight.apple.com/join/HraW4tkJ")!) {
+                        HStack {
+                            Image(systemName: "figure.wave")
+                            Text("Recommend this app to Friends!")
+                                .foregroundStyle(Color.systemText)
+                        }
+                    }
+                }
             }
             .navigationTitle("Settings")
         }
@@ -141,7 +151,7 @@ struct ProfileView: View {
                 Text("@\(userViewModel.appUser.uid)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                if userViewModel.appUser.subscription != nil {
+                if UserDefaults.standard.bool(forKey: "isPremium")  {
                     Button {
                         
                     } label: {
@@ -224,7 +234,10 @@ struct ProfileView: View {
                 initialUsername: userViewModel.appUser.name,
                 initialUid: userViewModel.appUser.uid,
                 onSubmit: { username, uid in
-                    userViewModel.saveUserData(username: username, uid: uid)
+                    userViewModel.updateUserData(updates: [
+                        "name": username,
+                        "uid": uid
+                    ])
                     userViewModel.fetchUserData { success in
                         if success {
                             showingProfileEdit = false

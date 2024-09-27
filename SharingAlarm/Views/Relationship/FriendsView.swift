@@ -71,9 +71,11 @@ struct FriendsView: View {
                         showingAddFriend = true
                     }) {
                         if viewModel.friendRequests.count > 0 {
-                            Image(systemName: "plus.circle")
+                            Image(systemName: "person.fill.badge.plus")
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(Color.accent, Color.thirdAccent)
                         } else {
-                            Image(systemName: "plus")
+                            Image(systemName: "person.fill.badge.plus")
                         }
                     }
                     .popoverTip(FriendsTip())

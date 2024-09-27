@@ -83,7 +83,7 @@ struct IconSelectionView: View {
             if icon.iconName == nil {
                 // this is default icon
                 return true
-            } else if icon.iconName == "icon10" && userViewModel.appUser.subscription != nil {
+            } else if icon.iconName == "icon10" && UserDefaults.standard.bool(forKey: "isPremium")  {
                 // this is premium icon
                 return true
             }

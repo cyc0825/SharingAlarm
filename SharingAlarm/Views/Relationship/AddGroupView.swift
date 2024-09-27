@@ -11,9 +11,9 @@ struct AddGroupView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var friendViewModel = FriendsViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var viewModel: GroupsViewModel
     @State var userName: String = UserDefaults.standard.value(forKey: "name") as? String ?? ""
-    @State var userViewModel = UserViewModel()
     @State public var name = ""
     @State public var startDate = Date()
     @State public var endDate = Date()
@@ -147,16 +147,19 @@ struct FriendPicker: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.friends.indices, id: \.self) { index in
-                if !selectedFriends.contains(where: { $0.uid == viewModel.friends[index].friendRef.uid }) {
-                    Button(viewModel.friends[index].friendRef.name) {
-                        // Add the selected friend to the participants list if not already added
-                        selectedFriends.append(viewModel.friends[index].friendRef)
-                        dismiss()
+            VStack {
+                List(viewModel.friends.indices, id: \.self) { index in
+                    if !selectedFriends.contains(where: { $0.uid == viewModel.friends[index].friendRef.uid }) {
+                        Button(viewModel.friends[index].friendRef.name) {
+                            // Add the selected friend to the participants list if not already added
+                            selectedFriends.append(viewModel.friends[index].friendRef)
+                            dismiss()
+                        }
+                    } else {
+                        Text(viewModel.friends[index].friendRef.name)
                     }
-                } else {
-                    Text(viewModel.friends[index].friendRef.name)
                 }
+                Text("Did not find your friends? Go to FRIENDS tab and make sure they are added to your friends list.")
             }
             .navigationTitle("Select Friends")
             .toolbar {

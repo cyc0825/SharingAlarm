@@ -144,7 +144,7 @@ extension AuthViewModel {
         }
         catch  {
             print(error)
-            errorMessage = error.localizedDescription
+            errorMessage = "Email or password is incorrect. Please try again."
             authenticationState = .unauthenticated
             return false
         }
@@ -322,7 +322,8 @@ extension AuthViewModel {
             "alarmScheduled": 0,
             "alarmResponsed": 0,
             "alarmResponsedDay": 0,
-            "alarmResponsedNight": 0
+            "alarmResponsedNight": 0,
+            "subscription": "free",
         ] as [String : Any]
         Task {
             do {

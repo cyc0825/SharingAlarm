@@ -113,6 +113,18 @@ class UserViewModel: ObservableObject {
                     UserDefaults.standard.setValue(self.appUser.name, forKey: "name")
                     UserDefaults.standard.setValue(self.appUser.uid, forKey: "uid")
                     UserDefaults.standard.setValue(self.appUser.id, forKey: "userID")
+                    // Check for Premium
+                    if appUser.subscription != "free" {
+                        if let expirationDate = appUser.expirationDate,
+                           expirationDate < Date(){
+                            updateUserData(updates: ["subscription": "free"])
+                            UserDefaults.standard.setValue(false, forKey: "isPremium")
+                        } else {
+                            UserDefaults.standard.setValue(true, forKey: "isPremium")
+                        }
+                    } else {
+                        UserDefaults.standard.setValue(false, forKey: "isPremium")
+                    }
                     completion(true)
                 } else {
                     debugPrint("[fetchUserData] no document found for \(userID)")
@@ -127,15 +139,6 @@ class UserViewModel: ObservableObject {
         }
     }
     
-    func saveUserData(username: String, uid: String) {
-        guard let userID = user?.uid else { return }
-        print("[saveUserData] starts for \(userID)")
-        db.collection("UserData").document(userID).updateData([
-            "name": username,
-            "uid": uid
-        ])
-    }
-    
     func updateUserData(updates: [String: String]) {
         guard let userID = user?.uid else { return }
         db.collection("UserData").document(userID).updateData(updates)
@@ -148,7 +151,7 @@ class UserViewModel: ObservableObject {
                 appUser.uid = value
                 UserDefaults.standard.setValue(value, forKey: "uid")
             default:
-                print("Unknown key \(key)")
+                print("Change \(key) to \(value)")
             }
         }
     }

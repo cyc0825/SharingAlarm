@@ -46,6 +46,9 @@ struct SharingAlarmApp: App {
                                 showLaunchScreen = false
                             }
                         }
+                        appDelegate.alarmsViewModel = alarmsViewModel
+                        appDelegate.userViewModel = userViewModel
+                        
                     }
             } else if authViewModel.authenticationState == .authenticated {
                 ContentView()
@@ -131,6 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var alarmWindow: UIWindow?
     var alarmsViewModel: AlarmsViewModel?
+    var userViewModel: UserViewModel?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Request notification permissions
@@ -347,8 +351,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             let dateFormatter = ISO8601DateFormatter()
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             
-            if let alarmTime = dateFormatter.date(from: alarmTimeString) {
-                let rootView = AlarmRequestView(userViewModel: UserViewModel(), alarmViewModel: AlarmsViewModel(), alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
+            if let alarmTime = dateFormatter.date(from: alarmTimeString), let userViewModel = userViewModel, let alarmsViewModel = alarmsViewModel {
+                let rootView = AlarmRequestView(userViewModel: userViewModel, alarmViewModel: alarmsViewModel, alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
                 let hostingController = UIHostingController(rootView: rootView)
                 hostingController.modalPresentationStyle = .pageSheet
                 

@@ -71,7 +71,7 @@ struct AddAlarmView: View {
                 if selectedTime < Date() {
                     // The selected time has already passed
                     viewModel.errorMessage = "The selected time has already passed. Please choose a future time."
-                } else if userViewModel.appUser.subscription != nil || viewModel.alarms.count < 3 {
+                } else if UserDefaults.standard.bool(forKey: "isPremium") || viewModel.alarms.count < 3 {
                     //                viewModel.alarms.append(Alarm(time: selectedTime, sound: selectedSound, repeatInterval: repeatInterval, groupID: selectedGroup?.id, groupName: selectedGroup?.name))
                     viewModel.addAlarm(
                         alarmBody: "\(name) wants you to \(alarmBody)",

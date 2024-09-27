@@ -293,6 +293,7 @@ class AlarmsViewModel: ObservableObject {
                 if selectedAlarm?.id == documentID {
                     selectedAlarm = nil
                 }
+                cancelAlarm(alarmId: documentID)
                 debugPrint("[removeAlarm] ends")
             } catch {
                 debugPrint("Error removing alarm: \(error.localizedDescription)")
@@ -695,6 +696,38 @@ extension AlarmsViewModel {
                 print("Alarm scheduled successfully")
             } else {
                 print("Failed to schedule alarm")
+            }
+        }.resume()
+    }
+    
+    func cancelAlarm(alarmId: String) {
+        // https://alarm-scheduler.fly.dev/scheduleAlarm
+        // http://192.168.7.39:3000/scheduleAlarm
+        guard let url = URL(string: "https://alarm-scheduler.fly.dev/cancelAlarm") else { return }
+        print("Schedule alarm now within https://alarm-scheduler.fly.dev/cancelAlarm")
+        
+        let alarmRequest = ["alarmId": alarmId]
+        
+        // Convert to JSON data
+        guard let jsonData = try? JSONEncoder().encode(alarmRequest) else { return }
+        
+        // Create the URL request
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        // Make the network request
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error cancelling alarm: \(error.localizedDescription)")
+                return
+            }
+            
+            if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                print("Alarm cancelled successfully")
+            } else {
+                print("Failed to cancel alarm")
             }
         }.resume()
     }
