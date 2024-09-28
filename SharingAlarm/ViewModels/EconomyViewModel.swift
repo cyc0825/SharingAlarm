@@ -67,7 +67,7 @@ extension EconomyViewModel {
                 case .verified(let transaction):
                     // Handle the verified transaction
                     await updateSubscriptionToFirebase(transaction: transaction)
-                    
+                    UserDefaults.standard.set(true, forKey: "isPremium")
                     // Mark the transaction as finished after processing
                     await transaction.finish()
                 case .unverified(_, let error):

@@ -48,7 +48,7 @@ struct AlarmSoundView: View {
                 Section("Personalized Ringtone") {
                     ZStack {
                         AudioRecorderView(alarmsViewModel: viewModel)
-                        if UserDefaults.standard.bool(forKey: "isPremium")  {
+                        if !UserDefaults.standard.bool(forKey: "isPremium")  {
                             Color.clear
                                 .background(.ultraThinMaterial)
                                 .onTapGesture {

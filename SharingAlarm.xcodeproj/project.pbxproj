@@ -57,6 +57,10 @@
 		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
+		D39CFECA2CA760F30089C7E9 /* Ringtone.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39CFEC92CA760F00089C7E9 /* Ringtone.swift */; };
+		D39CFECE2CA784230089C7E9 /* icon11.png in Resources */ = {isa = PBXBuildFile; fileRef = D39CFECB2CA784230089C7E9 /* icon11.png */; };
+		D39CFECF2CA784230089C7E9 /* icon13.png in Resources */ = {isa = PBXBuildFile; fileRef = D39CFECD2CA784230089C7E9 /* icon13.png */; };
+		D39CFED02CA784230089C7E9 /* icon12.png in Resources */ = {isa = PBXBuildFile; fileRef = D39CFECC2CA784230089C7E9 /* icon12.png */; };
 		D3AB27FF2C7BE42600E8B3E0 /* beep-04.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.caf */; };
 		D3AB28002C7BE42600E8B3E0 /* beep-04.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3AB27FE2C7BE42600E8B3E0 /* beep-04.caf */; };
 		D3AB28022C7D41DD00E8B3E0 /* IconSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */; };
@@ -207,6 +211,10 @@
 		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
+		D39CFEC92CA760F00089C7E9 /* Ringtone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ringtone.swift; sourceTree = "<group>"; };
+		D39CFECB2CA784230089C7E9 /* icon11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon11.png; sourceTree = "<group>"; };
+		D39CFECC2CA784230089C7E9 /* icon12.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon12.png; sourceTree = "<group>"; };
+		D39CFECD2CA784230089C7E9 /* icon13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon13.png; sourceTree = "<group>"; };
 		D3AB27FE2C7BE42600E8B3E0 /* beep-04.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "beep-04.caf"; sourceTree = "<group>"; };
 		D3AB28012C7D41DB00E8B3E0 /* IconSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconSelectionView.swift; sourceTree = "<group>"; };
 		D3ABC8322BDE9799003D2265 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
@@ -423,6 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				D36BD6802CA090650014A985 /* IconTask.swift */,
+				D39CFEC92CA760F00089C7E9 /* Ringtone.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -575,6 +584,9 @@
 				D3B469AF2C9BA17800D36E1D /* icon8.png */,
 				D3B469B02C9BA17800D36E1D /* icon9.png */,
 				D36BD6822CA0C2AB0014A985 /* icon10.png */,
+				D39CFECB2CA784230089C7E9 /* icon11.png */,
+				D39CFECC2CA784230089C7E9 /* icon12.png */,
+				D39CFECD2CA784230089C7E9 /* icon13.png */,
 				D3DE34702C80F6C50000C48A /* AppIconDefault.png */,
 				D3CAA1302C7DC5B900B93A00 /* icon1 */,
 				D3CAA1352C7E4F5500B93A00 /* icon2 */,
@@ -764,6 +776,9 @@
 				D3B469BA2C9BA8FD00D36E1D /* SymphonyOfTheSoul.caf in Resources */,
 				D3B469C42C9DF78200D36E1D /* SyncedProducts.storekit in Resources */,
 				D3B469BB2C9BA8FD00D36E1D /* RiseOfPhoenix.caf in Resources */,
+				D39CFECE2CA784230089C7E9 /* icon11.png in Resources */,
+				D39CFECF2CA784230089C7E9 /* icon13.png in Resources */,
+				D39CFED02CA784230089C7E9 /* icon12.png in Resources */,
 				D33B873C2C77117C002C11D4 /* Classic.caf in Resources */,
 				D3B53B342BC6204B00B41769 /* Harmony.caf in Resources */,
 				D3B469C12C9DF3E700D36E1D /* StoreKitTestCertificate.cer in Resources */,
@@ -851,6 +866,7 @@
 				D337DFB52C56F22400D33713 /* AddGroupView.swift in Sources */,
 				D30FB1982BC3172700C88BBC /* AddFriendCard.swift in Sources */,
 				D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */,
+				D39CFECA2CA760F30089C7E9 /* Ringtone.swift in Sources */,
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
 				D36A0FAE2C92402100633E02 /* PremiumStoreView.swift in Sources */,
 				D36A0FA72C91093000633E02 /* EconomyViewModel.swift in Sources */,
@@ -1137,7 +1153,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1174,7 +1190,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.0;
+				MARKETING_VERSION = 0.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

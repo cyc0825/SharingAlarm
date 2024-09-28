@@ -751,13 +751,6 @@ class AlarmDetailsViewModel: ObservableObject {
     // Add functionality to modify alarm details as needed
 }
 
-struct Ringtone: Hashable, Codable, Identifiable {
-    @DocumentID var id: String?
-    var name: String
-    var filename: String
-    var price: Int
-}
-
 extension AlarmsViewModel {
     func fetchRingtoneList() {
         guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
@@ -766,15 +759,11 @@ extension AlarmsViewModel {
             do {
                 let userSnapshot = try await db.collection("UserData").document(userID).getDocument()
                 if let unlockedRingtones = userSnapshot.data()?["unlockedRingtones"] as? [String] {
-                    let querySnapshot = try await db.collection("Ringtones").getDocuments()
-                    if !querySnapshot.isEmpty {
-                        for document in querySnapshot.documents {
-                            let ringtone = try document.data(as: Ringtone.self)
-                            if unlockedRingtones.contains(document.documentID) {
-                                self.ringtones.append(ringtone)
-                            } else {
-                                self.premiumRingtones.append(ringtone)
-                            }
+                    for ringtone in RingtoneList {
+                        if unlockedRingtones.contains(ringtone.id!) {
+                            self.ringtones.append(ringtone)
+                        } else {
+                            self.premiumRingtones.append(ringtone)
                         }
                     }
                     debugPrint("[fetchRingtone] ends")

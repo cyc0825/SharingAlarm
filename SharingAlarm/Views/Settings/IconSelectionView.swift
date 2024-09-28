@@ -83,7 +83,11 @@ struct IconSelectionView: View {
             if icon.iconName == nil {
                 // this is default icon
                 return true
-            } else if icon.iconName == "icon10" && UserDefaults.standard.bool(forKey: "isPremium")  {
+            } else if (icon.iconName == "icon10" ||
+                       icon.iconName == "icon11" ||
+                       icon.iconName == "icon12" ||
+                       icon.iconName == "icon13") &&
+                        UserDefaults.standard.bool(forKey: "isPremium")  {
                 // this is premium icon
                 return true
             }
@@ -222,6 +226,9 @@ class AppIconManager: ObservableObject {
         AppIcon(displayName: "Flower", iconName: "icon8", imageName: "icon8"),
         AppIcon(displayName: "Forest", iconName: "icon9", imageName: "icon9"),
         AppIcon(displayName: "Premium", iconName: "icon10", imageName: "icon10"),
+        AppIcon(displayName: "Infinite", iconName: "icon11", imageName: "icon11"),
+        AppIcon(displayName: "Audiogram", iconName: "icon12", imageName: "icon12"),
+        AppIcon(displayName: "Badge", iconName: "icon13", imageName: "icon13"),
         // Add more icons as needed
     ]
     
