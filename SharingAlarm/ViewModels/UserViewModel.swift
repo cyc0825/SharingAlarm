@@ -13,7 +13,7 @@ import FirebaseMessaging
 import FirebaseAuth
 import FirebaseFirestore
 
-struct AppUser: Codable, Identifiable {
+struct AppUser: Hashable, Codable, Identifiable {
     @DocumentID var id: String?
     var name: String
     var uid: String

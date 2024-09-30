@@ -9,7 +9,15 @@ import Foundation
 import CloudKit
 import FirebaseFirestore
 
-struct FriendReference: Codable, Identifiable {
+struct FriendReference: Hashable, Codable, Identifiable, Comparable {
+    static func < (lhs: FriendReference, rhs: FriendReference) -> Bool {
+        return lhs.friendRef.name < rhs.friendRef.name
+    }
+    
+    static func == (lhs: FriendReference, rhs: FriendReference) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     @DocumentID var id: String?
     var friendRef: AppUser
     var timestamp: Date
@@ -264,11 +272,11 @@ class FriendsViewModel: ObservableObject {
         return true
     }
     
-    func removeFriend(for friendIndex: Int) {
+    func removeFriend(for friend: AppUser) {
         guard let userID = UserDefaults.standard.value(forKey: "userID") as? String else { return }
         
         let userRef = db.collection("UserData").document(userID)
-        let friendRef = db.collection("UserData").document(friends[friendIndex].friendRef.id!)
+        let friendRef = db.collection("UserData").document(friend.id!)
         
         Task {
             debugPrint("[removeFriend] starts")
@@ -287,7 +295,7 @@ class FriendsViewModel: ObservableObject {
             }
             
             // Query and delete from the 'ownRequests' collection
-            let ownRequestsQuery = db.collection("Friends").document(friends[friendIndex].friendRef.id!)
+            let ownRequestsQuery = db.collection("Friends").document(friend.id!)
                 .collection("friends")
                 .whereField("friendRef", isEqualTo: userRef)
             
@@ -300,7 +308,7 @@ class FriendsViewModel: ObservableObject {
             } catch {
                 debugPrint("Error removing friend for 'friend': \(error.localizedDescription)")
             }
-            friends.remove(at: friendIndex)
+            friends.removeAll(where: {$0.friendRef.uid == friend.uid})
             debugPrint("[removeFriend] ends")
         }
     }

@@ -12,10 +12,6 @@ struct FriendsView: View {
     @EnvironmentObject var viewModel: FriendsViewModel
     @State private var showingAddFriend = false
     @State private var hasNewFriendRequests = false
-    @State private var showDeleteConfirmation = false
-    @State private var showFriendsCompare = false
-    @State private var friendIDToDelete: Int?
-    @State private var friendToDelete: String?
 
     var body: some View {
         NavigationStack {
@@ -27,25 +23,7 @@ struct FriendsView: View {
                     }
                 }
                 else {
-                    List(viewModel.friends.indices, id: \.self) { index in
-                        Text(viewModel.friends[index].friendRef.name)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                viewModel.selectedFriend = viewModel.friends[index]
-                                showFriendsCompare = true
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button {
-                                    friendIDToDelete = index
-                                    friendToDelete = viewModel.friends[friendIDToDelete!].friendRef.name
-                                    showDeleteConfirmation = true
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                                .tint(.red)
-                            }
-                    }
+                    FriendScrollView(viewModel: viewModel)
                 }
             }
             .navigationTitle("Friends")
@@ -54,17 +32,7 @@ struct FriendsView: View {
                 viewModel.fetchOwnRequest()
                 viewModel.fetchFriendsRequest()
             }
-            .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
-                Button("Delete", role: .destructive) {
-                    guard let friendIDToDelete = friendIDToDelete else { return }
-                    viewModel.removeFriend(for: friendIDToDelete)
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                if let friendToDelete = friendToDelete {
-                    Text("Would you like to remove \(friendToDelete) from your friends list?")
-                }
-            }
+            
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
@@ -73,9 +41,10 @@ struct FriendsView: View {
                         if viewModel.friendRequests.count > 0 {
                             Image(systemName: "person.fill.badge.plus")
                                 .symbolRenderingMode(.palette)
-                                .foregroundStyle(Color.accent, Color.thirdAccent)
+                                .foregroundStyle(Color.red, Color.accent)
                         } else {
                             Image(systemName: "person.fill.badge.plus")
+                                .foregroundStyle(Color.accent)
                         }
                     }
                     .popoverTip(FriendsTip())
@@ -84,11 +53,6 @@ struct FriendsView: View {
             .sheet(isPresented: $showingAddFriend) {
                 AddFriendView(viewModel: viewModel)
             }
-            .sheet(isPresented: $showFriendsCompare, content: {
-                if let selectedFriend = viewModel.selectedFriend {
-                    FriendsCompareView(selectedFriend: selectedFriend)
-                }
-            })
         }
     }
 }

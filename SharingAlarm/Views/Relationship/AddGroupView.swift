@@ -33,7 +33,6 @@ struct AddGroupView: View {
 
     var body: some View {
         VStack {
-            Spacer()
             NavigationView {
                 List {
                     Section(header: Text("Group Name")) {
@@ -143,23 +142,40 @@ struct AddGroupView: View {
 struct FriendPicker: View {
     @StateObject var viewModel = FriendsViewModel()
     @Binding var selectedFriends: [AppUser]
+    @State var showingAddFriend: Bool = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
-            VStack {
-                List(viewModel.friends.indices, id: \.self) { index in
-                    if !selectedFriends.contains(where: { $0.uid == viewModel.friends[index].friendRef.uid }) {
-                        Button(viewModel.friends[index].friendRef.name) {
-                            // Add the selected friend to the participants list if not already added
-                            selectedFriends.append(viewModel.friends[index].friendRef)
-                            dismiss()
+            VStack(alignment: .center) {
+                Form {
+                    Section {
+                        List(viewModel.friends.indices, id: \.self) { index in
+                            if !selectedFriends.contains(where: { $0.uid == viewModel.friends[index].friendRef.uid }) {
+                                Button(viewModel.friends[index].friendRef.name) {
+                                    // Add the selected friend to the participants list if not already added
+                                    selectedFriends.append(viewModel.friends[index].friendRef)
+                                    dismiss()
+                                }
+                            } else {
+                                HStack {
+                                    Text(viewModel.friends[index].friendRef.name)
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            }
                         }
-                    } else {
-                        Text(viewModel.friends[index].friendRef.name)
+                    }
+                    Section {
+                        Button {
+                            showingAddFriend = true
+                        } label: {
+                            Text("Add More Friends")
+                        }
+                    } footer: {
+                        Text("Did not find your friends? Make sure they are added to your friends list.")
                     }
                 }
-                Text("Did not find your friends? Go to FRIENDS tab and make sure they are added to your friends list.")
             }
             .navigationTitle("Select Friends")
             .toolbar {
@@ -170,6 +186,9 @@ struct FriendPicker: View {
         }
         .onAppear {
             viewModel.fetchFriends()
+        }
+        .sheet(isPresented: $showingAddFriend) {
+            AddFriendView(viewModel: viewModel)
         }
     }
 }

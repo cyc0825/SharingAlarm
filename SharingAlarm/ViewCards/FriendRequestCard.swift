@@ -44,7 +44,6 @@ struct FriendRequestCard: View {
                     }
                 }) {
                     Text("Accept")
-                        .foregroundColor(.white)
                 }
                 Divider()
                 Button(action: {
@@ -75,8 +74,7 @@ struct FriendRequestCard: View {
         .animation(.easeInOut(duration: 0.2), value: animatePop)
         .padding()
         .frame(width: UIScreen.main.bounds.width * 5 / 6, alignment: .leading)
-        .background(Color.gray)
+        .background(.ultraThinMaterial)
         .cornerRadius(10)
-        .shadow(radius: 5)
     }
 }

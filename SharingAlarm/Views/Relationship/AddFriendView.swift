@@ -41,6 +41,7 @@ struct AddFriendView: View {
                 }
                 .onDisappear {
                     viewModel.fetchFriends()
+                    viewModel.fetchOwnRequest()
                 }
                 .navigationBarTitle("Add Friends", displayMode: .inline)
                 .toolbar {
