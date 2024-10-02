@@ -15,7 +15,6 @@ struct Groups: Hashable, Codable, Identifiable  {
     var to: Date
     var name: String
     var participants: [AppUser]
-    var alarmCount: Int
     
     static func == (lhs: Groups, rhs: Groups) -> Bool {
         return lhs.id == rhs.id
@@ -81,8 +80,7 @@ class GroupsViewModel: ObservableObject {
                                                             from: (GroupData["from"] as? Timestamp)?.dateValue() ?? Date(),
                                                             to: (GroupData["to"] as? Timestamp)?.dateValue() ?? Date(),
                                                             name: GroupData["name"] as? String ?? "",
-                                                            participants: resolvedParticipants,
-                                                            alarmCount: GroupData["alarmCount"] as? Int ?? 0)
+                                                            participants: resolvedParticipants)
                                         self.groups.append(Groups)
                                     }
                                 }
@@ -127,7 +125,7 @@ class GroupsViewModel: ObservableObject {
                 addParticipant(groupId: groupRef.documentID, participants: participants) { result in
                     switch result {
                     case .success(_):
-                        completion(.success(Groups(id: groupRef.documentID, from: startDate, to: endDate, name: name, participants: participants, alarmCount: 0)))
+                        completion(.success(Groups(id: groupRef.documentID, from: startDate, to: endDate, name: name, participants: participants)))
                     case .failure(let error):
                         completion(.failure(error))
                     }
@@ -257,7 +255,7 @@ class GroupsViewModel: ObservableObject {
 extension GroupsViewModel {
     static func withSampleData() -> GroupsViewModel {
         let sampleViewModel = GroupsViewModel()
-        sampleViewModel.groups.append(Groups(from: Date(), to: Date(), name: "test", participants: [], alarmCount: 0))
+        sampleViewModel.groups.append(Groups(from: Date(), to: Date(), name: "test", participants: []))
         
         return sampleViewModel
     }

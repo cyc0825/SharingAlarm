@@ -84,10 +84,10 @@ struct AddAlarmView: View {
                         switch result {
                         case .success(_):
                             // modify the front-end, local groups should not be too large, thus using firstIndex
-                            if let selectedGroup = selectedGroup,
-                               let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
-                                groupsViewModel.groups[index].alarmCount += 1
-                            }
+//                            if let selectedGroup = selectedGroup,
+//                               let index = groupsViewModel.groups.firstIndex(where: { $0.id == selectedGroup.id }) {
+//                                groupsViewModel.groups[index].alarmCount += 1
+//                            }
                             userViewModel.updateUserStatic(field: "alarmScheduled", value: 1)
 //                            startAlarmLiveActivity(alarmTime: selectedTime, alarmBody: alarmBody)
                         case .failure(let error):

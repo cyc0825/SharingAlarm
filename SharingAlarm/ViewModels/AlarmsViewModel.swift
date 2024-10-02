@@ -79,10 +79,6 @@ class AlarmsViewModel: ObservableObject {
     private var db = Firestore.firestore()
     private var listener: ListenerRegistration?
     private var alarmsListener: ListenerRegistration?
-    
-    init() {
-        // fetchAlarmsData()
-    }
 
     func sortAlarmsByTime() {
         alarms.sort { $0.time < $1.time }
@@ -143,16 +139,16 @@ class AlarmsViewModel: ObservableObject {
                     let groupRef = db.collection("Groups")
                         .document(groupId)
                     
-                    // Count + 1 for group
-                    DispatchQueue.main.async {
-                        groupRef.updateData([
-                            "alarmCount": FieldValue.increment(Int64(1))
-                        ]) { error in
-                            if let error = error {
-                                completion(.failure(error))
-                            }
-                        }
-                    }
+//                    // Count + 1 for group
+//                    DispatchQueue.main.async {
+//                        groupRef.updateData([
+//                            "alarmCount": FieldValue.increment(Int64(1))
+//                        ]) { error in
+//                            if let error = error {
+//                                completion(.failure(error))
+//                            }
+//                        }
+//                    }
                         
                     let participantsDoc = try await groupRef
                         .collection("participants")
@@ -170,7 +166,7 @@ class AlarmsViewModel: ObservableObject {
                                "alarmTime": max(0, time.timeIntervalSince(Date())),
                                "sound": sound,
                                "repeatInterval": repeatInterval,
-                               "groupId": groupId,
+                               "groupID": groupId,
                                "groupName": groupName ?? "",
                                "participants": participants,
                                "creatorID": userID,
@@ -260,18 +256,18 @@ class AlarmsViewModel: ObservableObject {
                     let groupRef = db.collection("Groups")
                         .document(groupId)
                     
-                    // Count - 1 for group
-                    DispatchQueue.main.async {
-                        groupRef.updateData([
-                            "alarmCount": FieldValue.increment(Int64(-1))
-                        ]) { error in
-                            if let error = error {
-                                print("Cannot -1 count alarm for group: \(error.localizedDescription)")
-                            } else {
-                                print("Alarm count successfully decremented.")
-                            }
-                        }
-                    }
+//                    // Count - 1 for group
+//                    DispatchQueue.main.async {
+//                        groupRef.updateData([
+//                            "alarmCount": FieldValue.increment(Int64(-1))
+//                        ]) { error in
+//                            if let error = error {
+//                                print("Cannot -1 count alarm for group: \(error.localizedDescription)")
+//                            } else {
+//                                print("Alarm count successfully decremented.")
+//                            }
+//                        }
+//                    }
                     
                     let alarmDoc = try await db.collection("Alarm").document(documentID).getDocument()
                     guard let participants = alarmDoc.get("participants") as? [String: [String]] else {

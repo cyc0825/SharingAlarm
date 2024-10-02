@@ -6,40 +6,72 @@
 //
 
 import SwiftUI
-import CloudKit
 
 struct GroupCard: View {
     @StateObject var viewModel: GroupsViewModel
+    @StateObject var alarmsViewModel: AlarmsViewModel
     var group: Groups
+    var alarmsForGroup: [Alarm]
+    
     var body: some View {
-        ZStack {
-            VStack {
-                Text(group.name)
-                    .font(.title2)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        HStack {
+            VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("\(group.alarmCount) Alarm(s)")
-                        .font(.footnote)
-                    Divider()
-                    Text("\(group.participants.count) Pariticpant(s)")
-                        .font(.footnote)
-                    Divider()
-                    Text(group.to.formatted(date: .abbreviated, time: .omitted))
-                        .font(.footnote)
+                    Text(group.name)
+                        .font(.title2)
+                        .bold()
+                    AvatarStack(participants: group.participants)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading)
+                
+                HStack {
+                    Text(group.to.formatted(date: .abbreviated, time: .omitted))
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    Divider()
+                    Text("\(alarmsForGroup.count) \(alarmsForGroup.count == 1 ? "Alarm" : "Alarms")")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+            }
+            if let firstAlarm = alarmsForGroup.first {
+                PathView(alarm: firstAlarm, radius: 25, lineWidth: 12)
             }
         }
-        .frame(width: UIScreen.main.bounds.width * 4 / 5, height: 60)
-        .cornerRadius(10)
-        
+        .padding()  // Add padding inside the card
+        .background(Capsule().fill(.ultraThinMaterial))
+        .shadow(color: Color.systemText.opacity(0.1), radius: 5, x: 0, y: 2)  // Add a subtle shadow
+        .frame(height: 100)
     }
 }
 
-//struct GroupCard_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let sampleViewModel = GroupsViewModel.withSampleData()
-//        GroupCard(viewModel: sampleViewModel, index: 0)
-//            .previewLayout(.sizeThatFits) // Adjust the layout as needed
-//    }
-//}
+struct AvatarStack: View {
+    var participants: [AppUser]
+    var body: some View {
+        ZStack {
+            ForEach(participants.prefix(3).indices, id: \.self) { index in
+                Image(uiImage: AvatarGenerator.generateAvatar(for: participants[index].name, size: CGSize(width: 30, height: 30)) ?? UIImage())
+                    .overlay(Circle().stroke(Color.system, lineWidth: 2))
+                    .offset(CGSize(width: 22 * Double(index), height: 0))
+            }
+            if participants.count - 3 > 0 {
+                Image(uiImage: AvatarGenerator.generateAvatar(for: "\(participants.count - 3) +", size: CGSize(width: 30, height: 30)) ?? UIImage())
+                    .overlay(Circle().stroke(Color.system, lineWidth: 2))
+                    .offset(CGSize(width: 22 * 3, height: 0))
+            }
+        }
+    }
+}
+
+struct GroupCard_Previews: PreviewProvider {
+    static var previews: some View {
+        let sampleViewModel = GroupsViewModel.withSampleData()
+        let group = Groups(from: Date(), to: Date(), name: "Test", participants: [])
+        GroupCard(viewModel: sampleViewModel, alarmsViewModel: AlarmsViewModel(), group: group, alarmsForGroup: [Alarm(time: Date() + 100, sound: "", alarmBody: "test", repeatInterval: "")])
+            .previewLayout(.sizeThatFits) // Adjust the layout as needed
+    }
+}

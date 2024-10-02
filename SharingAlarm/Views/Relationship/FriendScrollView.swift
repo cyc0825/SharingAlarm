@@ -42,29 +42,34 @@ struct FriendScrollView: View {
                     ForEach(alphabet, id: \.self) { letter in
                         if let friendRefs = groupedFriends[letter] {
                             Section(header: Text(letter)) {
-                                ForEach(friendRefs, id: \.self) { friend in
-                                    HStack {
-                                        Image(uiImage: AvatarGenerator.generateAvatar(for: friend.friendRef.name, size: CGSize(width: 30, height: 30)) ?? UIImage())
-                                        Text(friend.friendRef.name)
-                                    }
-                                    .listRowBackground(Color(UIColor.systemGroupedBackground))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        viewModel.selectedFriend = friend
-                                        showFriendsCompare = true
-                                    }
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                        Button {
-                                            friendToDelete = friend.friendRef
-                                            showDeleteConfirmation = true
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
+                                VStack(spacing: 4) {
+                                    ForEach(friendRefs, id: \.self) { friend in
+                                        HStack {
+                                            Image(uiImage: AvatarGenerator.generateAvatar(for: friend.friendRef.name, size: CGSize(width: 30, height: 30)) ?? UIImage())
+                                            Text(friend.friendRef.name)
                                         }
-                                        .tint(.red)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(10)
+                                        .background(Capsule().fill(.ultraThinMaterial))
+                                        .listRowSeparator(.hidden)
+                                        .listRowBackground(Color(UIColor.systemGroupedBackground))
+                                        .onTapGesture {
+                                            viewModel.selectedFriend = friend
+                                            showFriendsCompare = true
+                                        }
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                            Button {
+                                                friendToDelete = friend.friendRef
+                                                showDeleteConfirmation = true
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                            .tint(.red)
+                                        }
                                     }
                                 }
                             }
+                            .listRowSeparator(.hidden)
                             .id(letter) // Section identifier for scrolling
                         }
                     }

@@ -108,6 +108,7 @@
 		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
 		D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870572C7DC03200CDA558 /* icon2@2x.png */; };
 		D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870582C7DC03200CDA558 /* icon2@3x.png */; };
+		D3F614602CADF4240031AC0D /* FriendCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F6145F2CADF4200031AC0D /* FriendCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,6 +260,7 @@
 		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
 		D3E870572C7DC03200CDA558 /* icon2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@2x.png"; sourceTree = "<group>"; };
 		D3E870582C7DC03200CDA558 /* icon2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@3x.png"; sourceTree = "<group>"; };
+		D3F6145F2CADF4200031AC0D /* FriendCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -337,6 +339,7 @@
 				D30FB1972BC3172700C88BBC /* AddFriendCard.swift */,
 				D3B53B2C2BC4755B00B41769 /* FriendRequestCard.swift */,
 				D3B53B372BC85B8A00B41769 /* GroupCard.swift */,
+				D3F6145F2CADF4200031AC0D /* FriendCard.swift */,
 			);
 			path = ViewCards;
 			sourceTree = "<group>";
@@ -865,6 +868,7 @@
 				D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
 				D3B53B362BC85A2D00B41769 /* GroupsViewModel.swift in Sources */,
+				D3F614602CADF4240031AC0D /* FriendCard.swift in Sources */,
 				D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
 				D337DFB52C56F22400D33713 /* AddGroupView.swift in Sources */,

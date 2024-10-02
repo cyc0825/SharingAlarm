@@ -10,6 +10,7 @@ import TipKit
 
 struct GroupsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var alarmsViewModel: AlarmsViewModel
     @EnvironmentObject var viewModel: GroupsViewModel
     @State private var showingAddGroup = false
     var body: some View {
@@ -22,12 +23,23 @@ struct GroupsView: View {
                     }
                 } else {
                     List(viewModel.groups, id: \.self) { group in
-                        NavigationLink(destination: GroupDetailView(viewModel: viewModel, group: group)) {
-                            GroupCard(viewModel: viewModel, group: group)
+                        var alarmsForGroup: [Alarm] {
+                            alarmsViewModel.alarms.filter { $0.groupID == group.id }
                         }
+                        ZStack {
+                            GroupCard(viewModel: viewModel, alarmsViewModel: alarmsViewModel, group: group, alarmsForGroup: alarmsForGroup)
+                            NavigationLink(destination: GroupDetailView(viewModel: viewModel, group: group, alarmsForGroup: alarmsForGroup)) {
+                                EmptyView()
+                            }
+                            .opacity(0.0)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color(UIColor.systemGroupedBackground))  // Clear list row background
                     }
+                    .listStyle(PlainListStyle())
                 }
             }
+            .background(Color(UIColor.systemGroupedBackground))
             .navigationTitle("Groups")
             .refreshable {
                 viewModel.fetchGroup()

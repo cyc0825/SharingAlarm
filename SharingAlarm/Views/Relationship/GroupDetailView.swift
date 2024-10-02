@@ -17,6 +17,8 @@ struct GroupDetailView: View {
     @State private var friendIndexToDelete: Int?
     @State var group: Groups
     
+    var alarmsForGroup: [Alarm]
+    
     var groupIndex: Int {
         viewModel.groups.firstIndex(where: { $0.id == group.id }) ?? 0
     }
@@ -46,6 +48,16 @@ struct GroupDetailView: View {
                                 }
                         }
                     }
+                }
+                
+                if alarmsForGroup.count > 0 {
+                    Section {
+                        TinyAlarmCards(alarms: alarmsForGroup)
+                    } header: {
+                        Text("Alarms")
+                    }
+                    .background(Color(UIColor.systemGroupedBackground))
+                    .padding(-20)
                 }
                 
                 Section(header:Text("Date")) {
@@ -113,6 +125,51 @@ struct GroupDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             case .failure(let error):
                 debugPrint("Remove Groups error \(error.localizedDescription)")
+            }
+        }
+    }
+}
+
+struct TinyAlarmCard: View {
+    var alarm: Alarm
+    var body: some View {
+        ZStack() {
+            PathView(alarm: alarm, radius: 50, lineWidth: 18)
+            Text(alarm.time.formatted(date: .omitted, time: .shortened))
+        }
+        .padding()
+        .frame(width: 150, height: 150)
+        .cornerRadius(20)
+    }
+}
+
+struct TinyAlarmCards: View {
+    @State var isShowEdit: Bool = false
+    @State var selectedAlarm: Alarm?
+    var viewModel = AlarmsViewModel()
+    var alarms: [Alarm]
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: 15) {
+                ForEach(alarms) { alarm in
+                    TinyAlarmCard(alarm: alarm)
+                        .onTapGesture {
+                            viewModel.selectedAlarm = alarm
+                            isShowEdit = true
+                        }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .padding(.top, 5)
+        .sheet(isPresented: $isShowEdit) {
+            if let selectedAlarm = viewModel.selectedAlarm {
+                EditAlarmView(
+                    isPresented: $isShowEdit,
+                    viewModel: viewModel,
+                    alarm: selectedAlarm
+                )
             }
         }
     }

@@ -46,7 +46,7 @@ struct AddFriendView: View {
                 .navigationBarTitle("Add Friends", displayMode: .inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Cancel") {
+                        Button("Done") {
                             presentationMode.wrappedValue.dismiss()
                         }
                     }

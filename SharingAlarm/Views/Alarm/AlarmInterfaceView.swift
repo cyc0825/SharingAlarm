@@ -99,10 +99,11 @@ struct CombineView: View {
                         switch result {
                         case .success(_):
                             // modify the front-end, local groups should not be too large, thus using firstIndex
-                            if let selectedGroupID = alarm.groupID,
-                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
-                                groupViewModel.groups[index].alarmCount += 1
-                            }
+//                            if let selectedGroupID = alarm.groupID,
+//                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
+//                                groupViewModel.groups[index].alarmCount += 1
+//                            }
+                            print("rescheduled alarm")
                         case .failure(let error):
                             debugPrint("Add Group error: \(error)")
                         }
@@ -121,10 +122,11 @@ struct CombineView: View {
                         switch result {
                         case .success(_):
                             // modify the front-end, local groups should not be too large, thus using firstIndex
-                            if let selectedGroupID = alarm.groupID,
-                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
-                                groupViewModel.groups[index].alarmCount += 1
-                            }
+//                            if let selectedGroupID = alarm.groupID,
+//                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
+//                                groupViewModel.groups[index].alarmCount += 1
+//                            }
+                            print("rescheduled alarm")
                         case .failure(let error):
                             debugPrint("Add Group error: \(error)")
                         }
@@ -282,6 +284,33 @@ struct ArcView: View {
                     )
                 }
             }
+        }
+    }
+}
+
+// Used for groups
+struct PathView: View {
+    var alarm: Alarm
+    var radius: CGFloat = 25
+    var lineWidth: CGFloat = 12
+    
+    var body: some View {
+        let alarmTime = alarm.time.timeIntervalSinceNow
+        let timeRemaining = max(0, alarmTime)
+        // Calculate end angle based on time remaining
+        let endAngleDegree: Double = timeRemaining > 7200
+            ? 360.0 * (timeRemaining.truncatingRemainder(dividingBy: 3600)) / 3600 + 360.0
+            : 360.0 * timeRemaining / 3600
+        // Draw the Path if an alarm exists for this group
+        VStack {
+            GeometryReader { geometry in
+                Path { path in
+                    let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                    path.addArc(center: center, radius: radius, startAngle: .degrees(-90), endAngle: .degrees(endAngleDegree), clockwise: false)
+                }
+                .stroke(Color.accent, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+            }
+            .frame(width: radius * 2.5, height: radius * 2.5) // Set a frame size for the path
         }
     }
 }
