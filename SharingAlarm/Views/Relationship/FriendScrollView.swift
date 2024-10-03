@@ -44,27 +44,29 @@ struct FriendScrollView: View {
                             Section(header: Text(letter)) {
                                 VStack(spacing: 4) {
                                     ForEach(friendRefs, id: \.self) { friend in
-                                        HStack {
-                                            Image(uiImage: AvatarGenerator.generateAvatar(for: friend.friendRef.name, size: CGSize(width: 30, height: 30)) ?? UIImage())
-                                            Text(friend.friendRef.name)
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .padding(10)
-                                        .background(Capsule().fill(Color.listCellBackground))
-                                        .listRowSeparator(.hidden)
-                                        .onTapGesture {
+                                        UserCard(name: friend.friendRef.name, swipable: true, onTapAction: {
                                             viewModel.selectedFriend = friend
                                             showFriendsCompare = true
-                                        }
-                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                            Button {
-                                                friendToDelete = friend.friendRef
-                                                showDeleteConfirmation = true
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                            .tint(.red)
-                                        }
+                                        }, onDeleteAction: {
+                                            friendToDelete = friend.friendRef
+                                            showDeleteConfirmation = true
+                                        })
+//                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+//                                            Button {
+//                                                    friendToDelete = friend.friendRef
+//                                                    showDeleteConfirmation = true
+//                                                } label: {
+//                                                    ZStack {
+//                                                        Capsule()
+//                                                            .fill(Color.red) // Capsule-shaped background
+//                                                            .frame(width: 80, height: 40)
+//                                                            .cornerRadius(10)
+//                                                        
+//                                                        Label("Delete", systemImage: "trash")
+//                                                            .foregroundColor(.white)  // Button text color
+//                                                    }
+//                                                }
+//                                        }
                                     }
                                 }
                             }

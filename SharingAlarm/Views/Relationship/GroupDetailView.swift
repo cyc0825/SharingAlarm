@@ -31,21 +31,28 @@ struct GroupDetailView: View {
                 Section(header:Text("Participants")) {
                     ForEach(group.participants.indices, id: \.self) { index in
                         if group.participants[index].id == userID {
-                            Text(group.participants[index].name)
-                                .bold()
+                            HStack {
+                                Image(uiImage: AvatarGenerator.generateAvatar(for: group.participants[index].name, size: CGSize(width: 30, height: 30)) ?? UIImage())
+                                Text(group.participants[index].name)
+                                    .bold()
+                            }
                         } else {
-                            Text(group.participants[index].name)
-                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                    Button {
-                                        friendToDelete = group.participants[index].name
-                                        friendIDToDelete = group.participants[index].id
-                                        friendIndexToDelete = index
-                                        showDeleteConfirmation = true
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                    .tint(.red)
+                            HStack {
+                                Image(uiImage: AvatarGenerator.generateAvatar(for: group.participants[index].name, size: CGSize(width: 30, height: 30)) ?? UIImage())
+                                Text(group.participants[index].name)
+                                    .bold()
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button {
+                                    friendToDelete = group.participants[index].name
+                                    friendIDToDelete = group.participants[index].id
+                                    friendIndexToDelete = index
+                                    showDeleteConfirmation = true
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
+                                .tint(.red)
+                            }
                         }
                     }
                 }

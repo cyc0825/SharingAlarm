@@ -1,38 +1,43 @@
 
 import SwiftUI
 
-struct UIPlayView: View {
-    @State var isShowEdit: Bool = false
-    @State var selectedAlarm: Alarm?
-    var alarms: [Alarm]
-    
+struct CustomSwipeRow: View {
+    @State private var offset: CGFloat = 0
+    @State private var isSwiped: Bool = false
+
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: 15) {
-                ForEach(alarms) { alarm in
-                    TinyAlarmCard(alarm: alarm)
-                        .onTapGesture {
-                            selectedAlarm = alarm
-                            isShowEdit = true
-                        }
+        ZStack {
+            // Background Delete Button (Initially hidden, shows on swipe)
+            HStack {
+                Spacer()
+                Button(action: {
+                    print("Delete action triggered")
+                }) {
+                    Image(systemName: "trash")
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .padding(.horizontal, 12)
+                        .background(Capsule().fill(Color.red))
                 }
+                .padding(.trailing, 15)
             }
-            .padding(.horizontal)
+
+            // Main Row Content
+            UserCard(name: "cyc", swipable: true)
         }
-        .padding(.top, 5)
-        .sheet(isPresented: $isShowEdit) {
-            if let selectedAlarm {
-                EditAlarmView(
-                    isPresented: $isShowEdit,
-                    viewModel: AlarmsViewModel(),
-                    alarm: selectedAlarm
-                )
-            }
+        .frame(height: 60)
+        .padding(.horizontal)
+        .contentShape(Rectangle()) // Ensures the entire row is tappable
+    }
+}
+struct UIPlayView: View {
+    var body: some View {
+        ForEach(1...10, id: \.self) { _ in
+            CustomSwipeRow()
         }
     }
 }
-
 #Preview {
-    UIPlayView(alarms: [Alarm(time: Date.distantFuture, sound: "", alarmBody: "test", repeatInterval: "none"),
-                        Alarm(time: Date.distantFuture, sound: "", alarmBody: "test", repeatInterval: "none")])
+    UIPlayView()
 }

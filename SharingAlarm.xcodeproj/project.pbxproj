@@ -108,6 +108,7 @@
 		D3E8705C2C7DC03200CDA558 /* icon1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870562C7DC03200CDA558 /* icon1@3x.png */; };
 		D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870572C7DC03200CDA558 /* icon2@2x.png */; };
 		D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870582C7DC03200CDA558 /* icon2@3x.png */; };
+		D3F614622CAF154D0031AC0D /* UserCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F614612CAF15450031AC0D /* UserCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,6 +260,7 @@
 		D3E870562C7DC03200CDA558 /* icon1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon1@3x.png"; sourceTree = "<group>"; };
 		D3E870572C7DC03200CDA558 /* icon2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@2x.png"; sourceTree = "<group>"; };
 		D3E870582C7DC03200CDA558 /* icon2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@3x.png"; sourceTree = "<group>"; };
+		D3F614612CAF15450031AC0D /* UserCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -331,6 +333,7 @@
 		D30FB1962BC3171100C88BBC /* ViewCards */ = {
 			isa = PBXGroup;
 			children = (
+				D3F614612CAF15450031AC0D /* UserCard.swift */,
 				D36A0FAB2C921B1C00633E02 /* CoinEarnedPopupCard.swift */,
 				D3E611312C8BC58000EF3CFF /* NotificationBannerCard.swift */,
 				D37594122C6979AC006DB7AA /* AlarmCardView.swift */,
@@ -885,6 +888,7 @@
 				D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,
 				D3B53B2D2BC4755B00B41769 /* FriendRequestCard.swift in Sources */,
+				D3F614622CAF154D0031AC0D /* UserCard.swift in Sources */,
 				D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */,
 				D3632D292BCF2420004F02FD /* GroupDetailView.swift in Sources */,
 				D3B53B2F2BC4E66000B41769 /* AlarmView.swift in Sources */,
