@@ -45,7 +45,7 @@ struct AlarmRequestView: View {
                             // Check the user's subscription status or alarm count
                             if UserDefaults.standard.bool(forKey: "isPremium")  || alarmViewModel.alarms.count < 3 {
                                 // Proceed to add the alarm to the participant and schedule it
-                                alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupID ?? "") { result in
+                                alarmViewModel.addAlarmToParticipant(alarmId: id, groupId: alarm.groupId ?? "") { result in
                                     switch result {
                                     case .success(_):
                                         // Schedule the alarm after successfully adding the participant

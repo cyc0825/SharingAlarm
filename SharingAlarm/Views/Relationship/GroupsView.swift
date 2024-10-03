@@ -24,7 +24,7 @@ struct GroupsView: View {
                 } else {
                     List(viewModel.groups, id: \.self) { group in
                         var alarmsForGroup: [Alarm] {
-                            alarmsViewModel.alarms.filter { $0.groupID == group.id }
+                            alarmsViewModel.alarms.filter { $0.groupId == group.id }
                         }
                         ZStack {
                             GroupCard(viewModel: viewModel, alarmsViewModel: alarmsViewModel, group: group, alarmsForGroup: alarmsForGroup)

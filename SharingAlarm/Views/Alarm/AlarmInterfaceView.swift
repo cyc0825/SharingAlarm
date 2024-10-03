@@ -81,74 +81,15 @@ struct CombineView: View {
     
     func setupTimerEndAction() {
         timerViewModel.onTimerEnd = {
-            if let currentTargetDate = timerViewModel.targetDate {
-                let calendar = Calendar.current
-                var newTargetDate: Date?
                 
-                switch alarm.repeatInterval {
-                case "Daily":
-                    // Add one day to the current target date
-                    newTargetDate = calendar.date(byAdding: .day, value: 1, to: currentTargetDate)
-                    viewModel.addAlarm(alarmBody: "\(name) wants you to \(alarm.alarmBody)",
-                                       time: newTargetDate!,
-                                       sound: alarm.sound,
-                                       repeatInterval: alarm.repeatInterval,
-                                       groupId: alarm.groupID,
-                                       groupName: alarm.groupName
-                    ) { result in
-                        switch result {
-                        case .success(_):
-                            // modify the front-end, local groups should not be too large, thus using firstIndex
-//                            if let selectedGroupID = alarm.groupID,
-//                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
-//                                groupViewModel.groups[index].alarmCount += 1
-//                            }
-                            print("rescheduled alarm")
-                        case .failure(let error):
-                            debugPrint("Add Group error: \(error)")
-                        }
-                    }
-
-                case "Weekly":
-                    // Add one week to the current target date
-                    newTargetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentTargetDate)
-                    viewModel.addAlarm(alarmBody: "\(name) wants you to \(alarm.alarmBody)",
-                                       time: newTargetDate!,
-                                       sound: alarm.sound,
-                                       repeatInterval: alarm.repeatInterval,
-                                       groupId: alarm.groupID,
-                                       groupName: alarm.groupName
-                    ) { result in
-                        switch result {
-                        case .success(_):
-                            // modify the front-end, local groups should not be too large, thus using firstIndex
-//                            if let selectedGroupID = alarm.groupID,
-//                               let index = groupViewModel.groups.firstIndex(where: { $0.id == selectedGroupID }) {
-//                                groupViewModel.groups[index].alarmCount += 1
-//                            }
-                            print("rescheduled alarm")
-                        case .failure(let error):
-                            debugPrint("Add Group error: \(error)")
-                        }
-                    }
-                default:
-                    print("Do not need to reshchedule")
-                }
-                print("Alarm is ringing")
-                //Present Alarm View
-                // viewModel.startLongVibration()
-                viewModel.showAlarmView = true
-                viewModel.selectedAlarm = alarm
-                viewModel.ongoingAlarms.append(alarm)
+            print("Alarm is ringing")
+            //Present Alarm View
+            // viewModel.startLongVibration()
+            viewModel.showAlarmView = true
+            viewModel.selectedAlarm = alarm
+//            viewModel.ongoingAlarms.append(alarm)
 //                    arViewModel.playSound(soundName: "/\(alarm.creatorID ?? "")/Recording.caf")
-                // viewModel.removeAlarm(documentID: alarmID)
-                if let newTargetDate = newTargetDate {
-                    // Update the alarm with the new target date
-                    viewModel.editAlarm(alarmId: alarm.id, updates: ["time": newTargetDate])
-                }
-            } else {
-                print("Cannot find TargetDate")
-            }
+            // viewModel.removeAlarm(documentID: alarmID)
         }
     }
     

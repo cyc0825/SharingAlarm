@@ -50,9 +50,8 @@ struct FriendScrollView: View {
                                         }
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(10)
-                                        .background(Capsule().fill(.ultraThinMaterial))
+                                        .background(Capsule().fill(Color.listCellBackground))
                                         .listRowSeparator(.hidden)
-                                        .listRowBackground(Color(UIColor.systemGroupedBackground))
                                         .onTapGesture {
                                             viewModel.selectedFriend = friend
                                             showFriendsCompare = true
@@ -70,6 +69,7 @@ struct FriendScrollView: View {
                                 }
                             }
                             .listRowSeparator(.hidden)
+                            .listRowBackground(Color(UIColor.systemGroupedBackground))
                             .id(letter) // Section identifier for scrolling
                         }
                     }

@@ -43,8 +43,7 @@ struct GroupCard: View {
             }
         }
         .padding()  // Add padding inside the card
-        .background(Capsule().fill(.ultraThinMaterial))
-        .shadow(color: Color.systemText.opacity(0.1), radius: 5, x: 0, y: 2)  // Add a subtle shadow
+        .background(Capsule().fill(Color.listCellBackground))
         .frame(height: 100)
     }
 }
@@ -55,12 +54,12 @@ struct AvatarStack: View {
         ZStack {
             ForEach(participants.prefix(3).indices, id: \.self) { index in
                 Image(uiImage: AvatarGenerator.generateAvatar(for: participants[index].name, size: CGSize(width: 30, height: 30)) ?? UIImage())
-                    .overlay(Circle().stroke(Color.system, lineWidth: 2))
+                    .overlay(Circle().stroke(Color.listCellBackground, lineWidth: 2))
                     .offset(CGSize(width: 22 * Double(index), height: 0))
             }
             if participants.count - 3 > 0 {
                 Image(uiImage: AvatarGenerator.generateAvatar(for: "\(participants.count - 3) +", size: CGSize(width: 30, height: 30)) ?? UIImage())
-                    .overlay(Circle().stroke(Color.system, lineWidth: 2))
+                    .overlay(Circle().stroke(Color.listCellBackground, lineWidth: 2))
                     .offset(CGSize(width: 22 * 3, height: 0))
             }
         }

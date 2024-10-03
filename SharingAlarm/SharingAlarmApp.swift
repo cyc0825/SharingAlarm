@@ -352,7 +352,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             
             if let alarmTime = dateFormatter.date(from: alarmTimeString), let userViewModel = userViewModel, let alarmsViewModel = alarmsViewModel {
-                let rootView = AlarmRequestView(userViewModel: userViewModel, alarmViewModel: alarmsViewModel, alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupID: groupId, groupName: groupName))
+                let rootView = AlarmRequestView(userViewModel: userViewModel, alarmViewModel: alarmsViewModel, alarm: Alarm(id: id, time: alarmTime, sound: sound, alarmBody: alarmBody, repeatInterval: repeatInterval, groupId: groupId, groupName: groupName))
                 let hostingController = UIHostingController(rootView: rootView)
                 hostingController.modalPresentationStyle = .pageSheet
                 

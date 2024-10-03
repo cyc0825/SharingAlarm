@@ -14,6 +14,8 @@ struct AlarmsView: View {
     @State private var showingAddAlarm = false
     @State private var showingEditAlarm = false
     @State private var showingOngoingAlarm = false
+    @State private var showingRemoveAlarm = false
+    @State private var showingSkipAlarm = false
     
     @State private var selectedTime: Date? = nil
     @State private var selectedGroup = ""
@@ -30,17 +32,17 @@ struct AlarmsView: View {
                 Text("Alarms")
                     .font(.largeTitle.bold())
                 Spacer()
-                if !viewModel.ongoingAlarms.isEmpty {
-                    Button {
-                        viewModel.showAlarmView = true
-                    } label: {
-                        Image(systemName: "alarm.fill")
-                            .resizable()
-                            .frame(width: 38, height: 40)
-                            .foregroundStyle(.accent)
-                            .padding(.trailing)
-                    }
-                }
+//                if !viewModel.ongoingAlarms.isEmpty {
+//                    Button {
+//                        viewModel.showAlarmView = true
+//                    } label: {
+//                        Image(systemName: "alarm.fill")
+//                            .resizable()
+//                            .frame(width: 38, height: 40)
+//                            .foregroundStyle(.accent)
+//                            .padding(.trailing)
+//                    }
+//                }
                 Menu {
                     Button {
                         viewModel.sortAlarmsByTime()
@@ -132,11 +134,21 @@ struct AlarmsView: View {
                             })
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button {
-                                    viewModel.removeAlarm(documentID: alarm.id)
+                                    showingRemoveAlarm = true
+                                    viewModel.selectedAlarm = alarm
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
                                 .tint(.red)
+                                if alarm.repeatInterval != "None" {
+                                    Button {
+                                        showingSkipAlarm = true
+                                        viewModel.selectedAlarm = alarm
+                                    } label: {
+                                        Label("Skip", systemImage: "forward")
+                                    }
+                                    .tint(.accent)
+                                }
                             }
                             .listRowBackground(Color.clear)
                         }
@@ -155,6 +167,37 @@ struct AlarmsView: View {
         .background(
             Color(UIColor.systemGroupedBackground)
         )
+        .confirmationDialog("Are you sure you want to Remove this Alarm?", isPresented: $showingRemoveAlarm, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) {
+                if let alarm = viewModel.selectedAlarm {
+                    viewModel.removeAlarm(alarm: alarm)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Removing Alarm will remove it from group, thus all participants will loss the alarm. If you want to turn it off just for yourself, tap the toggle switch.")
+        }
+        .confirmationDialog("Are you sure you want to Skip this Alarm?", isPresented: $showingSkipAlarm, titleVisibility: .visible) {
+            Button("Skip", role: .destructive) {
+                if let alarm = viewModel.selectedAlarm {
+                    viewModel.removeAlarm(alarm: alarm, reschedule: true)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            if let alarm = viewModel.selectedAlarm, alarm.repeatInterval != "None" {
+                switch alarm.repeatInterval {
+                case "Daily":
+                    var newTargetDate = Calendar.current.date(byAdding: .day, value: 1, to: alarm.time)
+                    Text("Skip the alarm for \(alarm.time.formatted(.dateTime)) and reschedule it at \(newTargetDate!.formatted(.dateTime)).")
+                case "Weekly":
+                    var newTargetDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: alarm.time)
+                    Text("Skip the alarm for \(alarm.time.formatted(.dateTime)) and reschedule it at \(newTargetDate!.formatted(.dateTime)).")
+                default:
+                    Text("You cannot skip this alarm without a repeat value. This will remove the alarm")
+                }
+            }
+        }
         .sheet(isPresented: $showingEditAlarm) {
             if let selectedAlarm = viewModel.selectedAlarm {
                 EditAlarmView(

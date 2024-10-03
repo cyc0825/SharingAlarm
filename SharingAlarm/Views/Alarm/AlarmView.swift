@@ -19,23 +19,23 @@ struct AlarmView: View {
             if let alarm = alarmViewModel.selectedAlarm {
                 AlarmStatusView(alarm: alarm, alarmViewModel: alarmViewModel)
             }
-            else if alarmViewModel.ongoingAlarms.isEmpty {
-                // Show a message if there are no active alarms
-                Text("There are no active alarms")
-                    .font(.title)
-                    .padding()
-            } else {
-                // Create a TabView for ongoing alarms
-                TabView {
-                    ForEach(alarmViewModel.ongoingAlarms, id: \.self) { alarm in
-                        AlarmStatusView(alarm: alarm, alarmViewModel: alarmViewModel)
-                        .tabItem {
-                            Text(alarm.sound)
-                        }
-                    }
-                }
-                .tabViewStyle(PageTabViewStyle())
-            }
+//            else if alarmViewModel.ongoingAlarms.isEmpty {
+//                // Show a message if there are no active alarms
+//                Text("There are no active alarms")
+//                    .font(.title)
+//                    .padding()
+//            } else {
+//                // Create a TabView for ongoing alarms
+//                TabView {
+//                    ForEach(alarmViewModel.ongoingAlarms, id: \.self) { alarm in
+//                        AlarmStatusView(alarm: alarm, alarmViewModel: alarmViewModel)
+//                        .tabItem {
+//                            Text(alarm.sound)
+//                        }
+//                    }
+//                }
+//                .tabViewStyle(PageTabViewStyle())
+//            }
         }
     }
 }
@@ -116,7 +116,7 @@ struct AlarmStatusView: View {
                                         }
                                         if alarm.participants.count == 1 {
                                             // Only one participant, no need to wait for others
-                                            alarmViewModel.removeAlarm(documentID: alarm.id)
+                                            alarmViewModel.removeAlarm(alarm: alarm, reschedule: true)
                                             dismiss()
                                         } else {
                                             alarmViewModel.setUserStatus(alarmId: alarm.id, status: "Stopped", participants: alarm.participants)
@@ -139,7 +139,7 @@ struct AlarmStatusView: View {
                     .padding(.bottom, 60)
                 } else if alarmViewModel.ifAllUserStop(alarmId: alarm.id, participants: alarm.participants) {
                     Button {
-                        alarmViewModel.removeAlarm(documentID: alarm.id)
+                        alarmViewModel.removeAlarm(alarm: alarm, reschedule: true)
                         dismiss()
                     } label: {
                         Text("Remove Alarm")
