@@ -15,9 +15,10 @@ struct AddAlarmView: View {
     @Binding var isPresented: Bool // To dismiss the view
     @State private var selectedTime = Date()
     @State private var repeatInterval = "None"
-    @State private var selectedSound = "Classic.caf"
+    @State private var selectedRingtone = Ringtone(name: "Classic", filename: "Classic.caf", price: 0)
     @State private var alarmBody: String = "wake up"
     @State private var selectedGroup: Groups? = nil
+    @State private var showingAddGroup = false
     
     var name = UserDefaults.standard.string(forKey: "name") ?? "SharingAlarm"
     
@@ -43,19 +44,28 @@ struct AddAlarmView: View {
                         }
                     }
                     
-                    Picker("Ringtone", selection: $selectedSound) {
-                        ForEach(viewModel.ringtones, id: \.self) { ringtone in
-                            Text(ringtone.name).tag("\(ringtone.name).caf")
-                        }
-                        ForEach(viewModel.personalizedSounds, id: \.self) { sound in
-                            Text(sound).tag("\(sound).caf")
+//                    Picker("Ringtone", selection: $selectedSound) {
+//                        ForEach(viewModel.ringtones, id: \.self) { ringtone in
+//                            Text(ringtone.name).tag("\(ringtone.name).caf")
+//                        }
+//                        ForEach(viewModel.personalizedSounds, id: \.self) { sound in
+//                            Text(sound).tag("\(sound).caf")
+//                        }
+//                    }
+                    NavigationLink(destination: UIPlayView(selectedRingtone: $selectedRingtone, alarmsViewModel: viewModel)) {
+                        HStack {
+                            Text("Ringtone")
+                            Spacer()
+                            Text(selectedRingtone.name)
+                                .foregroundStyle(.secondary)
                         }
                     }
-                    Picker("Group", selection: $selectedGroup) {
-                        Text("Just For You").tag(nil as Groups?)
-                        
-                        ForEach(groupsViewModel.groups, id: \.id) { group in
-                            Text(group.name).tag(group as Groups?)
+                    NavigationLink(destination: GroupPickerView(selectedGroup: $selectedGroup, groupsViewModel: groupsViewModel, groups: groupsViewModel.groups)) {
+                        HStack {
+                            Text("Group")
+                            Spacer()
+                            Text(selectedGroup?.name ?? "Just For You")
+                                .foregroundStyle(.secondary)
                         }
                     }
                 } header: {
@@ -76,7 +86,7 @@ struct AddAlarmView: View {
                     viewModel.addAlarm(
                         alarmBody: "\(name) wants you to \(alarmBody)",
                         time: selectedTime,
-                        sound: selectedSound,
+                        sound: selectedRingtone.filename,
                         repeatInterval: repeatInterval,
                         groupId: selectedGroup?.id,
                         groupName: selectedGroup?.name
@@ -106,6 +116,9 @@ struct AddAlarmView: View {
                       dismissButton:.default(Text("Confirm"), action: {
                     viewModel.errorMessage = nil
                 }))
+            }
+            .sheet(isPresented: $showingAddGroup) {
+                AddGroupView(viewModel: groupsViewModel)
             }
         }
     }

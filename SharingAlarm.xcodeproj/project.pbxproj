@@ -57,6 +57,7 @@
 		D38EEBA32BA371A00099D382 /* SharingAlarmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA22BA371A00099D382 /* SharingAlarmUITests.swift */; };
 		D38EEBA52BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */; };
 		D38EEBB22BA3FC4E0099D382 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EEBB12BA3FC4E0099D382 /* LoginView.swift */; };
+		D39BCC702CB3342D000E1782 /* GroupPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39BCC6F2CB33424000E1782 /* GroupPickerView.swift */; };
 		D39CFECA2CA760F30089C7E9 /* Ringtone.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39CFEC92CA760F00089C7E9 /* Ringtone.swift */; };
 		D39CFECE2CA784230089C7E9 /* icon11.png in Resources */ = {isa = PBXBuildFile; fileRef = D39CFECB2CA784230089C7E9 /* icon11.png */; };
 		D39CFECF2CA784230089C7E9 /* icon13.png in Resources */ = {isa = PBXBuildFile; fileRef = D39CFECD2CA784230089C7E9 /* icon13.png */; };
@@ -109,6 +110,7 @@
 		D3E8705D2C7DC03200CDA558 /* icon2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870572C7DC03200CDA558 /* icon2@2x.png */; };
 		D3E8705E2C7DC03200CDA558 /* icon2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3E870582C7DC03200CDA558 /* icon2@3x.png */; };
 		D3F614622CAF154D0031AC0D /* UserCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F614612CAF15450031AC0D /* UserCard.swift */; };
+		D3F614732CB0DA990031AC0D /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F614722CB0DA960031AC0D /* WelcomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -213,6 +215,7 @@
 		D38EEBA42BA371A00099D382 /* SharingAlarmUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingAlarmUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D38EEBB12BA3FC4E0099D382 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SharingAlarm.entitlements; sourceTree = "<group>"; };
+		D39BCC6F2CB33424000E1782 /* GroupPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPickerView.swift; sourceTree = "<group>"; };
 		D39CFEC92CA760F00089C7E9 /* Ringtone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ringtone.swift; sourceTree = "<group>"; };
 		D39CFECB2CA784230089C7E9 /* icon11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon11.png; sourceTree = "<group>"; };
 		D39CFECC2CA784230089C7E9 /* icon12.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon12.png; sourceTree = "<group>"; };
@@ -261,6 +264,7 @@
 		D3E870572C7DC03200CDA558 /* icon2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@2x.png"; sourceTree = "<group>"; };
 		D3E870582C7DC03200CDA558 /* icon2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon2@3x.png"; sourceTree = "<group>"; };
 		D3F614612CAF15450031AC0D /* UserCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCard.swift; sourceTree = "<group>"; };
+		D3F614722CB0DA960031AC0D /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -363,6 +367,7 @@
 		D337DFAA2C56F13100D33713 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D3F614722CB0DA960031AC0D /* WelcomeView.swift */,
 				D36A0FAF2C93BE9200633E02 /* Animations.swift */,
 				D36A0FA22C8E6E1400633E02 /* Tips.swift */,
 				D36A0F9E2C8E609C00633E02 /* UIPlayground.swift */,
@@ -382,6 +387,7 @@
 		D337DFAB2C56F14200D33713 /* Alarm */ = {
 			isa = PBXGroup;
 			children = (
+				D39BCC6F2CB33424000E1782 /* GroupPickerView.swift */,
 				D3717E452BC9796600440099 /* AlarmInterfaceView.swift */,
 				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
 				D3B53B2E2BC4E66000B41769 /* AlarmView.swift */,
@@ -860,6 +866,7 @@
 				D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */,
 				D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */,
 				D3B469C62C9E26E300D36E1D /* DeleteProfileView.swift in Sources */,
+				D39BCC702CB3342D000E1782 /* GroupPickerView.swift in Sources */,
 				D3CAA1392C7E94D100B93A00 /* AppearanceSelectionView.swift in Sources */,
 				D3ABC83F2BDF12D3003D2265 /* SignupView.swift in Sources */,
 				D3B53B312BC4E6AA00B41769 /* AuthViewModel.swift in Sources */,
@@ -895,6 +902,7 @@
 				D3B469BD2C9CA28600D36E1D /* FeedbackView.swift in Sources */,
 				D36A0FB02C93BE9400633E02 /* Animations.swift in Sources */,
 				D36A0FA32C8E6E1600633E02 /* Tips.swift in Sources */,
+				D3F614732CB0DA990031AC0D /* WelcomeView.swift in Sources */,
 				D337DFAE2C56F18D00D33713 /* AddAlarmView.swift in Sources */,
 				D3E611322C8BC58D00EF3CFF /* NotificationBannerCard.swift in Sources */,
 				D36A0FAC2C921B2100633E02 /* CoinEarnedPopupCard.swift in Sources */,

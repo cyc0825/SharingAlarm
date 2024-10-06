@@ -160,7 +160,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("Registered for remote notifications with token: \(deviceToken)")
+        let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+            print("APNs Device Token: \(tokenString)")
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -549,7 +550,18 @@ extension AppDelegate {
 // App Life Cycle
 extension AppDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
+        let userDefaults = UserDefaults(suiteName: "group.com.cyc0825.SharingAlarm")
+        print("Become Active. Set VoiceKey to 1")
+        userDefaults?.set(1, forKey: "VoiceKey")
         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("Enter Background")
+    }
+    
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        print("Finish Launching")
     }
 }
 

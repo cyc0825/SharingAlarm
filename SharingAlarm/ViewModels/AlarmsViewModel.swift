@@ -721,6 +721,9 @@ extension AlarmsViewModel {
             }
             self.vibrationTimer = nil
         }
+        let userDefaults = UserDefaults(suiteName: "group.com.cyc0825.SharingAlarm")
+        print("Become Active. Set VoiceKey to 1")
+        userDefaults?.set(1, forKey: "VoiceKey")
     }
 }
 

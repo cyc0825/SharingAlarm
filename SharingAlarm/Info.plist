@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
@@ -100,33 +102,33 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-            <key>icon11</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>icon11</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <false/>
-            </dict>
-            <key>icon12</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>icon12</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <false/>
-            </dict>
-            <key>icon13</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>icon13</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <false/>
-            </dict>
+			<key>icon11</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon11</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon12</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon12</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon13</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon13</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
 		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>

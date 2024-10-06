@@ -8,8 +8,12 @@
 import UserNotifications
 import AVFoundation
 
+var soundID: SystemSoundID = 0
+let key = "VoiceKey"
+let appGroup = "group.com.cyc0825.SharingAlarm"
+
 class NotificationService: UNNotificationServiceExtension {
-    var soundID: SystemSoundID = 0
+    let userDefaults = UserDefaults(suiteName: appGroup)
     var audioPlayer: AVAudioPlayer?
     var ringToneName: String?
     
@@ -18,7 +22,7 @@ class NotificationService: UNNotificationServiceExtension {
     private var vibrationTimer: DispatchSourceTimer?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        
+        print("didReceive")
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         ringToneName = request.content.userInfo["ringTone"] as? String
@@ -26,6 +30,10 @@ class NotificationService: UNNotificationServiceExtension {
         if request.content.categoryIdentifier == "alarmVibrate" {
             startAudioWork()
             // startRingtone()
+            userDefaults?.set(0, forKey: key)
+        } else if request.content.categoryIdentifier == "stopVibrate"{
+            print("Stop Vibrate")
+            stopAudioWork()
             if let bestAttemptContent = bestAttemptContent {
                 contentHandler(bestAttemptContent)
             }
@@ -48,7 +56,7 @@ class NotificationService: UNNotificationServiceExtension {
         print("extensionTimeWillExpire")
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        stopAudioWork()
+        // stopAudioWork()
             
         if let handler = self.contentHandler, let content = self.bestAttemptContent {
             content.body = "[You miss the alarm]"
@@ -57,12 +65,22 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func startAudioWork() {
-        print("startAudioWork")
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        let selfPointer = unsafeBitCast(self, to: UnsafeMutableRawPointer.self)
         AudioServicesAddSystemSoundCompletion(kSystemSoundID_Vibrate, nil, nil, { sound, clientData in
-            print("start Vibrate")
-            AudioServicesPlaySystemSound(sound)  // Replay the vibration
-        }, nil)
+            guard let pointer = clientData else { return }
+        
+            let selfP = unsafeBitCast(pointer, to: NotificationService.self)
+            let value = selfP.userDefaults?.integer(forKey: key) ?? 0
+            if value == 1 {
+                selfP.stopAudioWork()
+                if let handler = selfP.contentHandler, let content = selfP.bestAttemptContent {
+                    handler(content)
+                }
+            } else {
+                AudioServicesPlayAlertSound(sound)
+            }
+        }, selfPointer)
     }
     
     
@@ -83,9 +101,6 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     private func stopAudioWork() {
-        print("Stop Audio Work")
-        vibrationTimer?.cancel()
-        vibrationTimer = nil
         AudioServicesRemoveSystemSoundCompletion(soundID)
         AudioServicesDisposeSystemSoundID(soundID)
     }

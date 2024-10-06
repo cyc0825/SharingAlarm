@@ -133,6 +133,12 @@ struct AlarmStatusView: View {
                         alarmViewModel.setUserStatus(alarmId: alarm.id, status: "Snoozed", participants: alarm.participants)
                         AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate)
                         alarmViewModel.stopVibration()
+                        if let id = alarm.id {
+                            let calendar = Calendar.current
+                            if let newTargetDate: Date = calendar.date(byAdding: .minute, value: 9, to: alarm.time) {
+                                AppDelegate.shared.scheduleLocalNotification(id: id, title: "SharingAlarm", body: alarm.alarmBody, alarmTime: newTargetDate, sound: alarm.sound, ringtoneURL: alarm.ringtoneURL)
+                            }
+                        }
                     }) {
                         Text("Snooze")
                     }
