@@ -11,16 +11,21 @@ import StoreKit
 struct PremiumStoreView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     var body: some View {
-        SubscriptionStoreView(groupID: "21542755"){
-            StoreContentView()
-        }
-        .subscriptionStoreButtonLabel(.multiline)
-        .onDisappear {
-            userViewModel.fetchUserData { success in
-                if success {
-                    print("fetch user data success")
+        if #available(iOS 17.0, *) {
+            SubscriptionStoreView(groupID: "21542755"){
+                StoreContentView()
+            }
+            .subscriptionStoreButtonLabel(.multiline)
+            .onDisappear {
+                userViewModel.fetchUserData { success in
+                    if success {
+                        print("fetch user data success")
+                    }
                 }
             }
+        } else {
+            // Fallback on earlier versions
+            Text("You need to upgrade to iOS 17 to use this feature.")
         }
     }
     

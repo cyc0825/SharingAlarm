@@ -111,7 +111,6 @@ struct AlarmsView: View {
                         }
                         .scrollDisabled(true)
                         .listStyle(.plain)
-                        .toolbarTitleDisplayMode(.inline)
                     }
                     // List with fixed height
                     else {
@@ -153,7 +152,6 @@ struct AlarmsView: View {
                             .listRowBackground(Color.clear)
                         }
                         .listStyle(.plain)
-                        .toolbarTitleDisplayMode(.inline)
                     }
                     // Gradient overlay
                     VStack {

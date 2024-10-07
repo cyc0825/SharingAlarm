@@ -46,12 +46,21 @@ struct GroupsView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        showingAddGroup = true
-                    }) {
-                        Image(systemName: "calendar.badge.plus")
+                    if #available(iOS 17.0, *) {
+                        Button(action: {
+                            showingAddGroup = true
+                        }) {
+                            Image(systemName: "calendar.badge.plus")
+                        }
+                        .popoverTip(GroupsTip())
+                    } else {
+                        // Fallback on earlier versions
+                        Button(action: {
+                            showingAddGroup = true
+                        }) {
+                            Image(systemName: "calendar.badge.plus")
+                        }
                     }
-                    .popoverTip(GroupsTip())
                 }
             }
             .sheet(isPresented: $showingAddGroup) {

@@ -254,13 +254,23 @@ struct ProfileView: View {
         )
         .toolbar {
             ToolbarItem {
-                HStack {
-                    Image(systemName: "seal.fill")
-                        .foregroundStyle(.accent)
-                    Text("\(userViewModel.appUser.money)")
-                        .foregroundStyle(.accent)
+                if #available(iOS 17.0, *) {
+                    HStack {
+                        Image(systemName: "seal.fill")
+                            .foregroundStyle(.accent)
+                        Text("\(userViewModel.appUser.money)")
+                            .foregroundStyle(.accent)
+                    }
+                    .popoverTip(EconomyTip())
+                } else {
+                    // Fallback on earlier versions
+                    HStack {
+                        Image(systemName: "seal.fill")
+                            .foregroundStyle(.accent)
+                        Text("\(userViewModel.appUser.money)")
+                            .foregroundStyle(.accent)
+                    }
                 }
-                .popoverTip(EconomyTip())
             }
         }
     }

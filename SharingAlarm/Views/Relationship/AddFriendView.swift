@@ -11,7 +11,7 @@ struct AddFriendView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: FriendsViewModel
     @State private var name = ""
-
+    @State var showQRCode: Bool = false
     @State private var searchQuery = ""
     
     var body: some View {
@@ -25,6 +25,22 @@ struct AddFriendView: View {
                     .submitLabel(.search)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                    HStack {
+                        Divider()
+                            .rotationEffect(.degrees(90))
+                            .frame(height: 20)
+                        Text("or")
+                            .padding(.horizontal)
+                        Divider()
+                            .rotationEffect(.degrees(90))
+                            .frame(height: 20)
+                    }
+                    Button {
+                        showQRCode = true
+                    } label: {
+                        Text("Show your QR code")
+                    }
+                    .buttonStyle(.borderedProminent)
                     
                     List(viewModel.friendSearchResults, id: \.id) { friend in
                         AddFriendCard(friend: friend, viewModel: viewModel)
@@ -51,9 +67,16 @@ struct AddFriendView: View {
                         }
                     }
                 }
+                .sheet(isPresented: $showQRCode) {
+                    QRCodeView()
+                }
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
     }
+}
+
+#Preview {
+    AddFriendView(viewModel: FriendsViewModel())
 }

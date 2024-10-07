@@ -79,6 +79,11 @@ struct ContentView: View {
                     }
                 )
             }
+            .sheet(isPresented: $friendViewModel.showScanResult) {
+                if let scanResult = friendViewModel.scanResult {
+                    QRScanResultView(friendViewModel: friendViewModel, user2ID: scanResult)
+                }
+            }
         }
     }
 }

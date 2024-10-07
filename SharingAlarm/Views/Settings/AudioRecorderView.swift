@@ -43,11 +43,19 @@ struct AudioRecorderView: View {
                                 recorder.playRecording()
                             }
                         }) {
-                            Image(systemName: recorder.isPlaying ? "pause" : "play.fill")
-                                .resizable()
-                                .frame(width: 25, height: 30)
-                                .foregroundColor(.accentColor)
-                                .contentTransition(.symbolEffect(.replace))
+                            if #available(iOS 17.0, *) {
+                                Image(systemName: recorder.isPlaying ? "pause" : "play.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 30)
+                                    .foregroundColor(.accentColor)
+                                    .contentTransition(.symbolEffect(.replace))
+                            } else {
+                                // Fallback on earlier versions
+                                Image(systemName: recorder.isPlaying ? "pause" : "play.fill")
+                                    .resizable()
+                                    .frame(width: 25, height: 30)
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                         Button(action: {
                             Task {
@@ -61,10 +69,17 @@ struct AudioRecorderView: View {
                                 uploaded = false
                             })
                         }) {
-                            Image(systemName: uploaded ? "checkmark" : "square.and.arrow.up")
-                                .resizable()
-                                .frame(width: 14, height: 20)
-                                .contentTransition(.symbolEffect(.replace))
+                            if #available(iOS 17.0, *) {
+                                Image(systemName: uploaded ? "checkmark" : "square.and.arrow.up")
+                                    .resizable()
+                                    .frame(width: 14, height: 20)
+                                    .contentTransition(.symbolEffect(.replace))
+                            } else {
+                                // Fallback on earlier versions
+                                Image(systemName: uploaded ? "checkmark" : "square.and.arrow.up")
+                                    .resizable()
+                                    .frame(width: 14, height: 20)
+                            }
                         }
                     }
                 }

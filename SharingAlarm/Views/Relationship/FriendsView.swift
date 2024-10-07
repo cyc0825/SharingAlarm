@@ -35,19 +35,35 @@ struct FriendsView: View {
             
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        showingAddFriend = true
-                    }) {
-                        if viewModel.friendRequests.count > 0 {
-                            Image(systemName: "person.fill.badge.plus")
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(Color.red, Color.accent)
-                        } else {
-                            Image(systemName: "person.fill.badge.plus")
-                                .foregroundStyle(Color.accent)
+                    if #available(iOS 17.0, *) {
+                        Button(action: {
+                            showingAddFriend = true
+                        }) {
+                            if viewModel.friendRequests.count > 0 {
+                                Image(systemName: "person.fill.badge.plus")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(Color.red, Color.accent)
+                            } else {
+                                Image(systemName: "person.fill.badge.plus")
+                                    .foregroundStyle(Color.accent)
+                            }
+                        }
+                        .popoverTip(FriendsTip())
+                    } else {
+                        // Fallback on earlier versions
+                        Button(action: {
+                            showingAddFriend = true
+                        }) {
+                            if viewModel.friendRequests.count > 0 {
+                                Image(systemName: "person.fill.badge.plus")
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(Color.red, Color.accent)
+                            } else {
+                                Image(systemName: "person.fill.badge.plus")
+                                    .foregroundStyle(Color.accent)
+                            }
                         }
                     }
-                    .popoverTip(FriendsTip())
                 }
             }
             .sheet(isPresented: $showingAddFriend) {

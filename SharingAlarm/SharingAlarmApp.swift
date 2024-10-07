@@ -33,7 +33,11 @@ struct SharingAlarmApp: App {
     @State private var showLaunchScreen = true
     
     init() {
-        try? Tips.configure()
+        if #available(iOS 17.0, *) {
+            try? Tips.configure()
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     var body: some Scene {
@@ -48,6 +52,7 @@ struct SharingAlarmApp: App {
                         }
                         appDelegate.alarmsViewModel = alarmsViewModel
                         appDelegate.userViewModel = userViewModel
+                        appDelegate.friendViewModel = friendViewModel
                         
                     }
             } else if authViewModel.authenticationState == .authenticated {
@@ -135,6 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var alarmWindow: UIWindow?
     var alarmsViewModel: AlarmsViewModel?
     var userViewModel: UserViewModel?
+    var friendViewModel: FriendsViewModel?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Request notification permissions
@@ -186,6 +192,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Register the notification type.
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.setNotificationCategories([alarmInviteCategory])
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        let urlString = url.absoluteString
+        print(urlString)
+        if urlString.contains("addFriend") {
+            print("QR code redirected to FR")
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+               let queryItems = components.queryItems {
+                for item in queryItems {
+                    if item.name == "uid", let uid = item.value {
+                        // Navigate to the Add Friend page with the uid
+                        if let friendViewModel = friendViewModel, !friendViewModel.friends.contains(where: { $0.friendRef.uid == uid }) {
+                            friendViewModel.showScanResult = true
+                            friendViewModel.scanResult = uid
+                        } else {
+                            print("already added")
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        let userDefaults = UserDefaults(suiteName: "group.com.cyc0825.SharingAlarm")
+        print("Become Active. Set VoiceKey to 1")
+        userDefaults?.set(1, forKey: "VoiceKey")
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("Enter Background")
+    }
+    
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        print("Finish Launching")
     }
 }
 
@@ -507,62 +551,54 @@ extension AppDelegate {
 }
 
 // ActivityKit
-extension AppDelegate {
-    func startAlarmLiveActivity(remainingTime: TimeInterval, alarmBody: String) {
-        let initialContentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarmBody)
-        let attributes = AlarmAttributes(alarmBody: alarmBody)
-
-        do {
-            let activity = try Activity<AlarmAttributes>.request(
-                attributes: attributes,
-                contentState: initialContentState,
-                pushType: nil)
-            updateAlarmLiveActivity(alarm: activity, remainingTime: remainingTime)
-            print("Started Live Activity")
-        } catch {
-            print("Failed to start Live Activity: \(error.localizedDescription)")
-        }
-    }
-    
-    func updateAlarmLiveActivity(alarm: Activity<AlarmAttributes>, remainingTime: TimeInterval) {
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            let remainingTime = remainingTime - 1
-            let contentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarm.attributes.alarmBody)
-            
-            Task {
-                await alarm.update(using: contentState)
-            }
-            
-            if remainingTime == 0 {
-                timer.invalidate()
-                self.endAlarmLiveActivity(activity: alarm)
-            }
-        }
-    }
-
-    func endAlarmLiveActivity(activity: Activity<AlarmAttributes>) {
-        Task {
-            await activity.end(dismissalPolicy: .immediate)
-        }
-    }
-}
+//extension AppDelegate {
+//    func startAlarmLiveActivity(remainingTime: TimeInterval, alarmBody: String) {
+//        let initialContentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarmBody)
+//        let attributes = AlarmAttributes(alarmBody: alarmBody)
+//
+//        do {
+//            let activity = try Activity<AlarmAttributes>.request(
+//                attributes: attributes,
+//                contentState: initialContentState,
+//                pushType: nil)
+//            updateAlarmLiveActivity(alarm: activity, remainingTime: remainingTime)
+//            print("Started Live Activity")
+//        } catch {
+//            print("Failed to start Live Activity: \(error.localizedDescription)")
+//        }
+//    }
+//    
+//    func updateAlarmLiveActivity(alarm: Activity<AlarmAttributes>, remainingTime: TimeInterval) {
+//        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+//            let remainingTime = remainingTime - 1
+//            let contentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarm.attributes.alarmBody)
+//            
+//            Task {
+//                await alarm.update(using: contentState)
+//            }
+//            
+//            if remainingTime == 0 {
+//                timer.invalidate()
+//                self.endAlarmLiveActivity(activity: alarm)
+//            }
+//        }
+//    }
+//
+//    func endAlarmLiveActivity(activity: Activity<AlarmAttributes>) {
+//        Task {
+//            await activity.end(dismissalPolicy: .immediate)
+//        }
+//    }
+//}
 
 // App Life Cycle
+
 extension AppDelegate {
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        let userDefaults = UserDefaults(suiteName: "group.com.cyc0825.SharingAlarm")
-        print("Become Active. Set VoiceKey to 1")
-        userDefaults?.set(1, forKey: "VoiceKey")
-        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-    }
     
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        print("Enter Background")
-    }
+}
+
+extension AppDelegate {
     
-    func applicationDidFinishLaunching(_ application: UIApplication) {
-        print("Finish Launching")
-    }
 }
 
 extension FileManager {

@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
@@ -17,6 +15,42 @@
 				<key>CFBundleIconFiles</key>
 				<array>
 					<string>icon1</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon10</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon10</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon11</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon11</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon12</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon12</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>icon13</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>icon13</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
@@ -93,42 +127,6 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
-			<key>icon10</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon10</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>icon11</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon11</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>icon12</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon12</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
-			<key>icon13</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>icon13</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-			</dict>
 		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
@@ -142,6 +140,23 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLIconFile</key>
+			<string>AppIconDefault</string>
+			<key>CFBundleURLName</key>
+			<string>com.cyc0825.SharingAlarm</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>SharingAlarm</string>
+			</array>
+		</dict>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>MusicHapticsSupported</key>
 	<false/>
 	<key>UIBackgroundModes</key>

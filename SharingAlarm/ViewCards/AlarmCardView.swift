@@ -30,7 +30,7 @@ struct AlarmCardView: View {
                 .tint(.accent)
                 .labelsHidden()
             }
-            .onChange(of: alarm.isOn) {
+            .onChange(of: alarm.isOn) { _ in
                 if let alarmId = alarm.id, let isOn = alarm.isOn {
                     viewModel.toggleAlarm(alarmId: alarmId, value: isOn)
                     if isOn {
