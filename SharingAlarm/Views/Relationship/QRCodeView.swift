@@ -69,24 +69,48 @@ struct QRScanResultView: View {
     var user2ID: String
     var body: some View {
         VStack {
-            Text("Are you sure you want to send friend request to @\(user2ID)? ")
+            Text("Adding @\(user2ID) as a friend?")
+                .font(.headline)
+            Text("You can group up and alarm for each others")
+                .font(.callout)
                 .multilineTextAlignment(.center)
             HStack {
-                Button("Cancel") {
+                Button {
                     dismiss()
+                } label: {
+                    Text("Cancel")
+                        .frame(width: 100)
+                        .padding()
+                        .background(Capsule().fill(.ultraThinMaterial))
                 }
-                .buttonStyle(.borderedProminent)
                 .padding()
-                Button("Send") {
-                    friendViewModel.saveFriendRequest(user2ID: user2ID)
-                    dismiss()
-                }.buttonStyle(.borderedProminent)
-                    .padding()
+                Button {
+                    if !friendViewModel.friends.contains(where: { $0.friendRef.uid == user2ID }) {
+                        friendViewModel.saveFriendRequest(user2ID: user2ID)
+                        dismiss()
+                    } else {
+                        friendViewModel.errorMessage = "You are already friends with @\(user2ID)."
+                    }
+                } label: {
+                    Text("Send")
+                        .frame(width: 100)
+                        .padding()
+                        .background(Capsule().fill(Color.accent))
+                        .foregroundStyle(Color.system)
+                }
+                .padding()
             }
             .padding()
         }
         .padding()
         .presentationDetents([.fraction(0.3)])
+        .alert(isPresented: .constant(friendViewModel.errorMessage != nil)) {
+            Alert(title: Text("Already Friend"),
+                  message: Text(friendViewModel.errorMessage ?? "Unknown Error"),
+                  dismissButton:.default(Text("Confirm"), action: {
+                friendViewModel.errorMessage = nil
+            }))
+        }
     }
 }
 

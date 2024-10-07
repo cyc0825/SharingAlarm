@@ -32,6 +32,7 @@ class FriendsViewModel: ObservableObject {
     @Published var selectedFriend: FriendReference?
     @Published var showScanResult: Bool = false
     @Published var scanResult: String? = ""
+    @Published var errorMessage: String?
     private var db = Firestore.firestore()
     
     init() {

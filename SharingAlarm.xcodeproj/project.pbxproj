@@ -20,7 +20,7 @@
 		D34A27512C642944009BB039 /* AlarmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34A27502C642944009BB039 /* AlarmDetailView.swift */; };
 		D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */; };
 		D35281142CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D35281122CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf */; };
-		D35281192CB37AC800C99FCA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35281182CB37AC300C99FCA /* SceneDelegate.swift */; };
+		D35281192CB37AC800C99FCA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35281182CB37AC300C99FCA /* AppDelegate.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* GroupsView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
@@ -176,7 +176,7 @@
 		D34A27502C642944009BB039 /* AlarmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmDetailView.swift; sourceTree = "<group>"; };
 		D35030A72C7D594E00C5F429 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		D35281122CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AfacadFlux-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
-		D35281182CB37AC300C99FCA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D35281182CB37AC300C99FCA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
@@ -507,7 +507,7 @@
 				D30FB1962BC3171100C88BBC /* ViewCards */,
 				D35372F02BBB7D9500B56F32 /* ViewModels */,
 				D38EEBB32BAD07570099D382 /* SharingAlarm.entitlements */,
-				D35281182CB37AC300C99FCA /* SceneDelegate.swift */,
+				D35281182CB37AC300C99FCA /* AppDelegate.swift */,
 				D38EEB822BA3719F0099D382 /* SharingAlarmApp.swift */,
 				D36BD67F2CA0905A0014A985 /* Models */,
 				D337DFAA2C56F13100D33713 /* Views */,
@@ -893,7 +893,7 @@
 				D337DFB02C56F1BA00D33713 /* EditAlarmView.swift in Sources */,
 				D3ABC8352BDE99FA003D2265 /* AuthedView.swift in Sources */,
 				D35372E82BBA7AE400B56F32 /* SettingsView.swift in Sources */,
-				D35281192CB37AC800C99FCA /* SceneDelegate.swift in Sources */,
+				D35281192CB37AC800C99FCA /* AppDelegate.swift in Sources */,
 				D3B53B362BC85A2D00B41769 /* GroupsViewModel.swift in Sources */,
 				D37594132C6979AC006DB7AA /* AlarmCardView.swift in Sources */,
 				D35372EA2BBA7F4E00B56F32 /* AlarmsViewModel.swift in Sources */,
@@ -1189,7 +1189,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1226,7 +1226,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.4.1;
+				MARKETING_VERSION = 0.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cyc0825.SharingAlarm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
