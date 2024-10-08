@@ -20,10 +20,14 @@ struct RingtoneLib: View {
         VStack {
             if viewModel.premiumRingtones.isEmpty {
                 VStack {
+                    Image(systemName: "tray")
+                        .resizable()
+                        .frame(width: 100, height: 70)
                     Text("You bought all ringtones, please check here later.")
                         .padding()
                     Spacer()
                 }
+                .padding()
             }
             List {
                 ForEach(viewModel.premiumRingtones, id: \.self) { ringtone in

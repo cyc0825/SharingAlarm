@@ -18,8 +18,18 @@ struct FriendsView: View {
             ZStack {
                 if viewModel.friends.isEmpty {
                     List {
-                        Text("Tap the add button and add your friends.")
-                            .padding()
+                        VStack {
+                            Image(systemName: "person.and.background.dotted")
+                                .resizable()
+                                .frame(width: 100, height: 80)
+                                .padding()
+                            Text("Tap the add button and add your friends.")
+                                .multilineTextAlignment(.center)
+                                
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .listRowBackground(Color(UIColor.systemGroupedBackground))
                     }
                 }
                 else {

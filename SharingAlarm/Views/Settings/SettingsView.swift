@@ -120,6 +120,8 @@ struct ProfileView: View {
     @EnvironmentObject var arViewModel: AudioRecorderViewModel
     @State private var showingProfileEdit = false
     @State private var showingPremiumStore = false
+    @State private var showingEULAandPrivacyPolicy = false
+    @State private var selectedTab = 0
     
     private func signOut() {
         authViewModel.signOut()
@@ -212,6 +214,16 @@ struct ProfileView: View {
                         Spacer()
                     }
                 }
+                Button {
+                    showingEULAandPrivacyPolicy = true
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark.shield")
+                        Text("Terms of Use and Privacy Policy")
+                            .foregroundStyle(.systemText)
+                        Spacer()
+                    }
+                }
             }
 
             Section {
@@ -248,6 +260,22 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $showingPremiumStore) {
             PremiumStoreView()
+        }
+        .sheet(isPresented: $showingEULAandPrivacyPolicy) {
+            // two tabs and open two different URLs
+            TabView(selection: $selectedTab) {
+                SafariView(url: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    .tabItem {
+                        Text("EULA")
+                    }
+                    .tag(0)
+
+                SafariView(url: URL(string: "https://doc-hosting.flycricket.io/sharingalarm-privacy-policy/faf56047-0054-4cfc-b057-db3d467b5c52/privacy")!)
+                    .tabItem {
+                        Text("Privacy Policy")
+                    }
+                    .tag(1)
+            }
         }
         .background(
             Color(UIColor.systemGroupedBackground)

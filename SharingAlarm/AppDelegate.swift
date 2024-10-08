@@ -10,6 +10,7 @@ import Firebase
 import FirebaseCore
 import FirebaseMessaging
 import AVFoundation
+import ActivityKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -396,52 +397,42 @@ extension AppDelegate {
 }
 
 // ActivityKit
-//extension AppDelegate {
-//    func startAlarmLiveActivity(remainingTime: TimeInterval, alarmBody: String) {
-//        let initialContentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarmBody)
-//        let attributes = AlarmAttributes(alarmBody: alarmBody)
-//
-//        do {
-//            let activity = try Activity<AlarmAttributes>.request(
-//                attributes: attributes,
-//                contentState: initialContentState,
-//                pushType: nil)
-//            updateAlarmLiveActivity(alarm: activity, remainingTime: remainingTime)
-//            print("Started Live Activity")
-//        } catch {
-//            print("Failed to start Live Activity: \(error.localizedDescription)")
-//        }
-//    }
-//
-//    func updateAlarmLiveActivity(alarm: Activity<AlarmAttributes>, remainingTime: TimeInterval) {
-//        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-//            let remainingTime = remainingTime - 1
-//            let contentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarm.attributes.alarmBody)
-//
-//            Task {
-//                await alarm.update(using: contentState)
-//            }
-//
-//            if remainingTime == 0 {
-//                timer.invalidate()
-//                self.endAlarmLiveActivity(activity: alarm)
-//            }
-//        }
-//    }
-//
-//    func endAlarmLiveActivity(activity: Activity<AlarmAttributes>) {
-//        Task {
-//            await activity.end(dismissalPolicy: .immediate)
-//        }
-//    }
-//}
-
-// App Life Cycle
-
 extension AppDelegate {
-    
-}
+    func startAlarmLiveActivity(remainingTime: TimeInterval, alarmBody: String) {
+        let initialContentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarmBody)
+        let attributes = AlarmAttributes(alarmBody: alarmBody)
 
-extension AppDelegate {
-    
+        do {
+            let activity = try Activity<AlarmAttributes>.request(
+                attributes: attributes,
+                contentState: initialContentState,
+                pushType: nil)
+            updateAlarmLiveActivity(alarm: activity, remainingTime: remainingTime)
+            print("Started Live Activity")
+        } catch {
+            print("Failed to start Live Activity: \(error.localizedDescription)")
+        }
+    }
+
+    func updateAlarmLiveActivity(alarm: Activity<AlarmAttributes>, remainingTime: TimeInterval) {
+        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            let remainingTime = remainingTime - 1
+            let contentState = AlarmAttributes.ContentState(remainingTime: remainingTime, alarmBody: alarm.attributes.alarmBody)
+
+            Task {
+                await alarm.update(using: contentState)
+            }
+
+            if remainingTime == 0 {
+                timer.invalidate()
+                self.endAlarmLiveActivity(activity: alarm)
+            }
+        }
+    }
+
+    func endAlarmLiveActivity(activity: Activity<AlarmAttributes>) {
+        Task {
+            await activity.end(dismissalPolicy: .immediate)
+        }
+    }
 }

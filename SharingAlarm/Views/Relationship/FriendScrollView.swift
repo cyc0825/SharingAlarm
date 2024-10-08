@@ -51,22 +51,6 @@ struct FriendScrollView: View {
                                             friendToDelete = friend.friendRef
                                             showDeleteConfirmation = true
                                         })
-//                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-//                                            Button {
-//                                                    friendToDelete = friend.friendRef
-//                                                    showDeleteConfirmation = true
-//                                                } label: {
-//                                                    ZStack {
-//                                                        Capsule()
-//                                                            .fill(Color.red) // Capsule-shaped background
-//                                                            .frame(width: 80, height: 40)
-//                                                            .cornerRadius(10)
-//                                                        
-//                                                        Label("Delete", systemImage: "trash")
-//                                                            .foregroundColor(.white)  // Button text color
-//                                                    }
-//                                                }
-//                                        }
                                     }
                                 }
                             }
@@ -88,6 +72,7 @@ struct FriendScrollView: View {
                     }
                 }
                 .frame(width: 30)
+                .offset(x: 0, y: 150)
             }
             .background(Color(UIColor.systemGroupedBackground))
             .confirmationDialog("Are you sure you want to delete this friend?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
@@ -120,12 +105,12 @@ struct AlphabetIndexView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
+            VStack(spacing: -2) {
                 ForEach(alphabet, id: \.self) { letter in
                     Text(letter)
                         .font(.caption)
                         .foregroundStyle(Color.accent)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 15, height: 15)
                         .background(draggingLetter == letter ? Color.thirdAccent : Color.clear)
                         .cornerRadius(5)
                         .onTapGesture {
@@ -136,7 +121,7 @@ struct AlphabetIndexView: View {
             .gesture(DragGesture(minimumDistance: 0)
                 .onChanged { value in
                     let yPosition = value.location.y
-                    let alphabetHeight = 20
+                    let alphabetHeight = 13
                     let index = min(max(Int(yPosition / CGFloat(alphabetHeight)), 0), alphabet.count - 1)
                     let letter = alphabet[index]
                     draggingLetter = letter

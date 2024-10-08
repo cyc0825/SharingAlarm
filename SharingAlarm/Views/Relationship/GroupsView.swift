@@ -18,8 +18,18 @@ struct GroupsView: View {
             ZStack{
                 if viewModel.groups.isEmpty {
                     List {
-                        Text("There is no group currently")
-                            .padding()
+                        VStack {
+                            Image(systemName: "moon.stars")
+                                .resizable()
+                                .frame(width: 78, height: 80)
+                                .padding()
+                            Text("You haven't created any groups yet, so quiet here.")
+                                .multilineTextAlignment(.center)
+                                
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .listRowBackground(Color(UIColor.systemGroupedBackground))
                     }
                 } else {
                     List(viewModel.groups, id: \.self) { group in
