@@ -154,9 +154,17 @@
 				<string>SharingAlarm</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-213892319304-ios-2620673dd2f278e802707d</string>
+			</array>
+		</dict>
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<true/>
+	<false/>
 	<key>MusicHapticsSupported</key>
 	<false/>
 	<key>UIBackgroundModes</key>

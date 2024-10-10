@@ -22,6 +22,7 @@
 		D35281142CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D35281122CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf */; };
 		D35281192CB37AC800C99FCA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35281182CB37AC300C99FCA /* AppDelegate.swift */; };
 		D35281352CB5DBBD00C99FCA /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35281342CB5DBB900C99FCA /* SafariView.swift */; };
+		D35281372CB77D7D00C99FCA /* VerifyPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35281362CB77D7C00C99FCA /* VerifyPhoneNumberView.swift */; };
 		D35372E22BBA7AAF00B56F32 /* AlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */; };
 		D35372E42BBA7AD200B56F32 /* GroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E32BBA7AD200B56F32 /* GroupsView.swift */; };
 		D35372E62BBA7ADA00B56F32 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35372E52BBA7ADA00B56F32 /* FriendsView.swift */; };
@@ -179,6 +180,7 @@
 		D35281122CB34F0100C99FCA /* AfacadFlux-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AfacadFlux-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
 		D35281182CB37AC300C99FCA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D35281342CB5DBB900C99FCA /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		D35281362CB77D7C00C99FCA /* VerifyPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPhoneNumberView.swift; sourceTree = "<group>"; };
 		D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmsView.swift; sourceTree = "<group>"; };
 		D35372E32BBA7AD200B56F32 /* GroupsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsView.swift; sourceTree = "<group>"; };
 		D35372E52BBA7ADA00B56F32 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 		D337DFAC2C56F14E00D33713 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				D35281362CB77D7C00C99FCA /* VerifyPhoneNumberView.swift */,
 				D3ABC8322BDE9799003D2265 /* AuthView.swift */,
 				D3ABC8342BDE99FA003D2265 /* AuthedView.swift */,
 				D38EEBB12BA3FC4E0099D382 /* LoginView.swift */,
@@ -881,6 +884,7 @@
 				D37594172C6FFB0C006DB7AA /* AlarmRequestView.swift in Sources */,
 				D375941D2C74061C006DB7AA /* AudioRecorderViewModel.swift in Sources */,
 				D35030A82C7D594F00C5F429 /* LaunchScreenView.swift in Sources */,
+				D35281372CB77D7D00C99FCA /* VerifyPhoneNumberView.swift in Sources */,
 				D38EEB8C2BA371A00099D382 /* Persistence.swift in Sources */,
 				D36BD6812CA0906E0014A985 /* IconTask.swift in Sources */,
 				D35372EC2BBB722D00B56F32 /* FriendsViewModel.swift in Sources */,
@@ -1173,7 +1177,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;
@@ -1210,7 +1214,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = SharingAlarm/SharingAlarm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"SharingAlarm/Preview Content\"";
 				DEVELOPMENT_TEAM = 528US555T2;
 				ENABLE_PREVIEWS = YES;

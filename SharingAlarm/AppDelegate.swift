@@ -169,6 +169,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         return UIBackgroundFetchResult.newData
     }
 
+    func application(_ application: UIApplication, didReceiveRemoteNotification notification: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if Auth.auth().canHandleNotification(notification) {
+            completionHandler(.noData)
+            return
+        }
+    }
+    
     private func handleNotification(userInfo: [AnyHashable: Any]) {
         print("Received data message: \(userInfo)")
         if let id = userInfo["id"] as? String,

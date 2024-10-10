@@ -17,6 +17,9 @@ struct AuthView: View {
             case .login:
                 LoginView()
                     .environmentObject(authviewModel)
+            case .phoneNumberLogin:
+                VerifyPhoneNumberView()
+                    .environmentObject(authviewModel)
             case .signUp:
                 SignupView()
                     .environmentObject(authviewModel)

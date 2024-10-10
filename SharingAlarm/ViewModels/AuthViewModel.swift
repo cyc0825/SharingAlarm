@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import SwiftUI
@@ -21,13 +22,14 @@ enum AuthenticationState {
 }
 
 enum AuthenticationFlow {
-  case login
-  case signUp
+    case login
+    case phoneNumberLogin
+    case signUp
 }
 
 enum EmailLinkStatus {
-  case none
-  case pending
+    case none
+    case pending
 }
 
 @MainActor
@@ -35,9 +37,11 @@ class AuthViewModel: ObservableObject {
     @AppStorage("email-link") var emailLink: String?
     @Published var email = ""
     @Published var password = ""
+    @Published var phoneNumber = ""
+    @Published var code = ""
     @Published var confirmPassword = ""
     
-    @Published var flow: AuthenticationFlow = .login
+    @Published var flow: AuthenticationFlow = .phoneNumberLogin
     
     @Published var isValid = false
     @Published var authenticationState: AuthenticationState = .unauthenticated
@@ -89,8 +93,8 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func switchFlow() {
-        flow = flow == .login ? .signUp : .login
+    func switchFlow(_ currentFlow: AuthenticationFlow) {
+        flow = currentFlow
         errorMessage = ""
     }
     
@@ -136,7 +140,7 @@ extension AuthViewModel {
             user = authResult.user
             if authResult.additionalUserInfo?.isNewUser == true {
                 self.isNewUser = true
-//                await createUserDocument(userID: authResult.user.uid, name: nil, uid: nil)
+                //                await createUserDocument(userID: authResult.user.uid, name: nil, uid: nil)
             }
             print("User \(authResult.user.uid) signed in")
             
@@ -148,6 +152,32 @@ extension AuthViewModel {
             authenticationState = .unauthenticated
             return false
         }
+    }
+    
+    func signInWithPhoneNumber() async -> Bool {
+        authenticationState = .authenticating
+        do {
+            print("Authenting with verification code \(self.code)")
+            if let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") {
+                let credential = PhoneAuthProvider.provider().credential(
+                    withVerificationID: verificationID,
+                    verificationCode: self.code
+                )
+                let authResult = try await Auth.auth().signIn(with: credential)
+                self.user = authResult.user
+                if authResult.additionalUserInfo?.isNewUser == true {
+                    self.isNewUser = true
+                }
+                print("User \(authResult.user.uid) signed in")
+            }
+        }
+        catch  {
+            print(error)
+            errorMessage = "Code is incorrect. Please try again."
+            authenticationState = .unauthenticated
+            return false
+        }
+        return true
     }
     
     func signUpWithEmailPassword() async -> Bool {

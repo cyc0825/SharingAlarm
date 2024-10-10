@@ -1,30 +1,45 @@
 //
-//  LoginView.swift
+//  VerifyPhoneNumberView.swift
 //  SharingAlarm
 //
-//  Created by 曹越程 on 2024/3/14.
+//  Created by 曹越程 on 2024/10/9.
 //
 
 import SwiftUI
 import AuthenticationServices
+import FirebaseAuth
 
 private enum FocusableField: Hashable {
-  case email
-  case password
+  case phoneNumber
+  case code
 }
 
-struct LoginView: View {
+struct VerifyPhoneNumberView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     @FocusState private var focus: FocusableField?
     
-    private func signInWithEmailPassword() {
+    private func signInWithPhoneNumber() {
         Task {
-            if await authViewModel.signInWithEmailPassword() == true {
+            if await authViewModel.signInWithPhoneNumber() == true {
                 dismiss()
             }
         }
+    }
+    
+    private func sentVerificationCode(phoneNumber: String) {
+        print("Send verification code to \(phoneNumber)")
+        PhoneAuthProvider.provider()
+          .verifyPhoneNumber(phoneNumber, uiDelegate: nil) { verificationID, error in
+              if let error = error {
+                print(error.localizedDescription)
+                return
+              }
+              // Sign in using the verificationID and the code sent to the user
+              // ...
+              UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
+          }
     }
     
     var body: some View {
@@ -46,30 +61,40 @@ struct LoginView: View {
                         }
                     
                     HStack {
-                        Image(systemName: "at")
-                        TextField("Email", text: $authViewModel.email)
+                        Image(systemName: "phone")
+                        Text("(+1)")
+                        TextField("PhoneNumber", text: $authViewModel.phoneNumber)
                             .accentColor(.thirdAccent)
                             .textInputAutocapitalization(.never)
+                            .textContentType(.telephoneNumber)
                             .disableAutocorrection(true)
-                            .focused($focus, equals: .email)
+                            .focused($focus, equals: .phoneNumber)
                             .submitLabel(.next)
                             .onSubmit {
-                                self.focus = .password
+                                self.focus = .code
                             }
+                        Button {
+                            sentVerificationCode(phoneNumber: "+1\(authViewModel.phoneNumber)")
+                        } label: {
+                            Text("send")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.secondAccent)
                     }
                     .padding(.vertical, 6)
                     .background(Divider(), alignment: .bottom)
                     .padding(.bottom, 4)
                     
                     HStack {
-                        Image(systemName: "lock")
-                        SecureField("Password", text: $authViewModel.password)
+                        Image(systemName: "number")
+                        SecureField("Code", text: $authViewModel.code)
                             .accentColor(.thirdAccent)
                             .disableAutocorrection(true)
-                            .focused($focus, equals: .password)
+                            .textContentType(.oneTimeCode)
+                            .focused($focus, equals: .code)
                             .submitLabel(.go)
                             .onSubmit {
-                                signInWithEmailPassword()
+                                signInWithPhoneNumber()
                             }
                     }
                     .padding(.vertical, 6)
@@ -83,7 +108,7 @@ struct LoginView: View {
                         }
                     }
                     
-                    Button(action: signInWithEmailPassword) {
+                    Button(action: signInWithPhoneNumber) {
                         if authViewModel.authenticationState != .authenticating {
                             Text("Login")
                                 .padding(.vertical, 8)
@@ -117,9 +142,9 @@ struct LoginView: View {
                     .cornerRadius(8)
                     
                     HStack {
-                        Text("Don't have an account yet?")
-                        Button(action: { authViewModel.switchFlow(.signUp) }) {
-                            Text("Sign up")
+                        Text("Try Account login?")
+                        Button(action: { authViewModel.switchFlow(.login) }) {
+                            Text("Switch to account login")
                                 .fontWeight(.semibold)
                                 .foregroundColor(.blue)
                         }
