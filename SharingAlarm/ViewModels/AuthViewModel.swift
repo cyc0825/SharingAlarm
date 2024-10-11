@@ -38,7 +38,6 @@ class AuthViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var phoneNumber = ""
-    @Published var code = ""
     @Published var confirmPassword = ""
     
     @Published var flow: AuthenticationFlow = .phoneNumberLogin
@@ -154,14 +153,14 @@ extension AuthViewModel {
         }
     }
     
-    func signInWithPhoneNumber() async -> Bool {
+    func signInWithPhoneNumber(smsCode: String) async -> Bool {
         authenticationState = .authenticating
         do {
-            print("Authenting with verification code \(self.code)")
+            print("Authenting with verification code \(smsCode)")
             if let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") {
                 let credential = PhoneAuthProvider.provider().credential(
                     withVerificationID: verificationID,
-                    verificationCode: self.code
+                    verificationCode: smsCode
                 )
                 let authResult = try await Auth.auth().signIn(with: credential)
                 self.user = authResult.user

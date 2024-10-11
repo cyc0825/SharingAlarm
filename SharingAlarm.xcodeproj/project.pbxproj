@@ -96,6 +96,8 @@
 		D3B53B342BC6204B00B41769 /* Harmony.caf in Resources */ = {isa = PBXBuildFile; fileRef = D3B53B332BC6204B00B41769 /* Harmony.caf */; };
 		D3B53B362BC85A2D00B41769 /* GroupsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */; };
 		D3B53B382BC85B8A00B41769 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B53B372BC85B8A00B41769 /* GroupCard.swift */; };
+		D3BA23562CB8956F0062787A /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BA23552CB8956D0062787A /* String+.swift */; };
+		D3BA23582CB9A4C40062787A /* RingtonePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BA23572CB9A4BF0062787A /* RingtonePickerView.swift */; };
 		D3C0EF7E2BDD4FB400DA1795 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */; };
 		D3C0EF812BDD884700DA1795 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */; };
 		D3C0EF842BDD898000DA1795 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D3C0EF832BDD898000DA1795 /* FirebaseAnalytics */; };
@@ -259,6 +261,8 @@
 		D3B53B332BC6204B00B41769 /* Harmony.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Harmony.caf; sourceTree = "<group>"; };
 		D3B53B352BC85A2D00B41769 /* GroupsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsViewModel.swift; sourceTree = "<group>"; };
 		D3B53B372BC85B8A00B41769 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
+		D3BA23552CB8956D0062787A /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		D3BA23572CB9A4BF0062787A /* RingtonePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingtonePickerView.swift; sourceTree = "<group>"; };
 		D3C0EF7D2BDD4FB400DA1795 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		D3C0EF7F2BDD50E600DA1795 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -398,6 +402,7 @@
 		D337DFAB2C56F14200D33713 /* Alarm */ = {
 			isa = PBXGroup;
 			children = (
+				D3BA23572CB9A4BF0062787A /* RingtonePickerView.swift */,
 				D39BCC6F2CB33424000E1782 /* GroupPickerView.swift */,
 				D3717E452BC9796600440099 /* AlarmInterfaceView.swift */,
 				D35372E12BBA7AAF00B56F32 /* AlarmsView.swift */,
@@ -506,6 +511,7 @@
 		D38EEB812BA3719F0099D382 /* SharingAlarm */ = {
 			isa = PBXGroup;
 			children = (
+				D3BA23552CB8956D0062787A /* String+.swift */,
 				D36A0FA42C8FC69C00633E02 /* FileManager+.swift */,
 				D3C0EF802BDD884700DA1795 /* GoogleService-Info.plist */,
 				D3C0EF7F2BDD50E600DA1795 /* Info.plist */,
@@ -910,6 +916,7 @@
 				D3DE34752C87C2BA0000C48A /* AudioRecorderView.swift in Sources */,
 				D39CFECA2CA760F30089C7E9 /* Ringtone.swift in Sources */,
 				D337DFB32C56F20100D33713 /* AddFriendView.swift in Sources */,
+				D3BA23562CB8956F0062787A /* String+.swift in Sources */,
 				D36A0FAE2C92402100633E02 /* PremiumStoreView.swift in Sources */,
 				D36A0FA72C91093000633E02 /* EconomyViewModel.swift in Sources */,
 				D36A0F9F2C8E60A100633E02 /* UIPlayground.swift in Sources */,
@@ -919,6 +926,7 @@
 				D37594152C6BE06F006DB7AA /* ProfileSetupView.swift in Sources */,
 				D35372EF2BBB738300B56F32 /* Friendship.xcdatamodeld in Sources */,
 				D36A0FA12C8E672D00633E02 /* RingtoneLib.swift in Sources */,
+				D3BA23582CB9A4C40062787A /* RingtonePickerView.swift in Sources */,
 				D35372E42BBA7AD200B56F32 /* GroupsView.swift in Sources */,
 				D3CB39202C645A4D00AF7052 /* TimerViewModel.swift in Sources */,
 				D38EEB8F2BA371A00099D382 /* SharingAlarm.xcdatamodeld in Sources */,

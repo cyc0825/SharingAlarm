@@ -28,107 +28,97 @@ struct LoginView: View {
     }
     
     var body: some View {
-        NavigationStack{
-            ZStack {
-                Color.accentColor.ignoresSafeArea(edges: .all)
-                VStack{
-                    Text("WELCOME!")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.top, .bottom], 50)
-                    Image("loginscreen")
-                        .resizable()
-                        .frame(width: 300, height: 300)
-                        .padding(.bottom, 40)
-                        .onTapGesture {
-                            focus = nil
-                        }
-                    
-                    HStack {
-                        Image(systemName: "at")
-                        TextField("Email", text: $authViewModel.email)
-                            .accentColor(.thirdAccent)
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                            .focused($focus, equals: .email)
-                            .submitLabel(.next)
-                            .onSubmit {
-                                self.focus = .password
-                            }
+        VStack {
+            HStack {
+                Image(systemName: "at")
+                TextField("Email", text: $authViewModel.email)
+                    .accentColor(.thirdAccent)
+                    .textInputAutocapitalization(.never)
+                    .disableAutocorrection(true)
+                    .focused($focus, equals: .email)
+                    .submitLabel(.next)
+                    .onSubmit {
+                        self.focus = .password
                     }
-                    .padding(.vertical, 6)
-                    .background(Divider(), alignment: .bottom)
-                    .padding(.bottom, 4)
-                    
-                    HStack {
-                        Image(systemName: "lock")
-                        SecureField("Password", text: $authViewModel.password)
-                            .accentColor(.thirdAccent)
-                            .disableAutocorrection(true)
-                            .focused($focus, equals: .password)
-                            .submitLabel(.go)
-                            .onSubmit {
-                                signInWithEmailPassword()
-                            }
+            }
+            .padding()
+            .background(Capsule()
+                .fill(.secondAccent.opacity(0.4)))
+            
+            HStack {
+                Image(systemName: "lock")
+                SecureField("Password", text: $authViewModel.password)
+                    .accentColor(.thirdAccent)
+                    .disableAutocorrection(true)
+                    .focused($focus, equals: .password)
+                    .submitLabel(.go)
+                    .onSubmit {
+                        signInWithEmailPassword()
                     }
-                    .padding(.vertical, 6)
-                    .background(Divider(), alignment: .bottom)
-                    .padding(.bottom, 8)
-                    
-                    if !authViewModel.errorMessage.isEmpty {
-                        VStack {
-                            Text(authViewModel.errorMessage)
-                                .foregroundColor(Color(UIColor.systemRed))
-                        }
-                    }
-                    
-                    Button(action: signInWithEmailPassword) {
-                        if authViewModel.authenticationState != .authenticating {
-                            Text("Login")
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity)
-                        }
-                        else {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .padding(.vertical, 8)
-                                .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .disabled(!authViewModel.isValid)
-                    .frame(maxWidth: .infinity)
-                    .buttonStyle(.borderedProminent)
-                    .tint(authViewModel.isValid ? .secondAccent : .gray)
-                    
-                    HStack {
-                        VStack { Divider() }
-                        Text("or")
-                        VStack { Divider() }
-                    }
-                    
-                    SignInWithAppleButton(.signIn) { request in
-                        authViewModel.handleSignInWithAppleRequest(request)
-                    } onCompletion: { result in
-                        authViewModel.handleSignInWithAppleCompletion(result)
-                    }
-                    .signInWithAppleButtonStyle(colorScheme == .light ? .black : .white)
-                    .frame(height: 50)
-                    .cornerRadius(8)
-                    
-                    HStack {
-                        Text("Don't have an account yet?")
-                        Button(action: { authViewModel.switchFlow(.signUp) }) {
-                            Text("Sign up")
-                                .fontWeight(.semibold)
-                                .foregroundColor(.blue)
-                        }
-                    }
-                    .padding([.top, .bottom], 50)
+            }
+            .padding()
+            .background(Capsule()
+                .fill(.secondAccent.opacity(0.4)))
+            
+            if !authViewModel.errorMessage.isEmpty {
+                VStack {
+                    Text(authViewModel.errorMessage)
+                        .foregroundColor(Color(UIColor.systemRed))
                 }
-                .padding()
+            }
+            
+            Button(action: signInWithEmailPassword) {
+                if authViewModel.authenticationState != .authenticating {
+                    Text("Login")
+                        .foregroundStyle(.systemText)
+                        .frame(maxWidth: .infinity)
+                }
+                else {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .disabled(!authViewModel.isValid)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Capsule().fill(.secondAccent))
+            .opacity(!authViewModel.isValid ? 0.5 : 1)
+            
+            HStack {
+                VStack { Divider() }
+                Text("or")
+                VStack { Divider() }
+            }
+            
+            SignInWithAppleButton(.signIn) { request in
+                authViewModel.handleSignInWithAppleRequest(request)
+            } onCompletion: { result in
+                authViewModel.handleSignInWithAppleCompletion(result)
+            }
+            .signInWithAppleButtonStyle(colorScheme == .light ? .white : .black)
+            .frame(height: 50)
+            .cornerRadius(25)
+            Button(action: { authViewModel.switchFlow(.phoneNumberLogin) }) {
+                Text("Use Phone Number")
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondAccent)
+            }
+            .padding()
+            HStack {
+                Text("Don't have an account yet?")
+                Button(action: { authViewModel.switchFlow(.signUp) }) {
+                    Text("Sign up")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondAccent)
+                }
             }
         }
-        
     }
+}
+
+#Preview {
+    LoginView()
+        .environmentObject(AuthViewModel())
 }

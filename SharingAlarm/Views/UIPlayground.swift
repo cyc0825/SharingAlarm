@@ -3,80 +3,80 @@ import SwiftUI
 import AVFoundation
 
 struct UIPlayView: View {
-    @Binding var selectedRingtone: Ringtone
-    @StateObject var alarmsViewModel: AlarmsViewModel
-    @State private var showAddGroupView = false
-    @State private var audioPlayer: AVAudioPlayer?
+    
+    @State private var selection = 0
+    @State var phoneNumber = ""
+    @State private var codeDigits = Array(repeating: "", count: 6)
     
     var body: some View {
-        List {
-            Section(header: Text("Select a Ringtone")) {
-                ForEach(alarmsViewModel.ringtones, id: \.id) { ringtone in
-                    Button {
-                        if selectedRingtone == ringtone {
-                            playSound(named: ringtone.name)
-                        } else {
-                            audioPlayer?.stop()
-                            selectedRingtone = ringtone
-                        }
-                    } label: {
-                        HStack {
-                            Text(ringtone.name)
-                            Spacer()
-                            if selectedRingtone == ringtone {
-                                Image(systemName: "checkmark")
+        TabView(selection: $selection) {
+            // Phone Number Input Page
+            VStack(spacing: 20) {
+                HStack {
+                    Image(systemName: "phone")
+                    Text("+1")
+                    TextField("(XXX) XXX-XXXX", text: $phoneNumber)
+                        .onChange(of: phoneNumber) { newValue in
+                            let formattedNumber = newValue.formatPhoneNumber()
+                            if formattedNumber != newValue {
+                                phoneNumber = formattedNumber
                             }
                         }
-                    }
+                        .accentColor(.thirdAccent)
+                        .textContentType(.telephoneNumber)
+                        .keyboardType(.numberPad)
                 }
-            }
-            
-            if UserDefaults.standard.bool(forKey: "isPremium") {
-                Section("User your own voice") {
-                    AudioRecorderView(alarmsViewModel: alarmsViewModel)
-                    Button {
-                        selectedRingtone = Ringtone(name: "YourRecording", filename: "YourRecording.caf", price: 0)
-                    } label: {
-                        HStack {
-                            Text("YourRecording")
-                            Spacer()
-                            if selectedRingtone.name == "YourRecording" {
-                                Image(systemName: "checkmark")
-                            }
-                        }
-                    }
-                }
-            }
-            
-            Section {
-                // Option to add a new group
+                .padding()
+                .background(Capsule()
+                    .fill(.secondAccent.opacity(0.4)))
+                
                 Button {
-                    showAddGroupView = true
+                    withAnimation {
+                        selection = 1 // Move to the SMS code input page
+                    }
                 } label: {
-                    Text("View Ringtone Library")
+                    Text("Send")
                         .foregroundStyle(.systemText)
                         .frame(maxWidth: .infinity)
                 }
-                .listRowBackground(Color.accent)
+                .padding()
+                .background(Capsule().fill(.secondAccent))
             }
+            .tag(0) // Tag for the first tab (Phone Number Page)
+            .gesture(DragGesture())
+            
+            // SMS Code Input Page
+            VStack {
+                HStack(spacing: 10) {
+                    ForEach(0..<6) { index in
+                        TextField("", text: $codeDigits[index])
+                            .frame(width: 50, height: 50)
+                            .background(Circle().fill(.secondAccent.opacity(0.5)))
+                            .multilineTextAlignment(.center)
+                            .keyboardType(.numberPad)
+                    }
+                }
+                .contentShape(Rectangle()) // Make the entire HStack tappable
+                .padding(.bottom)
+                
+                Button {
+                    withAnimation {
+                        selection = 0 // Move to the SMS code input page
+                    } // Function to handle sign-in
+                } label: {
+                    Text("Verify")
+                        .foregroundStyle(.systemText)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding()
+                .background(Capsule().fill(.secondAccent))
+            }
+            .tag(1) // Tag for the second tab (SMS Code Input Page)
         }
-        .sheet(isPresented: $showAddGroupView) {
-            RingtoneLib(viewModel: alarmsViewModel)
-        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
-    
-    private func playSound(named soundName: String) {
-        guard let url = Bundle.main.url(forResource: soundName, withExtension: "caf") else {
-            print("Sound file not found")
-            return
-        }
-        
-        do {
-            audioPlayer?.stop()
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.play()
-        } catch {
-            print("Error playing sound: \(error.localizedDescription)")
-        }
-    }
+}
+
+#Preview {
+    UIPlayView()
 }

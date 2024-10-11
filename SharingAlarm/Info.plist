@@ -164,7 +164,7 @@
 		</dict>
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
+	<true/>
 	<key>MusicHapticsSupported</key>
 	<false/>
 	<key>UIBackgroundModes</key>

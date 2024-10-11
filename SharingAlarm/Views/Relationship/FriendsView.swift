@@ -21,7 +21,7 @@ struct FriendsView: View {
                         VStack {
                             Image(systemName: "person.and.background.dotted")
                                 .resizable()
-                                .frame(width: 100, height: 80)
+                                .frame(width: 100, height: 85)
                                 .padding()
                             Text("Tap the add button and add your friends.")
                                 .multilineTextAlignment(.center)
@@ -113,4 +113,9 @@ struct FriendsCompareView: View {
         }
         .presentationDetents([.fraction(0.3)])
     }
+}
+
+#Preview {
+    FriendsView()
+        .environmentObject(FriendsViewModel())
 }

@@ -52,7 +52,7 @@ struct AddAlarmView: View {
 //                            Text(sound).tag("\(sound).caf")
 //                        }
 //                    }
-                    NavigationLink(destination: UIPlayView(selectedRingtone: $selectedRingtone, alarmsViewModel: viewModel)) {
+                    NavigationLink(destination: RingtonePickerView(selectedRingtone: $selectedRingtone, alarmsViewModel: viewModel)) {
                         HStack {
                             Text("Ringtone")
                             Spacer()
